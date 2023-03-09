@@ -156,7 +156,7 @@ interface StatusBarItem {
 }
 
 export interface ToolbarDropdownIcon {
-	name: string;
+	name: ToolbarButton;
 	children: ArrayOneOrMore<ToolbarIcon | ToolbarButton>;
 	className: string;
 	title: string;
@@ -165,7 +165,7 @@ export interface ToolbarDropdownIcon {
 }
 
 export interface ToolbarIcon {
-	name: string;
+	name: ToolbarButton;
 	action: string | ((editor: EasyMDE2) => void);
 	className: string;
 	title: string;
@@ -176,7 +176,7 @@ export interface ToolbarIcon {
 }
 
 export interface ToolbarItemIncomplete {
-	name: string;
+	name: ToolbarButton;
 	default?: boolean | undefined;
 }
 
@@ -215,6 +215,7 @@ export interface Options {
 	blockStyles?: BlockStyleOptions;
 	element?: HTMLTextAreaElement;
 	forceSync?: boolean;
+	toolbarGuideIcon?: boolean;
 	hideIcons?: ReadonlyArray<ToolbarButton>;
 	indentWithTabs?: boolean;
 	initialValue?: string;

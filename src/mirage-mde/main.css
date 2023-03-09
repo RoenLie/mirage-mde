@@ -1,8 +1,16 @@
+.EasyMDEContainer {
+	/*--cm-background-color: rgb(30, 30, 30);
+	--cm-text-color: rgb(245, 245, 245);*/
+	--cm-background-color: rgb(245, 245, 245);
+	--cm-text-color: rgb(20, 20, 20);
+
+	color: var(--cm-text-color);
+}
+
 .CodeMirror {
 	font-family: monospace;
 	height: 300px;
-	color: #000;
-	direction: ltr
+	direction: ltr;
 }
 
 .CodeMirror-lines {
@@ -249,7 +257,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 .CodeMirror {
 	position: relative;
 	overflow: hidden;
-	background: #fff
+	background-color: var(--cm-background-color);
 }
 
 .CodeMirror-scroll {
@@ -559,6 +567,7 @@ span.CodeMirror-selectedtext {
 	-ms-user-select: none;
 	-o-user-select: none;
 	user-select: none;
+	background-color: var(--cm-background-color);
 	padding: 9px 10px;
 	border-top: 1px solid #ced4da;
 	border-left: 1px solid #ced4da;

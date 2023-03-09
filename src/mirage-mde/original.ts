@@ -1,4 +1,6 @@
-'use strict';
+// @ts-nocheck
+/* eslint-disable */
+
 import 'codemirror/addon/edit/continuelist.js';
 import './tablist';
 import 'codemirror/addon/display/fullscreen.js';

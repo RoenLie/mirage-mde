@@ -4,8 +4,9 @@ import CodeMirrorSpellChecker from 'codemirror-spell-checker';
 import { marked } from 'marked';
 
 import { EasyMDE2 } from './EasyMDE2.js';
-import { addAnchorTargetBlank, afterImageUploaded, bindings, fixShortcut, humanFileSize, isMobile, removeListStyleWhenCheckbox, toggleFullScreen, toolbarBuiltInButtons } from './main.js';
+import { addAnchorTargetBlank, afterImageUploaded, bindings, createSep, createToolbarButton, createToolbarDropdown, fixShortcut, getState, humanFileSize, isMobile, removeListStyleWhenCheckbox, toggleFullScreen, toolbarBuiltInButtons } from './main.js';
 import { Options, ToolbarItem } from './types.js';
+
 
 // Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem throw QuotaExceededError. We're going to detect this and set a constiable accordingly.
 function isLocalStorageAvailable() {
@@ -640,68 +641,75 @@ export const createToolbar = function(this: EasyMDE2, items: Options['toolbar'])
 	bar.className = 'editor-toolbar';
 	bar.setAttribute('role', 'toolbar');
 
-	const toolbarData = {};
-	this.toolbar = items as Exclude<ToolbarItem, '|'>[];
+	const toolbarData: Record<string, HTMLElement> = {};
+	this.toolbar = items;
 
 	for (i = 0; i < this.toolbar.length; i++) {
-		if (items[i]!.name == 'guide' && self.options.toolbarGuideIcon === false)
-			continue;
-
-		if (self.options.hideIcons && self.options.hideIcons.indexOf(items[i].name) != -1)
-			continue;
-
-		// Fullscreen does not work well on mobile devices (even tabconsts)
-		// In the future, hopefully this can be resolved
-		if ((items[i].name == 'fullscreen' || items[i].name == 'side-by-side') && isMobile())
-			continue;
-
-
-		// Don't include trailing separators
-		if (items[i] === '|') {
-			let nonSeparatorIconsFollow = false;
-
-			for (let x = (i + 1); x < items.length; x++) {
-				if (items[x] !== '|' && (!self.options.hideIcons || self.options.hideIcons.indexOf(items[x].name) == -1))
-					nonSeparatorIconsFollow = true;
-			}
-
-			if (!nonSeparatorIconsFollow)
+		const toolbarItem = this.toolbar[i];
+		if (typeof toolbarItem === 'object') {
+			if (toolbarItem.name == 'guide' && this.options.toolbarGuideIcon === false)
 				continue;
+
+			if (this.options.hideIcons && this.options.hideIcons.indexOf(toolbarItem.name) != -1)
+				continue;
+
+			// Fullscreen does not work well on mobile devices (even tabconsts)
+			// In the future, hopefully this can be resolved
+			if ((toolbarItem.name == 'fullscreen' || toolbarItem.name == 'side-by-side') && isMobile())
+				continue;
+		}
+
+		if (typeof toolbarItem === 'string') {
+			// Don't include trailing separators
+			if (toolbarItem === '|') {
+				let nonSeparatorIconsFollow = false;
+
+				for (let x = (i + 1); x < items.length; x++) {
+					if (items[x] !== '|' && (!this.options.hideIcons || this.options.hideIcons.indexOf(items[x].name) == -1))
+						nonSeparatorIconsFollow = true;
+				}
+
+				if (!nonSeparatorIconsFollow)
+					continue;
+			}
 		}
 
 
 		// Create the icon and append to the toolbar
-		(function(item) {
+		((item) => {
 			let el;
 			if (item === '|')
 				el = createSep();
-			else if (item.children)
-				el = createToolbarDropdown(item, self.options.toolbarTips, self.options.shortcuts, self);
+			else if ((item as any).children)
+				el = createToolbarDropdown(item, this.options.toolbarTips, this.options.shortcuts as any, this);
 			else
-				el = createToolbarButton(item, true, self.options.toolbarTips, self.options.shortcuts, 'button', self);
+				el = createToolbarButton(item, true, this.options.toolbarTips, this.options.shortcuts as any, 'button', this);
 
+			const name = typeof item === 'string' ? item : item!.name;
 
-			toolbarData[item.name || item] = el;
+			toolbarData[name] = el;
 			bar.appendChild(el);
 
-			// Create the input element (ie. <input type='file'>), used among
-			// with the 'import-image' icon to open the browse-file window.
-			if (item.name === 'upload-image') {
-				const imageInput = document.createElement('input');
-				imageInput.className = 'imageInput';
-				imageInput.type = 'file';
-				imageInput.multiple = true;
-				imageInput.name = 'image';
-				imageInput.accept = self.options.imageAccept;
-				imageInput.style.display = 'none';
-				imageInput.style.opacity = 0;
-				bar.appendChild(imageInput);
+			if (typeof item === 'object') {
+				// Create the input element (ie. <input type='file'>), used among
+				// with the 'import-image' icon to open the browse-file window.
+				if (item.name === 'upload-image') {
+					const imageInput = document.createElement('input');
+					imageInput.className = 'imageInput';
+					imageInput.type = 'file';
+					imageInput.multiple = true;
+					imageInput.name = 'image';
+					imageInput.accept = this.options.imageAccept!;
+					imageInput.style.display = 'none';
+					imageInput.style.opacity = '0';
+					bar.appendChild(imageInput);
+				}
 			}
 		})(items[i]);
 	}
 
-	self.toolbar_div = bar;
-	self.toolbarElements = toolbarData;
+	this.toolbar_div = bar;
+	this.toolbarElements = toolbarData;
 
 	const cm = this.codemirror;
 	cm.on('cursorActivity', () => {
@@ -719,7 +727,7 @@ export const createToolbar = function(this: EasyMDE2, items: Options['toolbar'])
 	});
 
 	const cmWrapper = cm.getWrapperElement();
-	cmWrapper.parentNode.insertBefore(bar, cmWrapper);
+	cmWrapper.parentNode?.insertBefore(bar, cmWrapper);
 
 	return bar;
 };

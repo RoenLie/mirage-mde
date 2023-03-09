@@ -256,10 +256,12 @@ export class EasyMDE2 extends EasyMDE2Static {
 	};
 
 	public codemirror: Editor;
-	public toolbar: Exclude<ToolbarItem, '|'>[];
+	public toolbar: ToolbarItem[];
 	public element: HTMLTextAreaElement;
 	public _rendered: HTMLElement;
 	public _autosave_timeout: number | NodeJS.Timeout;
+	public toolbar_div: HTMLDivElement;
+	public toolbarElements: Record<string, HTMLElement>;
 	public autosaveTimeoutId: number | undefined;
 	public documentOnKeyDown: (ev: KeyboardEvent) => any;
 

@@ -107,6 +107,8 @@ function EasyMDE(options) {
 	if (!Object.prototype.hasOwnProperty.call(options, 'previewClass'))
 		options.previewClass = 'editor-preview';
 
+	console.log(options.previewClass);
+
 
 	// Handle status bar
 	if (!Object.prototype.hasOwnProperty.call(options, 'status')) {
@@ -129,23 +131,14 @@ function EasyMDE(options) {
 		highlightFormatting: true, // needed for toggleCodeBlock to detect types of code
 	}, options.parsingConfig || {});
 
-
 	// Merging the insertTexts, with the given options
 	options.insertTexts = extend({}, insertTexts, options.insertTexts || {});
-
 
 	// Merging the promptTexts, with the given options
 	options.promptTexts = extend({}, promptTexts, options.promptTexts || {});
 
-
 	// Merging the blockStyles, with the given options
-	console.log(options.blockStyles, blockStyles);
-
-
 	options.blockStyles = extend({}, blockStyles, options.blockStyles || {});
-
-	console.log('after', options.blockStyles);
-
 
 	if (options.autosave != undefined) {
 		// Merging the Autosave timeFormat, with the given options
@@ -975,6 +968,9 @@ EasyMDE.prototype.createToolbar = function(items) {
 
 		// Fullscreen does not work well on mobile devices (even tabconsts)
 		// In the future, hopefully this can be resolved
+		console.log('is mobile:', isMobile());
+
+
 		if ((items[i].name == 'fullscreen' || items[i].name == 'side-by-side') && isMobile())
 			continue;
 
