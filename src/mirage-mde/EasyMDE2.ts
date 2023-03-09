@@ -1,38 +1,50 @@
 import { Editor } from 'codemirror';
 
-import { autosave } from './EasyMDE2-methods.js';
-import { blockStyles, cleanBlock, drawHorizontalRule, drawImage, drawLink, drawTable, drawUploadedImage, errorMessages, extend, iconClassMap, imageTexts, insertTexts, promptTexts, redo, shortcuts, timeFormat, toggleBlockquote, toggleBold, toggleCodeBlock, toggleFullScreen, toggleHeading1, toggleHeading2, toggleHeading3, toggleHeading4, toggleHeading5, toggleHeading6, toggleHeadingBigger, toggleHeadingSmaller, toggleItalic, toggleOrderedList, togglePreview, toggleSideBySide, toggleStrikethrough, toggleUnorderedList, ToolbarBuiltInButtons, toolbarBuiltInButtons, undo } from './main.js';
-import { EasyMDEBase, Options } from './types.js';
+import {
+	autosave, markdown, uploadImage, uploadImages,
+	uploadImagesUsingCustomFunction, uploadImageUsingCustomFunction,
+} from './EasyMDE2-methods.js';
+import {
+	blockStyles, cleanBlock, drawHorizontalRule, drawImage,
+	drawLink, drawTable, drawUploadedImage, errorMessages, extend,
+	iconClassMap, imageTexts, insertTexts, promptTexts, redo, shortcuts,
+	timeFormat, toggleBlockquote, toggleBold, toggleCodeBlock, toggleFullScreen,
+	toggleHeading1, toggleHeading2, toggleHeading3, toggleHeading4, toggleHeading5,
+	toggleHeading6, toggleHeadingBigger, toggleHeadingSmaller, toggleItalic,
+	toggleOrderedList, togglePreview, toggleSideBySide, toggleStrikethrough,
+	toggleUnorderedList, toolbarBuiltInButtons, undo,
+} from './main.js';
+import { Options, ToolbarItem, ToolbarItemIncomplete } from './types.js';
 
 
 class EasyMDE2Static {
 
-	public static toggleBold: (editor: EasyMDEBase) => void = toggleBold;
-	public static toggleItalic: (editor: EasyMDEBase) => void = toggleItalic;
-	public static toggleStrikethrough: (editor: EasyMDEBase) => void = toggleStrikethrough;
-	public static toggleHeadingSmaller: (editor: EasyMDEBase) => void = toggleHeadingSmaller;
-	public static toggleHeadingBigger: (editor: EasyMDEBase) => void = toggleHeadingBigger;
-	public static toggleHeading1: (editor: EasyMDEBase) => void = toggleHeading1;
-	public static toggleHeading2: (editor: EasyMDEBase) => void = toggleHeading2;
-	public static toggleHeading3: (editor: EasyMDEBase) => void = toggleHeading3;
-	public static toggleHeading4: (editor: EasyMDEBase) => void = toggleHeading4;
-	public static toggleHeading5: (editor: EasyMDEBase) => void = toggleHeading5;
-	public static toggleHeading6: (editor: EasyMDEBase) => void = toggleHeading6;
-	public static toggleCodeBlock: (editor: EasyMDEBase) => void = toggleCodeBlock;
-	public static toggleBlockquote: (editor: EasyMDEBase) => void = toggleBlockquote;
-	public static toggleUnorderedList: (editor: EasyMDEBase) => void = toggleUnorderedList;
-	public static toggleOrderedList: (editor: EasyMDEBase) => void = toggleOrderedList;
-	public static cleanBlock: (editor: EasyMDEBase) => void = cleanBlock;
-	public static drawLink: (editor: EasyMDEBase) => void = drawLink;
-	public static drawImage: (editor: EasyMDEBase) => void = drawImage;
-	public static drawUploadedImage: (editor: EasyMDEBase) => void = drawUploadedImage;
-	public static drawTable: (editor: EasyMDEBase) => void = drawTable;
-	public static drawHorizontalRule: (editor: EasyMDEBase) => void = drawHorizontalRule;
-	public static togglePreview: (editor: EasyMDEBase) => void = togglePreview;
-	public static toggleSideBySide: (editor: EasyMDEBase) => void = toggleSideBySide;
-	public static toggleFullScreen: (editor: EasyMDEBase) => void = toggleFullScreen;
-	public static undo: (editor: EasyMDEBase) => void = undo;
-	public static redo: (editor: EasyMDEBase) => void = redo;
+	public static toggleBold: (editor: EasyMDE2) => void = toggleBold;
+	public static toggleItalic: (editor: EasyMDE2) => void = toggleItalic;
+	public static toggleStrikethrough: (editor: EasyMDE2) => void = toggleStrikethrough;
+	public static toggleHeading1: (editor: EasyMDE2) => void = toggleHeading1;
+	public static toggleHeading2: (editor: EasyMDE2) => void = toggleHeading2;
+	public static toggleHeading3: (editor: EasyMDE2) => void = toggleHeading3;
+	public static toggleHeading4: (editor: EasyMDE2) => void = toggleHeading4;
+	public static toggleHeading5: (editor: EasyMDE2) => void = toggleHeading5;
+	public static toggleHeading6: (editor: EasyMDE2) => void = toggleHeading6;
+	public static toggleHeadingBigger: (editor: EasyMDE2) => void = toggleHeadingBigger;
+	public static toggleHeadingSmaller: (editor: EasyMDE2) => void = toggleHeadingSmaller;
+	public static toggleCodeBlock: (editor: EasyMDE2) => void = toggleCodeBlock;
+	public static toggleBlockquote: (editor: EasyMDE2) => void = toggleBlockquote;
+	public static toggleUnorderedList: (editor: EasyMDE2) => void = toggleUnorderedList;
+	public static toggleOrderedList: (editor: EasyMDE2) => void = toggleOrderedList;
+	public static cleanBlock: (editor: EasyMDE2) => void = cleanBlock;
+	public static drawLink: (editor: EasyMDE2) => void = drawLink;
+	public static drawImage: (editor: EasyMDE2) => void = drawImage;
+	public static drawUploadedImage: (editor: EasyMDE2) => void = drawUploadedImage;
+	public static drawTable: (editor: EasyMDE2) => void = drawTable;
+	public static drawHorizontalRule: (editor: EasyMDE2) => void = drawHorizontalRule;
+	public static togglePreview: (editor: EasyMDE2) => void = togglePreview;
+	public static toggleSideBySide: (editor: EasyMDE2) => void = toggleSideBySide;
+	public static toggleFullScreen: (editor: EasyMDE2) => void = toggleFullScreen;
+	public static undo: (editor: EasyMDE2) => void = undo;
+	public static redo: (editor: EasyMDE2) => void = redo;
 
 }
 
@@ -94,7 +106,8 @@ export class EasyMDE2 extends EasyMDE2Static {
 				if (key.indexOf('separator-') != -1)
 					options.toolbar.push('|');
 
-				if (toolbarBuiltInButtons[key].default === true ||
+				const button: any = toolbarBuiltInButtons[key];
+				if (button.default === true ||
 					(options.showIcons && Array.isArray(options.showIcons) &&
 					options.showIcons.indexOf(key) != -1)
 				)
@@ -115,9 +128,8 @@ export class EasyMDE2 extends EasyMDE2Static {
 
 		// Add default preview rendering function
 		if (!options.previewRender) {
-			options.previewRender = function(plainText, previewEl: HTMLElement) {
-				// Note: "this" refers to the options object
-				return this.parent.markdown(plainText);
+			options.previewRender = (plainText, previewEl: HTMLElement) => {
+				return this.options.parent.markdown(plainText) ?? '';
 			};
 		}
 
@@ -237,25 +249,30 @@ export class EasyMDE2 extends EasyMDE2Static {
 		}
 	}
 
-	public element: HTMLElement;
+
+	public gui: {
+		statusbar: HTMLElement;
+		toolbar: HTMLElement;
+	};
+
+	public codemirror: Editor;
+	public toolbar: Exclude<ToolbarItem, '|'>[];
+	public element: HTMLTextAreaElement;
+	public _rendered: HTMLElement;
+	public _autosave_timeout: number | NodeJS.Timeout;
 	public autosaveTimeoutId: number | undefined;
+	public documentOnKeyDown: (ev: KeyboardEvent) => any;
+
 	public value(): string;
 	public value(val: string): void;
 	public value(val?: unknown): string | void {
 		throw new Error('Method not implemented.');
 	}
 
-	public codemirror: Editor;
-
-	public autosave = autosave.bind(this);
-
 	public render(): void {
 		throw new Error('Method not implemented.');
 	}
 
-	public markdown(text: string): string | null {
-		throw new Error('Method not implemented.');
-	}
 
 	public cleanup(): void {
 		throw new Error('Method not implemented.');
@@ -285,33 +302,11 @@ export class EasyMDE2 extends EasyMDE2Static {
 		throw new Error('Method not implemented.');
 	}
 
-	/**
-	 * Upload asynchronously a list of images to a server.
-	 *
-	 * Can be triggered by:
-	 * - drag&drop;
-	 * - copy-paste;
-	 * - the browse-file window (opened when the user clicks on the *upload-image* icon).
-	 * @param imageUploadFunction {Function} The custom function to upload the image passed in options.
-	 * @param {FileList} files The files to upload the the server.
-	 */
-	public uploadImagesUsingCustomFunction(imageUploadFunction: Function, files: FileList) {
-		throw new Error('Method not implemented.');
-	}
-
-	/**
-	 * Upload asynchronously a list of images to a server.
-	 *
-	 * Can be triggered by:
-	 * - drag&drop;
-	 * - copy-paste;
-	 * - the browse-file window (opened when the user clicks on the *upload-image* icon).
-	 * @param {FileList} files The files to upload the the server.
-	 * @param [onSuccess] {function} see EasyMDE.prototype.uploadImage
-	 * @param [onError] {function} see EasyMDE.prototype.uploadImage
-	 */
-	public uploadImages(files: FileList, onSuccess?: Function, onError?: Function) {
-		throw new Error('Method not implemented.');
-	}
+	public markdown = markdown.bind(this);
+	public autosave = autosave.bind(this);
+	public uploadImage = uploadImage.bind(this);
+	public uploadImages = uploadImages.bind(this);
+	public uploadImageUsingCustomFunction = uploadImageUsingCustomFunction.bind(this);
+	public uploadImagesUsingCustomFunction = uploadImagesUsingCustomFunction.bind(this);
 
 }

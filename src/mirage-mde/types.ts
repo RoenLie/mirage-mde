@@ -1,12 +1,17 @@
-import CodeMirror from 'codemirror';
+import CodeMirror, { ScrollbarModels } from 'codemirror';
 import { marked } from 'marked';
 
 import { EasyMDE2 } from './EasyMDE2.js';
 import { IconClassMap } from './main.js';
 
+
 interface ArrayOneOrMore<T> extends Array<T> {
 	0: T;
 }
+
+
+type RecordOf<T = object> = T & Record<keyof any, any>;
+
 
 export type ToolbarBuiltInButton =
 	'bold'
@@ -67,15 +72,7 @@ export type ToolbarButton =
     | 'fullscreen'
     | 'guide';
 
-export interface ToolbarItem {
-	name:      string;
-	title?:     string;
-	action?:    ((editor: EasyMDEBase) => any) | string;
-	className?: string;
-	default?:   boolean;
-	noMobile?: boolean;
-	noDisable?: boolean;
-}
+export type ToolbarItem = '|' | ToolbarItemIncomplete | ToolbarButton | ToolbarIcon | ToolbarDropdownIcon;
 
 
 interface TimeFormatOptions {
@@ -93,6 +90,7 @@ interface AutoSaveOptions {
 	text?: string;
 	foundSavedValue?: boolean;
 	binded?: boolean;
+	loaded?: boolean;
 }
 
 interface BlockStyleOptions {
@@ -113,9 +111,11 @@ interface InsertTextOptions {
 }
 
 interface ParsingOptions {
+	name?: string;
 	allowAtxHeaderWithoutSpace?: boolean;
 	strikethrough?: boolean;
 	underscoresBreakWords?: boolean;
+	gitHubSpice?: boolean;
 }
 
 interface PromptTexts {
@@ -166,13 +166,18 @@ export interface ToolbarDropdownIcon {
 
 export interface ToolbarIcon {
 	name: string;
-	action: string | ((editor: EasyMDE) => void);
+	action: string | ((editor: EasyMDE2) => void);
 	className: string;
 	title: string;
 	noDisable?: boolean;
 	noMobile?: boolean;
 	icon?: string;
 	attributes?: CustomAttributes;
+}
+
+export interface ToolbarItemIncomplete {
+	name: string;
+	default?: boolean | undefined;
 }
 
 interface ImageTextsOptions {
@@ -189,6 +194,7 @@ interface ImageErrorTextsOptions {
 	typeNotAllowed?: string;
 	fileTooLarge?: string;
 	importError?: string;
+	filesTooLarge?: string;
 }
 
 interface OverlayModeOptions {
@@ -207,7 +213,7 @@ export interface Options {
 	autosave?: AutoSaveOptions;
 	autoRefresh?: boolean | { delay: number; };
 	blockStyles?: BlockStyleOptions;
-	element?: HTMLElement;
+	element?: HTMLTextAreaElement;
 	forceSync?: boolean;
 	hideIcons?: ReadonlyArray<ToolbarButton>;
 	indentWithTabs?: boolean;
@@ -234,12 +240,12 @@ export interface Options {
 	status?: boolean | Array<string | StatusBarItem>;
 	styleSelectedText?: boolean;
 	tabSize?: number;
-	toolbar?: boolean | Array<'|' | ToolbarButton | ToolbarIcon | ToolbarDropdownIcon>;
+	toolbar?: boolean | Array<ToolbarItem>;
 	toolbarTips?: boolean;
 	toolbarButtonClassPrefix?: string;
 	onToggleFullScreen?: (goingIntoFullScreen: boolean) => void;
 	theme?: string;
-	scrollbarStyle?: string;
+	scrollbarStyle?: keyof ScrollbarModels;
 	unorderedListStyle?: '*' | '-' | '+';
 	uploadImage?: boolean;
 	imageMaxSize?: number;
@@ -251,57 +257,11 @@ export interface Options {
 	imageCSRFName?: string;
 	imageCSRFHeader?: boolean;
 	imageTexts?: ImageTextsOptions;
-	errorMessages?: ImageErrorTextsOptions;
+	errorMessages?: RecordOf<ImageErrorTextsOptions>;
 	errorCallback?: (errorMessage: string) => void;
 	promptTexts?: PromptTexts;
 	syncSideBySidePreviewScroll?: boolean;
 	overlayMode?: OverlayModeOptions;
 	direction?: 'ltr' | 'rtl';
 	iconClassMap: IconClassMap;
-}
-
-export abstract class EasyMDEBase {
-
-	public abstract element: HTMLElement;
-
-	constructor(public options: Options = {}) {}
-
-	public abstract value(): string;
-	public abstract value(val: string): void;
-	public abstract codemirror: CodeMirror.Editor;
-	public abstract cleanup(): void;
-	public abstract toTextArea(): void;
-	public abstract isPreviewActive(): boolean;
-	public abstract isSideBySideActive(): boolean;
-	public abstract isFullscreenActive(): boolean;
-	public abstract clearAutosavedValue(): void;
-	public abstract updateStatusBar(itemName: string, content: string): void;
-
-	public static toggleBold: (editor: EasyMDEBase) => void;
-	public static toggleItalic: (editor: EasyMDEBase) => void;
-	public static toggleStrikethrough: (editor: EasyMDEBase) => void;
-	public static toggleHeadingSmaller: (editor: EasyMDEBase) => void;
-	public static toggleHeadingBigger: (editor: EasyMDEBase) => void;
-	public static toggleHeading1: (editor: EasyMDEBase) => void;
-	public static toggleHeading2: (editor: EasyMDEBase) => void;
-	public static toggleHeading3: (editor: EasyMDEBase) => void;
-	public static toggleHeading4: (editor: EasyMDEBase) => void;
-	public static toggleHeading5: (editor: EasyMDEBase) => void;
-	public static toggleHeading6: (editor: EasyMDEBase) => void;
-	public static toggleCodeBlock: (editor: EasyMDEBase) => void;
-	public static toggleBlockquote: (editor: EasyMDEBase) => void;
-	public static toggleUnorderedList: (editor: EasyMDEBase) => void;
-	public static toggleOrderedList: (editor: EasyMDEBase) => void;
-	public static cleanBlock: (editor: EasyMDEBase) => void;
-	public static drawLink: (editor: EasyMDEBase) => void;
-	public static drawImage: (editor: EasyMDEBase) => void;
-	public static drawUploadedImage: (editor: EasyMDEBase) => void;
-	public static drawTable: (editor: EasyMDEBase) => void;
-	public static drawHorizontalRule: (editor: EasyMDEBase) => void;
-	public static togglePreview: (editor: EasyMDEBase) => void;
-	public static toggleSideBySide: (editor: EasyMDEBase) => void;
-	public static toggleFullScreen: (editor: EasyMDEBase) => void;
-	public static undo: (editor: EasyMDEBase) => void;
-	public static redo: (editor: EasyMDEBase) => void;
-
 }

@@ -39,6 +39,8 @@ import {
 } from './main.js';
 
 
+//#region converted
+
 /**
  * Interface of EasyMDE.
  */
@@ -137,7 +139,13 @@ function EasyMDE(options) {
 
 
 	// Merging the blockStyles, with the given options
+	console.log(options.blockStyles, blockStyles);
+
+
 	options.blockStyles = extend({}, blockStyles, options.blockStyles || {});
+
+	console.log('after', options.blockStyles);
+
 
 	if (options.autosave != undefined) {
 		// Merging the Autosave timeFormat, with the given options
@@ -358,6 +366,79 @@ EasyMDE.prototype.markdown = function(text) {
 		return htmlText;
 	}
 };
+
+// Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem throw QuotaExceededError. We're going to detect this and set a constiable accordingly.
+function isLocalStorageAvailable() {
+	if (typeof localStorage === 'object') {
+		try {
+			localStorage.setItem('smde_localStorage', 1);
+			localStorage.removeItem('smde_localStorage');
+		}
+		catch (e) {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
+
+	return true;
+}
+
+EasyMDE.prototype.autosave = function() {
+	if (isLocalStorageAvailable()) {
+		const easyMDE = this;
+
+		if (this.options.autosave.uniqueId == undefined || this.options.autosave.uniqueId == '') {
+			console.log('EasyMDE: You must set a uniqueId to use the autosave feature');
+
+			return;
+		}
+
+		if (this.options.autosave.binded !== true) {
+			if (easyMDE.element.form != null && easyMDE.element.form != undefined) {
+				easyMDE.element.form.addEventListener('submit', () => {
+					clearTimeout(easyMDE.autosaveTimeoutId);
+					easyMDE.autosaveTimeoutId = undefined;
+
+					localStorage.removeItem('smde_' + easyMDE.options.autosave.uniqueId);
+				});
+			}
+
+			this.options.autosave.binded = true;
+		}
+
+		if (this.options.autosave.loaded !== true) {
+			if (typeof localStorage.getItem('smde_' + this.options.autosave.uniqueId) == 'string' && localStorage.getItem('smde_' + this.options.autosave.uniqueId) != '') {
+				this.codemirror.setValue(localStorage.getItem('smde_' + this.options.autosave.uniqueId));
+				this.options.autosave.foundSavedValue = true;
+			}
+
+			this.options.autosave.loaded = true;
+		}
+
+		const value = easyMDE.value();
+		if (value !== '')
+			localStorage.setItem('smde_' + this.options.autosave.uniqueId, value);
+		else
+			localStorage.removeItem('smde_' + this.options.autosave.uniqueId);
+
+
+		const el = document.getElementById('autosaved');
+		if (el != null && el != undefined && el != '') {
+			const d = new Date();
+			const dd = new Intl.DateTimeFormat([ this.options.autosave.timeFormat.locale, 'en-US' ], this.options.autosave.timeFormat.format).format(d);
+			const save = this.options.autosave.text == undefined ? 'Autosaved: ' : this.options.autosave.text;
+
+			el.innerHTML = save + dd;
+		}
+	}
+	else {
+		console.log('EasyMDE: localStorage not available, cannot autosave');
+	}
+};
+//#endregion
+
 
 /**
  * Render editor to the given element.
@@ -605,76 +686,6 @@ EasyMDE.prototype.cleanup = function() {
 	document.removeEventListener('keydown', this.documentOnKeyDown);
 };
 
-// Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem throw QuotaExceededError. We're going to detect this and set a constiable accordingly.
-function isLocalStorageAvailable() {
-	if (typeof localStorage === 'object') {
-		try {
-			localStorage.setItem('smde_localStorage', 1);
-			localStorage.removeItem('smde_localStorage');
-		}
-		catch (e) {
-			return false;
-		}
-	}
-	else {
-		return false;
-	}
-
-	return true;
-}
-
-EasyMDE.prototype.autosave = function() {
-	if (isLocalStorageAvailable()) {
-		const easyMDE = this;
-
-		if (this.options.autosave.uniqueId == undefined || this.options.autosave.uniqueId == '') {
-			console.log('EasyMDE: You must set a uniqueId to use the autosave feature');
-
-			return;
-		}
-
-		if (this.options.autosave.binded !== true) {
-			if (easyMDE.element.form != null && easyMDE.element.form != undefined) {
-				easyMDE.element.form.addEventListener('submit', () => {
-					clearTimeout(easyMDE.autosaveTimeoutId);
-					easyMDE.autosaveTimeoutId = undefined;
-
-					localStorage.removeItem('smde_' + easyMDE.options.autosave.uniqueId);
-				});
-			}
-
-			this.options.autosave.binded = true;
-		}
-
-		if (this.options.autosave.loaded !== true) {
-			if (typeof localStorage.getItem('smde_' + this.options.autosave.uniqueId) == 'string' && localStorage.getItem('smde_' + this.options.autosave.uniqueId) != '') {
-				this.codemirror.setValue(localStorage.getItem('smde_' + this.options.autosave.uniqueId));
-				this.options.autosave.foundSavedValue = true;
-			}
-
-			this.options.autosave.loaded = true;
-		}
-
-		const value = easyMDE.value();
-		if (value !== '')
-			localStorage.setItem('smde_' + this.options.autosave.uniqueId, value);
-		else
-			localStorage.removeItem('smde_' + this.options.autosave.uniqueId);
-
-
-		const el = document.getElementById('autosaved');
-		if (el != null && el != undefined && el != '') {
-			const d = new Date();
-			const dd = new Intl.DateTimeFormat([ this.options.autosave.timeFormat.locale, 'en-US' ], this.options.autosave.timeFormat.format).format(d);
-			const save = this.options.autosave.text == undefined ? 'Autosaved: ' : this.options.autosave.text;
-
-			el.innerHTML = save + dd;
-		}
-	}
-	else {
-		console.log('EasyMDE: localStorage not available, cannot autosave');
-	}
-};
 
 EasyMDE.prototype.clearAutosavedValue = function() {
 	if (isLocalStorageAvailable()) {
