@@ -1,0 +1,60 @@
+// @ts-expect-error
+import hljs from 'highlight.js';
+import { css, html, LitElement, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators/custom-element.js';
+
+import { MirageMDE } from './mirage-mde.js';
+import { type Options } from './mirage-mde-types.js';
+import hljsTheme from './styles/github-dark-dimmed.css?raw';
+import main from './styles/main.css?raw';
+
+
+@customElement('mirage-mde')
+export class MirageMDEElement extends LitElement {
+
+	@property({ type: Object }) public options: Options = {};
+	public mirageMDE?: MirageMDE;
+
+	public override connectedCallback() {
+		super.connectedCallback();
+
+		this.updateComplete.then(() => {
+			this.mirageMDE = new MirageMDE({
+				autoDownloadFontAwesome: true,
+				renderingConfig:         {
+					singleLineBreaks:       false,
+					codeSyntaxHighlighting: true,
+					hljs:                   hljs,
+				},
+				...this.options,
+				element: this.renderRoot.querySelector('#my-text-area') as HTMLTextAreaElement,
+			});
+		});
+	}
+
+	protected override render() {
+		return html`
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+		<textarea id="my-text-area"></textarea>
+		`;
+	}
+
+	public static override styles = [
+		unsafeCSS(main),
+		unsafeCSS(hljsTheme),
+		css`
+		:host {
+			font-family: Helvetica;
+		}
+		`,
+	];
+
+}
+
+
+declare global {
+	interface HTMLElementTagNameMap {
+		'mirage-mde': MirageMDEElement;
+	}
+}

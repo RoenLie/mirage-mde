@@ -2,18 +2,18 @@
 	"name": "@roenlie/mirage-mde",
 	"version": "1.0.0",
 	"description": "",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "dist/lib/index.js",
+	"types": "dist/lib/index.d.ts",
 	"type": "module",
 	"scripts": {
-		"dev": "vite"
+		"dev": "vite",
+		"build": "vite build && tsc --project ./src/tsconfig.json"
 	},
 	"author": "Kristoffer Roen-Lie",
 	"license": "ISC",
 	"dependencies": {
 		"codemirror": "^5.63.1",
 		"codemirror-spell-checker": "1.1.2",
-		"easymde": "^2.18.0",
 		"highlight.js": "^11.7.0",
 		"lit": "^2.6.1",
 		"marked": "^4.1.0",
