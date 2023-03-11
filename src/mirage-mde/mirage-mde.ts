@@ -214,7 +214,7 @@ export class MirageMDE extends MirageMDEMethods {
 		}
 		else if (options.element === null) {
 			// This means that the element option was specified, but no element was found
-			console.log('EasyMDE: Error. No element was found.');
+			console.log('MirageMDE: Error. No element was found.');
 
 			return;
 		}

@@ -42,14 +42,14 @@ const isLocalStorageAvailable = () => {
 
 export const autosave = function(this: MirageMDEMethods) {
 	if (!isLocalStorageAvailable())
-		return console.log('EasyMDE: localStorage not available, cannot autosave');
+		return console.log('MirageMDE: localStorage not available, cannot autosave');
 
 	const autosave = this.options.autosave;
 
 	if (!autosave)
 		return;
 	if (autosave.uniqueId == undefined || autosave.uniqueId == '')
-		return console.log('EasyMDE: You must set a uniqueId to use the autosave feature');
+		return console.log('MirageMDE: You must set a uniqueId to use the autosave feature');
 
 
 	if (autosave.binded !== true) {
@@ -111,8 +111,8 @@ export const autosave = function(this: MirageMDEMethods) {
  * - copy-paste;
  * - the browse-file window (opened when the user clicks on the *upload-image* icon).
  * @param {FileList} files The files to upload the the server.
- * @param [onSuccess] {function} see EasyMDE.prototype.uploadImage
- * @param [onError] {function} see EasyMDE.prototype.uploadImage
+ * @param [onSuccess] {function} see MirageMDE.prototype.uploadImage
+ * @param [onError] {function} see MirageMDE.prototype.uploadImage
  */
 export const uploadImages = function(this: MirageMDEMethods, files: FileList, onSuccess?: Function, onError?: Function) {
 	if (files.length === 0)
@@ -245,7 +245,7 @@ export const uploadImage = function(this: MirageMDEMethods, file: File, onSucces
 			response = JSON.parse(request.responseText);
 		}
 		catch (error) {
-			console.error('EasyMDE: The server did not return a valid json.');
+			console.error('MirageMDE: The server did not return a valid json.');
 			onErrorSup(fillErrorMessage(this.options.errorMessages!.importError!));
 
 			return;
@@ -261,7 +261,7 @@ export const uploadImage = function(this: MirageMDEMethods, file: File, onSucces
 				onErrorSup(fillErrorMessage(response.error));
 			}
 			else {  //unknown error
-				console.error('EasyMDE: Received an unexpected response after uploading the image.'
+				console.error('MirageMDE: Received an unexpected response after uploading the image.'
                     + request.status + ' (' + request.statusText + ')');
 
 				onErrorSup(fillErrorMessage(this.options.errorMessages?.importError ?? ''));
@@ -272,7 +272,7 @@ export const uploadImage = function(this: MirageMDEMethods, file: File, onSucces
 	request.onerror = (event) => {
 		const target = event.target as XMLHttpRequest;
 
-		console.error('EasyMDE: An unexpected error occurred when trying to upload the image.'
+		console.error('MirageMDE: An unexpected error occurred when trying to upload the image.'
             + target.status + ' (' + target.statusText + ')');
 		onErrorSup(this.options.errorMessages?.importError ?? '');
 	};
@@ -331,9 +331,9 @@ export const updateStatusBar = function(this: MirageMDEMethods, itemName: string
 	if (matchingClasses.length === 1)
 		matchingClasses[0]!.textContent = content;
 	else if (matchingClasses.length === 0)
-		console.log('EasyMDE: status bar item ' + itemName + ' was not found.');
+		console.log('MirageMDE: status bar item ' + itemName + ' was not found.');
 	else
-		console.log('EasyMDE: Several status bar items named ' + itemName + ' was found.');
+		console.log('MirageMDE: Several status bar items named ' + itemName + ' was found.');
 };
 
 
@@ -449,7 +449,7 @@ export const render = function(this: MirageMDEMethods, el?: HTMLTextAreaElement)
 			const combineMode = options.overlayMode?.combine;
 
 			if (!(baseMode && overlayMode && combineMode))
-				throw ('EasyMDE: could not defined modes');
+				throw ('MirageMDE: could not defined modes');
 
 			return CodeMirror.overlayMode(baseMode, overlayMode, combineMode);
 		});
@@ -492,7 +492,7 @@ export const render = function(this: MirageMDEMethods, el?: HTMLTextAreaElement)
 	this.codemirror = CodeMirror.fromTextArea(el, {
 		backdrop:           backdrop, // This does not actually belong in this type, for some reason.
 		mode:               mode,
-		theme:              (options.theme != undefined) ? options.theme : 'easymde',
+		theme:              (options.theme != undefined) ? options.theme : 'MirageMDE',
 		tabSize:            (options.tabSize != undefined) ? options.tabSize : 2,
 		indentUnit:         (options.tabSize != undefined) ? options.tabSize : 2,
 		indentWithTabs:     (options.indentWithTabs === false) ? false : true,
@@ -976,7 +976,7 @@ export const cleanup = function(this: MirageMDEMethods) {
 export const clearAutosavedValue = function(this: MirageMDEMethods) {
 	if (isLocalStorageAvailable()) {
 		if (this.options.autosave == undefined || this.options.autosave.uniqueId == undefined || this.options.autosave.uniqueId == '') {
-			console.log('EasyMDE: You must set a uniqueId to clear the autosave value');
+			console.log('MirageMDE: You must set a uniqueId to clear the autosave value');
 
 			return;
 		}
@@ -984,15 +984,15 @@ export const clearAutosavedValue = function(this: MirageMDEMethods) {
 		localStorage.removeItem('smde_' + this.options.autosave.uniqueId);
 	}
 	else {
-		console.log('EasyMDE: localStorage not available, cannot autosave');
+		console.log('MirageMDE: localStorage not available, cannot autosave');
 	}
 };
 
 
 /**
  * Open the browse-file window to upload an image to a server.
- * @param [onSuccess] {function} see EasyMDE.prototype.uploadImage
- * @param [onError] {function} see EasyMDE.prototype.uploadImage
+ * @param [onSuccess] {function} see MirageMDE.prototype.uploadImage
+ * @param [onError] {function} see MirageMDE.prototype.uploadImage
  */
 export const openBrowseFileWindow = function(this: MirageMDEMethods, onSuccess?: Function, onError?: Function) {
 	const imageInput = this.gui.toolbar.getElementsByClassName('imageInput')[0]! as HTMLElement;

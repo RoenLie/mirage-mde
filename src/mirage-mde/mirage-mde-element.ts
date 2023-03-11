@@ -28,7 +28,7 @@ export class MirageMDEElement extends LitElement {
 					hljs:                   hljs,
 				},
 				...this.options,
-				element: this.renderRoot.querySelector('#my-text-area') as HTMLTextAreaElement,
+				element: this.renderRoot.querySelector('textarea')!,
 			});
 		});
 	}

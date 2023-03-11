@@ -627,7 +627,7 @@ span.CodeMirror-selectedtext {
 	width: 100%
 }
 
-.editor-toolbar .easymde-dropdown,
+.editor-toolbar .miragemde-dropdown,
 .editor-toolbar button {
 	background: 0 0;
 	display: inline-block;
@@ -720,15 +720,15 @@ span.CodeMirror-selectedtext {
 	margin-left: 1em
 }
 
-.editor-statusbar .lines:before {
+.editor-statusbar .lines::before {
 	content: 'lines: '
 }
 
-.editor-statusbar .words:before {
+.editor-statusbar .words::before {
 	content: 'words: '
 }
 
-.editor-statusbar .characters:before {
+.editor-statusbar .characters::before {
 	content: 'characters: '
 }
 
@@ -792,82 +792,82 @@ span.CodeMirror-selectedtext {
 	padding: 5px
 }
 
-.cm-s-easymde .cm-tag {
+.cm-s-miragemde .cm-tag {
 	color: #63a35c
 }
 
-.cm-s-easymde .cm-attribute {
+.cm-s-miragemde .cm-attribute {
 	color: #795da3
 }
 
-.cm-s-easymde .cm-string {
+.cm-s-miragemde .cm-string {
 	color: #183691
 }
 
-.cm-s-easymde .cm-header-1 {
+.cm-s-miragemde .cm-header-1 {
 	font-size: calc(1.375rem + 1.5vw)
 }
 
-.cm-s-easymde .cm-header-2 {
+.cm-s-miragemde .cm-header-2 {
 	font-size: calc(1.325rem + .9vw)
 }
 
-.cm-s-easymde .cm-header-3 {
+.cm-s-miragemde .cm-header-3 {
 	font-size: calc(1.3rem + .6vw)
 }
 
-.cm-s-easymde .cm-header-4 {
+.cm-s-miragemde .cm-header-4 {
 	font-size: calc(1.275rem + .3vw)
 }
 
-.cm-s-easymde .cm-header-5 {
+.cm-s-miragemde .cm-header-5 {
 	font-size: 1.25rem
 }
 
-.cm-s-easymde .cm-header-6 {
+.cm-s-miragemde .cm-header-6 {
 	font-size: 1rem
 }
 
-.cm-s-easymde .cm-header-1,
-.cm-s-easymde .cm-header-2,
-.cm-s-easymde .cm-header-3,
-.cm-s-easymde .cm-header-4,
-.cm-s-easymde .cm-header-5,
-.cm-s-easymde .cm-header-6 {
+.cm-s-miragemde .cm-header-1,
+.cm-s-miragemde .cm-header-2,
+.cm-s-miragemde .cm-header-3,
+.cm-s-miragemde .cm-header-4,
+.cm-s-miragemde .cm-header-5,
+.cm-s-miragemde .cm-header-6 {
 	margin-bottom: .5rem;
 	line-height: 1.2
 }
 
-.cm-s-easymde .cm-comment {
+.cm-s-miragemde .cm-comment {
 	background: rgba(0, 0, 0, .05);
 	border-radius: 2px
 }
 
-.cm-s-easymde .cm-link {
+.cm-s-miragemde .cm-link {
 	color: #7f8c8d
 }
 
-.cm-s-easymde .cm-url {
+.cm-s-miragemde .cm-url {
 	color: #aab2b3
 }
 
-.cm-s-easymde .cm-quote {
+.cm-s-miragemde .cm-quote {
 	color: #7f8c8d;
 	font-style: italic
 }
 
-.editor-toolbar .easymde-dropdown {
+.editor-toolbar .miragemde-dropdown {
 	position: relative;
 	background: linear-gradient(to bottom right, #fff 0, #fff 84%, #333 50%, #333 100%);
 	border-radius: 0;
 	border: 1px solid #fff
 }
 
-.editor-toolbar .easymde-dropdown:hover {
+.editor-toolbar .miragemde-dropdown:hover {
 	background: linear-gradient(to bottom right, #fff 0, #fff 84%, #333 50%, #333 100%)
 }
 
-.easymde-dropdown-content {
+.miragemde-dropdown-content {
 	display: block;
 	visibility: hidden;
 	position: absolute;
@@ -878,13 +878,13 @@ span.CodeMirror-selectedtext {
 	top: 30px
 }
 
-.easymde-dropdown:active .easymde-dropdown-content,
-.easymde-dropdown:focus .easymde-dropdown-content,
-.easymde-dropdown:focus-within .easymde-dropdown-content {
+.miragemde-dropdown:active .miragemde-dropdown-content,
+.miragemde-dropdown:focus .miragemde-dropdown-content,
+.miragemde-dropdown:focus-within .miragemde-dropdown-content {
 	visibility: visible
 }
 
-.easymde-dropdown-content button {
+.miragemde-dropdown-content button {
 	display: block
 }
 
