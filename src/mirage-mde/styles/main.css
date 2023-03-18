@@ -5,6 +5,10 @@
 	--cm-text-color: rgb(20, 20, 20);
 
 	color: var(--cm-text-color);
+
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	overflow: hidden;
 }
 
 .CodeMirror {

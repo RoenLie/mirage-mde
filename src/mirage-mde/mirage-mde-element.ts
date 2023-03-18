@@ -46,6 +46,8 @@ export class MirageMDEElement extends LitElement {
 		css`
 		:host {
 			font-family: Helvetica;
+			display: grid;
+			overflow: hidden;
 		}
 		`,
 	];

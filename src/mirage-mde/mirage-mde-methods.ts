@@ -142,7 +142,11 @@ export const uploadImages = function(this: MirageMDEMethods, files: FileList, on
  * @param imageUploadFunction {Function} The custom function to upload the image passed in options.
  * @param {FileList} files The files to upload the the server.
  */
-export const uploadImagesUsingCustomFunction = function(this: MirageMDEMethods, imageUploadFunction: Function, files: FileList) {
+export const uploadImagesUsingCustomFunction = function(
+	this: MirageMDEMethods,
+	imageUploadFunction: Function,
+	files: FileList,
+) {
 	if (files.length === 0)
 		return;
 
@@ -168,7 +172,12 @@ export const uploadImagesUsingCustomFunction = function(this: MirageMDEMethods, 
  * @param [onError] {function} A callback function to execute when the image upload fails, with one parameter:
  * - error (string): the detailed error to display to the user (based on messages from options.errorMessages).
  */
-export const uploadImage = function(this: MirageMDEMethods, file: File, onSuccess?: Function, onError?: Function) {
+export const uploadImage = function(
+	this: MirageMDEMethods,
+	file: File,
+	onSuccess?: Function,
+	onError?: Function,
+) {
 	onSuccess ??= (imageUrl: string) => {
 		afterImageUploaded(this, imageUrl);
 	};
@@ -287,7 +296,11 @@ export const uploadImage = function(this: MirageMDEMethods, file: File, onSucces
  * @param imageUploadFunction {Function} The custom function to upload the image passed in options
  * @param file {File} The image to upload, as a HTML5 File object (https://developer.mozilla.org/en-US/docs/Web/API/File).
  */
-export const uploadImageUsingCustomFunction = function(this: MirageMDEMethods, imageUploadFunction: Function, file: File) {
+export const uploadImageUsingCustomFunction = function(
+	this: MirageMDEMethods,
+	imageUploadFunction: Function,
+	file: File,
+) {
 	const onSuccess = (imageUrl: string) => {
 		afterImageUploaded(this, imageUrl);
 	};
