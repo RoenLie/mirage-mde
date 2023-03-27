@@ -6,8 +6,8 @@ import { customElement } from 'lit/decorators/custom-element.js';
 
 import { MirageMDE } from './mirage-mde.js';
 import { type Options } from './mirage-mde-types.js';
-import hljsTheme from './styles/github-dark-dimmed.css?raw';
-import main from './styles/main.css?raw';
+import hljsTheme from './styles/github-dark-dimmed.css?inline';
+import main from './styles/main.css?inline';
 
 
 @customElement('mirage-mde')
