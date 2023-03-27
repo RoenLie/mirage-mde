@@ -459,12 +459,12 @@ export const createToolbarDropdown = (
 	parent: MirageMDEMethods,
 ) => {
 	const el = createToolbarButton(options, false, enabletooltips, shortcuts, 'button', parent);
-	el.classList.add('easymde-dropdown');
+	el.classList.add('miragemde-dropdown');
 
 	el.onclick = () => void el.focus();
 
 	const content = document.createElement('div');
-	content.className = 'easymde-dropdown-content';
+	content.className = 'miragemde-dropdown-content';
 	for (let childrenIndex = 0; childrenIndex < options.children.length; childrenIndex++) {
 		const child = options.children[childrenIndex];
 		let childElement;
@@ -864,7 +864,7 @@ export const toggleCodeBlock = (editor: MirageMDEMethods) => {
 	let lineCount: number;
 
 	if (is_code === 'single') {
-		// similar to some EasyMDE _toggleBlock logic
+		// similar to some MirageMDE _toggleBlock logic
 		const start = line.text.slice(0, cur_start.ch).replace('`', ''),
 			end = line.text.slice(cur_start.ch).replace('`', '');
 		cm.replaceRange(start + end, {

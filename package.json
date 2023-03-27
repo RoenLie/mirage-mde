@@ -1,16 +1,27 @@
 {
+	"version": "0.0.0",
 	"name": "@roenlie/mirage-mde",
-	"version": "1.0.0",
 	"description": "",
+	"author": "Kristoffer Roen-Lie",
+	"license": "MIT",
 	"main": "dist/lib/index.js",
 	"types": "dist/lib/index.d.ts",
 	"type": "module",
+	"files": [
+		"dist",
+		"src",
+		"package.json",
+		"README.md"
+	],
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build && tsc --project ./src/tsconfig.json"
+		"dev:codespaces": "vite dev --host",
+		"build": "vite build && tsc --project ./src/tsconfig.json",
+		"preview": "vite preview",
+		"updatedeps": "pnpm update --latest --interactive",
+		"typecheck": "tsc --project ./tsconfig.json",
+		"increment-version": "node --loader tsm ./build/increment-version.ts"
 	},
-	"author": "Kristoffer Roen-Lie",
-	"license": "ISC",
 	"dependencies": {
 		"codemirror": "^5.63.1",
 		"codemirror-spell-checker": "1.1.2",

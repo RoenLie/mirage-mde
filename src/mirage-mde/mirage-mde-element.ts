@@ -28,7 +28,7 @@ export class MirageMDEElement extends LitElement {
 					hljs:                   hljs,
 				},
 				...this.options,
-				element: this.renderRoot.querySelector('#my-text-area') as HTMLTextAreaElement,
+				element: this.renderRoot.querySelector('textarea')!,
 			});
 		});
 	}
@@ -46,6 +46,8 @@ export class MirageMDEElement extends LitElement {
 		css`
 		:host {
 			font-family: Helvetica;
+			display: grid;
+			overflow: hidden;
 		}
 		`,
 	];
