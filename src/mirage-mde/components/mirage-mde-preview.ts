@@ -85,6 +85,7 @@ export class PreviewElement extends EnhancedElement {
 			overflow: auto;
 			border: var(--mmde-border);
 			border-left: none;
+			border-bottom: none;
 		}
 		:host::-webkit-scrollbar {
 			width: var(--mmde-scrollsize);
