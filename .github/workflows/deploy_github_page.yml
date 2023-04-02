@@ -32,6 +32,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         
+      - name: Setup node
+        uses: actions/setup-node@v3
+        
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7.20.0
+        
       - name: Install dependencies
         run: pnpm install
         
@@ -44,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
+          # Upload preview folder
           path: './dist/preview'
           
       - name: Deploy to GitHub Pages
