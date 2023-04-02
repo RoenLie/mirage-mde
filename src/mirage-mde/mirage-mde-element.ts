@@ -96,9 +96,6 @@ export class MirageMDEElement extends LitElement {
 		:host {
 			font-family: Helvetica;
 			overflow: hidden;
-
-			min-height: 300px;
-			height: 300px;
 			resize: vertical;
 
 			display: grid;

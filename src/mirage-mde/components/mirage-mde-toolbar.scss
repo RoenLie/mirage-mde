@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 :host {
 	display: grid;
 }
@@ -5,8 +9,9 @@
 .editor-toolbar {
 	position: relative;
 	user-select: none;
-	min-height: 40px;
+	min-height: 32px;
 	padding-inline: 10px;
+	padding-block: 4px;
 	border: var(--mmde-border);
 	border-top-left-radius: var(--mmde-border-radius);
 	border-top-right-radius: var(--mmde-border-radius);

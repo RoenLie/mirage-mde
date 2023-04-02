@@ -29,6 +29,9 @@ export class DisplayElement extends LitElement {
 		unsafeCSS(markdownLightStyles),
 		unsafeCSS(codeDarkStyles),
 		css`
+		* {
+			box-sizing: border-box;
+		}
 		:host {
 			display: grid;
 		}

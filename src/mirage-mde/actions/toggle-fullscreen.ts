@@ -17,18 +17,16 @@ export const toggleFullScreen = (
 	cm.setOption('fullScreen', !cm.getOption('fullScreen'));
 	const fullscreenState = cm.getOption('fullScreen');
 
-	const { guiClasses: { statusbar }, options: { host } } = editor;
+	const { options: { host } } = editor;
 
 	// Prevent scrolling on body during fullscreen active
 	if (fullscreenState) {
 		saved_overflow = document.body.style.overflow;
 		saved_height = host?.style.height ?? '';
-		statusbar['hidden'] = true;
 		document.body.style.setProperty('overflow', 'hidden');
 		host?.style.setProperty('height', null);
 	}
 	else {
-		statusbar['hidden'] = false;
 		document.body.style.setProperty('overflow', saved_overflow);
 		host?.style.setProperty('height', saved_height);
 	}

@@ -1,32 +1,44 @@
-	:host {
-		display: grid;
-	}
+* {
+	box-sizing: border-box;
+}
 
-	.editor-statusbar {
-		padding: 8px 10px;
-		font-size: 12px;
-		color: #959694;
-		text-align: right
-	}
 
-	.mirage-mde-container.sided--no-fullscreen .editor-statusbar {
-		width: 100%
-	}
+:host {
+	display: grid;
 
-	.editor-statusbar span {
-		display: inline-block;
-		min-width: 4em;
-		margin-left: 1em
-	}
+	color: var(--mmde-color);
+	background-color: rgb(25, 34, 43);
+	border: var(--mmde-border);
+	border-top: 1px solid rgb(30, 40, 50);
+	border-bottom-left-radius: var(--mmde-border-radius);
+	border-bottom-right-radius: var(--mmde-border-radius);
+}
 
-	.editor-statusbar .lines::before {
-		content: 'lines: '
-	}
+.editor-statusbar {
+	padding: 8px 10px;
+	font-size: 12px;
+	color: #959694;
+	text-align: right
+}
 
-	.editor-statusbar .words::before {
-		content: 'words: '
-	}
+.mirage-mde-container.sided--no-fullscreen .editor-statusbar {
+	width: 100%
+}
 
-	.editor-statusbar .characters::before {
-		content: 'characters: '
-	}
+.editor-statusbar span {
+	display: inline-block;
+	min-width: 4em;
+	margin-left: 1em
+}
+
+.editor-statusbar .lines::before {
+	content: 'lines: '
+}
+
+.editor-statusbar .words::before {
+	content: 'words: '
+}
+
+.editor-statusbar .characters::before {
+	content: 'characters: '
+}

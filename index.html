@@ -10,18 +10,42 @@
 
 	<style>
 		body {
+			font-family: Arial, Helvetica, sans-serif;
 			padding: 0;
 			margin: 0;
 			min-height: 100vdh;
 
 			background-color: rgb(40,40,40);
 		}
+		.header {
+			display: grid;
+			place-items: center;
+			color: goldenrod;
+			padding-top: 32px;
+		}
+		.header h1, .header a {
+			margin: 0;
+			padding: 0;
+		}
+		.header a {
+			padding-top: 8px;
+			opacity: 0.5;
+			color: inherit;
+		}
+
 		.wrapper {
 			padding: 12px;
+			display: grid;
+			padding-inline: 10vw;
+			height: 70dvh;
 		}
 	</style>
 </head>
 <body>
+	<div class="header">
+		<h1>Mirage MDE</h1>
+		<a href="https://github.com/RoenLie">https://github.com/RoenLie</a>
+	</div>
 	<div class="wrapper">
 		<mirage-mde></mirage-mde>
 	</div>

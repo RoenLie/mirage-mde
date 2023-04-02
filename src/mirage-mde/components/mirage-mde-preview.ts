@@ -77,6 +77,9 @@ export class PreviewElement extends EnhancedElement {
 
 	public static override styles = [
 		css`
+		* {
+			box-sizing: border-box;
+		}
 		:host {
 			display: grid;
 			overflow: auto;
