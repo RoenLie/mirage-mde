@@ -1,82 +1,63 @@
+import { LitElement } from 'lit';
 import { marked } from 'marked';
 
+import { BuiltInAction, StringLiteral } from './action-register.js';
 import { CodeMirror } from './codemirror/Codemirror.js';
 import { MirageMDE } from './mirage-mde.js';
-import { IconClassMap, Shortcuts } from './mirage-mde-utilities.js';
 
 
-interface ArrayOneOrMore<T> extends Array<T> {
-	0: T;
+export type RecordOf<T, K extends keyof any, V> = T & Record<K, V>;
+
+export type ToolbarItem = ToolbarSeparator | ToolbarButton | ToolbarDropdown;
+
+export interface ToolbarButtonBase {
+	name: StringLiteral | BuiltInAction;
+	iconUrl: string;
+	title: string;
+	shortcut?: string;
+	noDisable?: boolean;
+	noMobile?: boolean;
 }
 
+export interface ToolbarDropdown extends ToolbarButtonBase {
+	type: 'dropdown';
+	children: (StringLiteral | BuiltInAction)[];
+}
 
-type RecordOf<T = object> = T & Record<keyof any, any>;
+export interface ToolbarButton extends ToolbarButtonBase {
+	type: 'button';
+	action: string | ((editor: MirageMDE) => void);
+	text?: string;
+}
 
+export interface ToolbarSeparator {
+	type: 'separator';
+}
 
-export type ToolbarButton =
-    'bold'
-    | 'italic'
-    | 'quote'
-    | 'unordered-list'
-    | 'ordered-list'
-    | 'link'
-    | 'image'
-    | 'upload-image'
-    | 'strikethrough'
-    | 'code'
-    | 'table'
-    | 'redo'
-    | 'heading'
-    | 'undo'
-    | 'heading-bigger'
-    | 'heading-smaller'
-    | 'heading-1'
-    | 'heading-2'
-    | 'heading-3'
-    | 'clean-block'
-    | 'horizontal-rule'
-    | 'preview'
-    | 'side-by-side'
-    | 'fullscreen'
-    | 'guide'
-    | 'separator-1'
-    | 'separator-2'
-    | 'separator-3'
-    | 'separator-4'
-    | 'separator-5';
-
-export type ToolbarItem = '|' | ToolbarItemIncomplete | ToolbarButton | ToolbarIcon | ToolbarDropdownIcon;
-
-
-interface TimeFormatOptions {
+export interface TimeFormatOptions {
 	locale?: string | string[];
 	format?: Intl.DateTimeFormatOptions;
 }
 
-interface AutoSaveOptions {
-	enabled?: boolean;
+export interface AutoSaveOptions {
+	enabled: boolean;
+	uniqueId: string;
 	delay?: number;
 	submit_delay?: number;
-	uniqueId: string;
-	unique_id?: string;
-	timeFormat?: TimeFormatOptions;
 	text?: string;
+	timeFormat?: TimeFormatOptions;
 	foundSavedValue?: boolean;
-	binded?: boolean;
+	bound?: boolean;
 	loaded?: boolean;
 }
 
-interface BlockStyleOptions {
+export interface BlockStyleOptions {
 	bold?: string;
 	code?: string;
 	italic?: string;
 }
 
-interface CustomAttributes {
-	[key: string]: string;
-}
-
-interface InsertTextOptions {
+export interface InsertTextOptions {
 	horizontalRule?: [string, string];
 	image?: [string, string];
 	link?: [string, string];
@@ -84,20 +65,21 @@ interface InsertTextOptions {
 	uploadedImage?: [string, string];
 }
 
-interface ParsingOptions {
+export interface ParsingOptions {
 	name?: string;
 	allowAtxHeaderWithoutSpace?: boolean;
 	strikethrough?: boolean;
 	underscoresBreakWords?: boolean;
 	gitHubSpice?: boolean;
+	highlightFormatting?: boolean;
 }
 
-interface PromptTexts {
+export interface PromptTexts {
 	image?: string;
 	link?: string;
 }
 
-interface RenderingOptions {
+export interface RenderingOptions {
 	codeSyntaxHighlighting?: boolean;
 	hljs?: any;
 	markedOptions?: marked.MarkedOptions;
@@ -105,40 +87,14 @@ interface RenderingOptions {
 	singleLineBreaks?: boolean;
 }
 
-
 export interface StatusBarItem {
 	className: string;
-	defaultValue: (element: HTMLElement) => void;
-	onUpdate: (element: HTMLElement) => void;
-	onActivity: (element: HTMLElement) => void;
+	value: string;
+	onUpdate: () => string;
+	onActivity: () => string;
 }
 
-export interface ToolbarDropdownIcon {
-	name: ToolbarButton;
-	children: ArrayOneOrMore<ToolbarIcon | ToolbarButton>;
-	className: string;
-	title: string;
-	noDisable?: boolean;
-	noMobile?: boolean;
-}
-
-export interface ToolbarIcon {
-	name: ToolbarButton;
-	action: string | ((editor: MirageMDE) => void);
-	className: string;
-	title: string;
-	noDisable?: boolean;
-	noMobile?: boolean;
-	icon?: string;
-	attributes?: CustomAttributes;
-}
-
-export interface ToolbarItemIncomplete {
-	name: ToolbarButton;
-	default?: boolean | undefined;
-}
-
-interface ImageTextsOptions {
+export interface ImageTextsOptions {
 	sbInit?: string;
 	sbOnDragEnter?: string;
 	sbOnDrop?: string;
@@ -147,7 +103,7 @@ interface ImageTextsOptions {
 	sizeUnits?: string;
 }
 
-interface ImageErrorTextsOptions {
+export interface ImageErrorTextsOptions {
 	noFileGiven?: string;
 	typeNotAllowed?: string;
 	fileTooLarge?: string;
@@ -155,54 +111,43 @@ interface ImageErrorTextsOptions {
 	filesTooLarge?: string;
 }
 
-interface OverlayModeOptions {
+export interface OverlayModeOptions {
 	mode: CodeMirror.Mode<any>;
 	combine?: boolean;
 }
 
-interface SpellCheckerOptions {
+export interface SpellCheckerOptions {
 	codeMirrorInstance: typeof CodeMirror;
 }
 
 export interface Options {
-	parent?: MirageMDE;
-	autoDownloadFontAwesome?: boolean;
+	host?: LitElement;
 	autofocus?: boolean;
 	autosave?: AutoSaveOptions;
 	autoRefresh?: boolean | { delay: number; };
 	blockStyles?: BlockStyleOptions;
-	element?: HTMLTextAreaElement;
-	forceSync?: boolean;
-	toolbarGuideIcon?: boolean;
-	hideIcons?: ReadonlyArray<ToolbarButton>;
+	hideIcons?: (StringLiteral | BuiltInAction)[];
 	indentWithTabs?: boolean;
 	initialValue?: string;
 	insertTexts?: InsertTextOptions;
 	lineNumbers?: boolean;
 	lineWrapping?: boolean;
-	minHeight?: string;
-	maxHeight?: string;
 	parsingConfig?: ParsingOptions;
 	placeholder?: string;
-	previewClass?: string | ReadonlyArray<string>;
 	previewImagesInEditor?: boolean;
-	imagesPreviewHandler?: (src: string) => string,
-	previewRender?: (markdownPlaintext: string, previewElement: HTMLElement) => string | null;
+	imagesPreviewHandler?: (src: string) => string;
+	previewRender?: (markdownPlaintext: string) => string;
 	promptURLs?: boolean;
 	renderingConfig?: RenderingOptions;
-	shortcuts?: Shortcuts;
-	showIcons?: ReadonlyArray<ToolbarButton>;
 	spellChecker?: boolean | ((options: SpellCheckerOptions) => void);
 	inputStyle?: 'textarea' | 'contenteditable';
 	nativeSpellcheck?: boolean;
-	sideBySideFullscreen?: boolean;
-	status?: boolean | Array<string | StatusBarItem>;
+	status?: (string | StatusBarItem)[];
 	styleSelectedText?: boolean;
 	tabSize?: number;
-	toolbar?: boolean | Array<ToolbarItem>;
-	toolbarTips?: boolean;
-	toolbarButtonClassPrefix?: string;
-	onToggleFullScreen?: (goingIntoFullScreen: boolean) => void;
+	toolbar?: (StringLiteral | BuiltInAction)[];
+	toolbarActions?: (ToolbarButton | ToolbarDropdown)[];
+	toolbarTooltips?: boolean;
 	theme?: string;
 	scrollbarStyle?: keyof CodeMirror.ScrollbarModels;
 	unorderedListStyle?: '*' | '-' | '+';
@@ -216,11 +161,9 @@ export interface Options {
 	imageCSRFName?: string;
 	imageCSRFHeader?: boolean;
 	imageTexts?: ImageTextsOptions;
-	errorMessages?: RecordOf<ImageErrorTextsOptions>;
+	errorMessages?: RecordOf<ImageErrorTextsOptions, string, string>;
 	errorCallback?: (errorMessage: string) => void;
 	promptTexts?: PromptTexts;
-	syncSideBySidePreviewScroll?: boolean;
 	overlayMode?: OverlayModeOptions;
 	direction?: 'ltr' | 'rtl';
-	iconClassMap?: IconClassMap;
 }

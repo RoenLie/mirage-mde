@@ -1,0 +1,107 @@
+.markdown-body.dark .hljs {
+	display: block;
+	overflow-x: auto;
+	padding: 0.5em;
+
+	color: #cdd9e5;
+	background: #22272e;
+}
+
+.markdown-body.dark .hljs-comment,
+.markdown-body.dark .hljs-punctuation {
+	color: #768390;
+}
+
+.markdown-body.dark .hljs-attr,
+.markdown-body.dark .hljs-attribute,
+.markdown-body.dark .hljs-meta,
+.markdown-body.dark .hljs-selector-attr,
+.markdown-body.dark .hljs-selector-class,
+.markdown-body.dark .hljs-selector-id {
+	color: #6cb6ff;
+}
+
+.markdown-body.dark .hljs-variable,
+.markdown-body.dark .hljs-literal,
+.markdown-body.dark .hljs-number,
+.markdown-body.dark .hljs-doctag {
+	color: #f69d50;
+}
+
+.markdown-body.dark .hljs-params {
+	color: #cdd9e5;
+}
+
+.markdown-body.dark .hljs-function {
+	color: #dcbdfb;
+}
+
+.markdown-body.dark .hljs-class,
+.markdown-body.dark .hljs-tag,
+.markdown-body.dark .hljs-title,
+.markdown-body.dark .hljs-built_in {
+	color: #8ddb8c;
+}
+
+.markdown-body.dark .hljs-keyword,
+.markdown-body.dark .hljs-type,
+.markdown-body.dark .hljs-builtin-name,
+.markdown-body.dark .hljs-meta-keyword,
+.markdown-body.dark .hljs-template-tag,
+.markdown-body.dark .hljs-template-variable {
+	color: #f47067;
+}
+
+.markdown-body.dark .hljs-string,
+.markdown-body.dark .hljs-undefined {
+	color: #96d0ff;
+}
+
+.markdown-body.dark .hljs-regexp {
+	color: #96d0ff;
+}
+
+.markdown-body.dark .hljs-symbol {
+	color: #6cb6ff;
+}
+
+.markdown-body.dark .hljs-bullet {
+	color: #f69d50;
+}
+
+.markdown-body.dark .hljs-section {
+	color: #6cb6ff;
+	font-weight: bold;
+}
+
+.markdown-body.dark .hljs-quote,
+.markdown-body.dark .hljs-name,
+.markdown-body.dark .hljs-selector-tag,
+.markdown-body.dark .hljs-selector-pseudo {
+	color: #8ddb8c;
+}
+
+.markdown-body.dark .hljs-emphasis {
+	color: #f69d50;
+	font-style: italic;
+}
+
+.markdown-body.dark .hljs-strong {
+	color: #f69d50;
+	font-weight: bold;
+}
+
+.markdown-body.dark .hljs-deletion {
+	color: #ff938a;
+	background-color: #78191b;
+}
+
+.markdown-body.dark .hljs-addition {
+	color: #8ddb8c;
+	background-color: #113417;
+}
+
+.markdown-body.dark .hljs-link {
+	color: #96d0ff;
+	font-style: underline;
+}

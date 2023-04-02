@@ -1,6 +1,7 @@
 import { globby } from 'globby';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import Inspect from 'vite-plugin-inspect';
 
 import { getExternalImportPaths } from './build/get-import-paths.js';
 
@@ -10,6 +11,9 @@ export default defineConfig(async () => {
 	const externalImportPaths = await getExternalImportPaths('./src');
 
 	return {
+		plugins: [ (Inspect as any)() ],
+
+
 		/** Do not include the public directory in the package output. */
 		publicDir: false,
 
