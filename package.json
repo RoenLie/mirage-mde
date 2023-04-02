@@ -16,7 +16,7 @@
 	"scripts": {
 		"dev": "vite",
 		"dev:codespaces": "vite dev --host",
-		"build": "vite && tsc --project ./src/tsconfig.json",
+		"build": "vite build && tsc --project ./src/tsconfig.json",
 		"build:preview": "vite --config ./build/vite.config.ts build",
 		"preview": "vite --config ./build/vite.config.ts preview",
 		"updatedeps": "pnpm update --latest --interactive",
