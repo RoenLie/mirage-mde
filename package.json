@@ -16,8 +16,9 @@
 	"scripts": {
 		"dev": "vite",
 		"dev:codespaces": "vite dev --host",
-		"build": "vite build && tsc --project ./src/tsconfig.json",
-		"preview": "vite preview",
+		"build": "vite && tsc --project ./src/tsconfig.json",
+		"build:preview": "vite --config ./build/vite.config.ts build",
+		"preview": "vite --config ./build/vite.config.ts preview",
 		"updatedeps": "pnpm update --latest --interactive",
 		"typecheck": "tsc --project ./tsconfig.json",
 		"increment-version": "node --loader tsm ./build/increment-version.ts"
