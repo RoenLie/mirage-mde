@@ -278,14 +278,13 @@ actionRegister.set('preview', {
 	title:     'Toggle Preview',
 });
 actionRegister.set('side-by-side', {
-	type:      'button',
-	name:      'side-by-side',
-	action:    toggleSideBySide,
-	shortcut:  'F9',
-	iconUrl:   'https://icons.getbootstrap.com/assets/icons/layout-sidebar-inset-reverse.svg',
-	title:     'Toggle Side by Side',
-	noDisable: true,
-	noMobile:  true,
+	type:     'button',
+	name:     'side-by-side',
+	action:   toggleSideBySide,
+	shortcut: 'F9',
+	iconUrl:  'https://icons.getbootstrap.com/assets/icons/layout-sidebar-inset-reverse.svg',
+	title:    'Toggle Side by Side',
+	noMobile: true,
 });
 actionRegister.set('fullscreen', {
 	type:      'button',
@@ -298,20 +297,18 @@ actionRegister.set('fullscreen', {
 	noMobile:  true,
 });
 actionRegister.set('undo', {
-	type:      'button',
-	name:      'undo',
-	action:    undo,
-	iconUrl:   'https://icons.getbootstrap.com/assets/icons/arrow-counterclockwise.svg',
-	title:     'Undo',
-	noDisable: true,
+	type:    'button',
+	name:    'undo',
+	action:  undo,
+	iconUrl: 'https://icons.getbootstrap.com/assets/icons/arrow-counterclockwise.svg',
+	title:   'Undo',
 });
 actionRegister.set('redo', {
-	type:      'button',
-	name:      'redo',
-	action:    redo,
-	iconUrl:   'https://icons.getbootstrap.com/assets/icons/arrow-clockwise.svg',
-	title:     'Redo',
-	noDisable: true,
+	type:    'button',
+	name:    'redo',
+	action:  redo,
+	iconUrl: 'https://icons.getbootstrap.com/assets/icons/arrow-clockwise.svg',
+	title:   'Redo',
 });
 actionRegister.set('guide', {
 	type:      'button',

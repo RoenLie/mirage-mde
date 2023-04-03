@@ -10,6 +10,7 @@ import { when } from 'lit/directives/when.js';
 import { actionRegister } from '../action-register.js';
 import { MirageMDE } from '../mirage-mde.js';
 import { Options, ToolbarButton } from '../mirage-mde-types.js';
+import { action } from '../utilities/create-action.js';
 import { fixShortcut, isMac } from '../utilities/fix-shortcut.js';
 import { getState } from '../utilities/get-state.js';
 import { isMobile } from '../utilities/is-mobile.js';
@@ -69,16 +70,14 @@ export class ToolbarElement extends LitElement {
 
 		const listener = (ev: Event) => {
 			ev.preventDefault();
-
-			if (typeof item.action === 'function')
-				item.action(this.scope);
-
-			if (typeof item.action === 'string')
-				globalThis.open(item.action, '_blank');
+			action(item, this.scope)();
 		};
 
 		const elRef = createRef<HTMLElement>();
 		this.scope.toolbarElements[item.name] = elRef;
+
+		const previewActive = !!this.scope.options.host?.classList.contains('preview');
+		const disabled = (!!item.noMobile && isMobile()) || (previewActive && !item.noDisable);
 
 		return html`
 		<button
@@ -86,7 +85,7 @@ export class ToolbarElement extends LitElement {
 			title     =${ title }
 			tabindex  ="-1"
 			aria-label=${ item.title }
-			?disabled=${ !!item.noMobile && isMobile() }
+			?disabled=${ disabled }
 			@click=${ listener }
 			${ ref(elRef) }
 		>

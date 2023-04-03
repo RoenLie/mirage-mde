@@ -6,6 +6,7 @@ import { actionRegister } from '../action-register.js';
 import { toggleFullScreen } from '../actions/toggle-fullscreen.js';
 import { CodeMirrorSpellChecker } from '../codemirror/Codemirror.js';
 import { MirageMDE } from '../mirage-mde.js';
+import { action } from '../utilities/create-action.js';
 import { fixShortcut } from '../utilities/fix-shortcut.js';
 import { isMobile } from '../utilities/is-mobile.js';
 import codemirrorStyles from './codemirror-theme1.scss?inline';
@@ -135,12 +136,7 @@ export class EditorElement extends LitElement {
 				return;
 
 			const shortcut = fixShortcut(item.shortcut);
-			keyMaps[shortcut] = () => {
-				if (typeof item.action === 'function')
-					item.action(scope);
-				if (typeof item.action === 'string')
-					globalThis.open(item.action, '_blank');
-			};
+			keyMaps[shortcut] = action(item, scope);
 		});
 
 		// Library markdown functions.

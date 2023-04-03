@@ -31,4 +31,5 @@ export const togglePreview = (editor: MirageMDE, force?: boolean) => {
 
 	// Update host to apply new css classes.
 	host?.requestUpdate();
+	gui.toolbar.requestUpdate();
 };
