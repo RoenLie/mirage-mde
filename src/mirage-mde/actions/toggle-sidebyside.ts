@@ -2,13 +2,13 @@ import { MirageMDE } from '../mirage-mde.js';
 
 
 let editorToPreview = (
-	editor: MirageMDE,
+	scope: MirageMDE,
 ) => {
-	const { gui, options } = editor;
+	const { gui, options, editor } = scope;
 	if (!gui.preview)
 		return;
 
-	const newValue = options.previewRender?.(editor.value()) ?? '';
+	const newValue = options.previewRender?.(editor.state.sliceDoc()) ?? '';
 	gui.preview.setContent(newValue);
 };
 
@@ -16,12 +16,12 @@ let editorToPreview = (
 /**
  * Toggle side by side preview
  */
-export const toggleSideBySide = (editor: MirageMDE, force?: boolean) => {
-	const { guiClasses, options: { host } } = editor;
-	const cm = editor.codemirror;
+export const toggleSideBySide = (scope: MirageMDE, force?: boolean) => {
+	const { guiClasses, options: { host } } = scope;
+	const cm = scope.codemirror;
 	const show = !(force ?? host?.classList.contains('sidebyside'));
-	const previewButton = editor.toolbarElements['preview']?.value;
-	const sidebysideButton = editor.toolbarElements['side-by-side']?.value;
+	const previewButton = scope.toolbarElements['preview']?.value;
+	const sidebysideButton = scope.toolbarElements['side-by-side']?.value;
 
 	if (show) {
 		guiClasses.editor['hidden'] = false;
@@ -39,16 +39,17 @@ export const toggleSideBySide = (editor: MirageMDE, force?: boolean) => {
 	}
 
 	if (show) {
-		editorToPreview(editor);
-		cm.on('update', () => editorToPreview(editor));
+		//
+		editorToPreview(scope);
+		//cm.on('update', () => editorToPreview(editor));
 	}
 	else {
-		cm.off('update', () => editorToPreview(editor));
+		//cm.off('update', () => editorToPreview(editor));
 	}
 
 	// Update host to apply new css classes.
 	host?.requestUpdate();
 
 	// Refresh to rerender text after.
-	setTimeout(() => cm.refresh());
+	//setTimeout(() => cm.refresh());
 };

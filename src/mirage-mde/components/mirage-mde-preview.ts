@@ -21,6 +21,8 @@ export class PreviewElement extends EnhancedElement {
 	}
 
 	public create() {
+		return;
+
 		// Only allow creating once.
 		if (this.isCreated)
 			return;

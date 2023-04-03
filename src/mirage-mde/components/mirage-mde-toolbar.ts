@@ -24,12 +24,16 @@ export class ToolbarElement extends LitElement {
 	@state() private items: Options['toolbar'] = [];
 
 	public create() {
+		//return;
+
 		this.items = this.scope.toolbar.filter(
 			action => !this.scope.options.hideIcons?.includes(action),
 		);
 
 		if (!this.items?.length)
 			return;
+
+		return;
 
 		const cm = this.scope.codemirror;
 		cm.on('cursorActivity', () => {

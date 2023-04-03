@@ -25,6 +25,8 @@ export class StatusbarElement extends LitElement {
 	protected itemProps: Record<string, Item>;
 
 	public create() {
+		return;
+
 		const options = this.scope.options;
 		const status = options.status;
 		const cm = this.scope.codemirror;

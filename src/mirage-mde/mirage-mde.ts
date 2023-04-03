@@ -8,7 +8,7 @@ import {
 	uploadImagesUsingCustomFunction,
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
-import { CodeMirror } from './codemirror/Codemirror.js';
+import { CodeMirror, EditorView } from './codemirror/Codemirror.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
 import { StatusbarElement } from './components/mirage-mde-statusbar.js';
@@ -47,6 +47,7 @@ type GUIClasses = Record<keyof GUIElements, Partial<Record<'hidden', boolean>>>;
 export class MirageMDE {
 
 	public options: Options;
+	public editor: EditorView;
 	public codemirror: CodeMirror.Editor;
 	public element: HTMLTextAreaElement;
 	public toolbar: (StringLiteral | BuiltInAction)[];
