@@ -8,7 +8,7 @@ import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
 import { Compartment, EditorState } from '@codemirror/state';
 import {
 	crosshairCursor, drawSelection, dropCursor, EditorView, highlightActiveLine,
-	highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection,
+	highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection, tooltips,
 } from '@codemirror/view';
 import { basicDark } from 'cm6-theme-basic-dark';
 import { css, html, LitElement, unsafeCSS } from 'lit';
@@ -63,6 +63,22 @@ export class EditorElement extends LitElement {
 					...completionKeymap,
 					...lintKeymap,
 				]),
+				EditorView.domEventHandlers({
+					scroll: (ev) => {
+						const preview = this.scope.gui.preview;
+						if (preview.editorScroll)
+							return preview.editorScroll = false;
+
+						preview.previewScroll = true;
+
+						const target = ev.target as HTMLElement;
+						const height = target.scrollHeight - target.clientHeight;
+						const ratio = target.scrollTop / height;
+						const move = (preview.scrollHeight - preview.clientHeight) * ratio;
+
+						preview.scrollTop = move;
+					},
+				}),
 				EditorState.tabSize.of(3),
 				EditorView.lineWrapping,
 				markdown({
