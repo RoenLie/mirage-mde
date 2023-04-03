@@ -46,6 +46,12 @@ export type BuiltInAction = [
 	'guide',
 	'undo',
 	'redo',
+	'separator-1',
+	'separator-2',
+	'separator-3',
+	'separator-4',
+	'separator-5',
+	'separator-6',
 ][number]
 
 
@@ -53,38 +59,44 @@ export const defaultToolbar: BuiltInAction[] = [
 	'bold',
 	'italic',
 	'strikethrough',
-	'separator',
+	'separator-1',
 	'heading',
 	'heading-bigger',
 	'heading-smaller',
 	'heading-1',
 	'heading-2',
 	'heading-3',
-	'separator',
+	'separator-2',
 	'code',
 	'ordered-list',
 	'unordered-list',
 	'clean-block',
-	'separator',
+	'separator-3',
 	'link',
 	'image',
 	'upload-image',
 	'table',
 	'horizontal-rule',
-	'separator',
+	'separator-4',
 	'preview',
 	'side-by-side',
 	'fullscreen',
-	'separator',
+	'separator-5',
 	'undo',
 	'redo',
-	'separator',
+	'separator-6',
 	'guide',
 ];
 
 
 export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem>();
-actionRegister.set('separator', { type: 'separator' });
+actionRegister.set('separator',   { type: 'separator' });
+actionRegister.set('separator-1', { type: 'separator' });
+actionRegister.set('separator-2', { type: 'separator' });
+actionRegister.set('separator-3', { type: 'separator' });
+actionRegister.set('separator-4', { type: 'separator' });
+actionRegister.set('separator-5', { type: 'separator' });
+actionRegister.set('separator-6', { type: 'separator' });
 actionRegister.set('bold', {
 	type:     'button',
 	name:     'bold',

@@ -26,10 +26,11 @@ import {
 	Options,
 	ParsingOptions,
 	TimeFormatOptions,
+	ToolbarItem,
 } from './mirage-mde-types.js';
 import { autosave } from './utilities/autosave.js';
+import { deepMerge } from './utilities/deep-merge.js';
 import { markdown } from './utilities/markdown.js';
-import { extend } from './utilities/merge-properties.js';
 import { openBrowseFileWindow } from './utilities/open-file-window.js';
 import { value } from './utilities/value.js';
 
@@ -69,9 +70,13 @@ export class MirageMDE {
 		this.toolbar = [ ...options.toolbar ?? defaultToolbar ];
 
 		// Register any additional toolbar actions.
-		options.toolbarActions?.forEach(
-			action => actionRegister.set(action.name, action),
-		);
+		options.toolbarActions?.forEach(action => {
+			let existing = (actionRegister.get(action.name) ?? {}) as ToolbarItem;
+			if (action.type === existing.type)
+				actionRegister.set(action.name, deepMerge<ToolbarItem>([ existing, action ]));
+			else
+				actionRegister.set(action.name, action);
+		});
 
 		// Handle status bar
 		options.status ??= [ 'autosave', 'lines', 'words', 'cursor' ];
@@ -82,28 +87,27 @@ export class MirageMDE {
 		options.previewRender ??= (plainText) => markdown(this, plainText) ?? '';
 
 		// Set default options for parsing config
-		options.parsingConfig = extend<ParsingOptions>({
-			highlightFormatting: true, // needed for toggleCodeBlock to detect types of code
-		}, options.parsingConfig || {});
+		options.parsingConfig = deepMerge<ParsingOptions>([
+			{
+				highlightFormatting: true, // needed for toggleCodeBlock to detect types of code
+			}, options.parsingConfig || {},
+		]);
 
 		// Merging the insertTexts, with the given options
-		options.insertTexts = extend<InsertTextOptions>({}, insertTexts as any, options.insertTexts || {});
+		options.insertTexts = deepMerge<InsertTextOptions>([ insertTexts as any, options.insertTexts || {} ]);
 
 		// Merging the promptTexts, with the given options
-		options.promptTexts = extend({}, promptTexts, options.promptTexts || {});
+		options.promptTexts = deepMerge([ promptTexts, options.promptTexts || {} ]);
 
 		// Merging the blockStyles, with the given options
-		options.blockStyles = extend({}, blockStyles, options.blockStyles || {});
+		options.blockStyles = deepMerge([ blockStyles, options.blockStyles || {} ]);
 
 		if (options.autosave) {
 			// Merging the Autosave timeFormat, with the given options
-			options.autosave.timeFormat = extend<TimeFormatOptions>(
-				{}, timeFormat as any, options.autosave.timeFormat || {},
+			options.autosave.timeFormat = deepMerge<TimeFormatOptions>(
+				[ timeFormat as any, options.autosave.timeFormat || {} ],
 			);
 		}
-
-		// Merging the shortcuts, with the given options
-		//options.shortcuts = extend<Shortcuts>({}, shortcuts, options.shortcuts || {});
 
 		options.direction = options.direction ?? 'ltr';
 
@@ -115,8 +119,8 @@ export class MirageMDE {
 		options.uploadImage       = options.uploadImage ?? false;
 		options.imageMaxSize      = options.imageMaxSize ?? 2097152; // 1024 * 1024 * 2
 		options.imageAccept       = options.imageAccept ?? 'image/png, image/jpeg, image/gif, image/avif';
-		options.imageTexts        = extend({}, imageTexts, options.imageTexts || {});
-		options.errorMessages     = extend({}, errorMessages, options.errorMessages || {});
+		options.imageTexts        = deepMerge([ imageTexts, options.imageTexts || {} ]);
+		options.errorMessages     = deepMerge([ errorMessages, options.errorMessages || {} ]);
 		options.imagePathAbsolute = options.imagePathAbsolute ?? false;
 		options.imageCSRFName     = options.imageCSRFName ?? 'csrfmiddlewaretoken';
 		options.imageCSRFHeader   = options.imageCSRFHeader ?? false;

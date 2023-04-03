@@ -12,8 +12,8 @@ export type ToolbarItem = ToolbarSeparator | ToolbarButton | ToolbarDropdown;
 
 export interface ToolbarButtonBase {
 	name: StringLiteral | BuiltInAction;
-	iconUrl: string;
-	title: string;
+	iconUrl?: string;
+	title?: string;
 	shortcut?: string;
 	noDisable?: boolean;
 	noMobile?: boolean;
@@ -26,7 +26,7 @@ export interface ToolbarDropdown extends ToolbarButtonBase {
 
 export interface ToolbarButton extends ToolbarButtonBase {
 	type: 'button';
-	action: string | ((editor: MirageMDE) => void);
+	action?: string | ((editor: MirageMDE) => void);
 	text?: string;
 }
 

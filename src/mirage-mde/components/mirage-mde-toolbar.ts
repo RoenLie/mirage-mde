@@ -52,7 +52,7 @@ export class ToolbarElement extends LitElement {
 	}
 
 	protected createTooltip(item: ToolbarButton) {
-		let tooltip = item.title;
+		let tooltip = item.title ?? '';
 		if (item.shortcut)
 			tooltip += ' (' + fixShortcut(item.shortcut) + ')';
 

@@ -1,5 +1,4 @@
 import { MirageMDE } from '../mirage-mde.js';
-import { toggleSideBySide } from './toggle-sidebyside.js';
 
 
 let saved_overflow = '';
