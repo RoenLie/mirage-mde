@@ -4,15 +4,21 @@ import { MirageMDE } from '../mirage-mde.js';
 /**
  * Get or set the text content.
  */
-export const value = (editor: MirageMDE, val?: string): MirageMDE | string => {
-	const cm = editor.codemirror;
+export const value = (scope: MirageMDE, val?: string): MirageMDE | string => {
+	const state = scope.editor.state;
 
 	if (val === undefined) {
-		return cm.getValue();
+		return state.doc.toString();
 	}
 	else {
-		cm.getDoc().setValue(val);
+		state.update({
+			changes: {
+				from:   0,
+				to:     state.doc.length,
+				insert: val,
+			},
+		});
 
-		return editor;
+		return scope;
 	}
 };

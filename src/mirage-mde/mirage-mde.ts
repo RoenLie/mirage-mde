@@ -1,3 +1,4 @@
+import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
 import { actionRegister, BuiltInAction, defaultToolbar, StringLiteral } from './action-register.js';
@@ -8,7 +9,7 @@ import {
 	uploadImagesUsingCustomFunction,
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
-import { CodeMirror, EditorView } from './codemirror/Codemirror.js';
+import { EditorView } from './codemirror/Codemirror.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
 import { StatusbarElement } from './components/mirage-mde-statusbar.js';
@@ -47,8 +48,8 @@ type GUIClasses = Record<keyof GUIElements, Partial<Record<'hidden', boolean>>>;
 export class MirageMDE {
 
 	public options: Options;
+	public host: LitElement;
 	public editor: EditorView;
-	public codemirror: CodeMirror.Editor;
 	public element: HTMLTextAreaElement;
 	public toolbar: (StringLiteral | BuiltInAction)[];
 	public toolbarElements: Record<string, Ref<HTMLElement>> = {};
@@ -63,9 +64,11 @@ export class MirageMDE {
 		toolbar:   {},
 	};
 
-
 	constructor(options: Options = {} as any) {
 		this.options = options;
+
+		// Assign the host.
+		this.host = options.host;
 
 		// Handle toolbar
 		this.toolbar = [ ...options.toolbar ?? defaultToolbar ];

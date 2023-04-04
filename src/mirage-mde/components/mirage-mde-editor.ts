@@ -1,20 +1,11 @@
-import { autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap } from '@codemirror/autocomplete';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
-import { bracketMatching, defaultHighlightStyle, foldGutter, foldKeymap, indentOnInput, syntaxHighlighting } from '@codemirror/language';
-import { languages } from '@codemirror/language-data';
-import { lintKeymap } from '@codemirror/lint';
-import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
-import { Compartment, EditorState } from '@codemirror/state';
-import {
-	crosshairCursor, drawSelection, dropCursor, EditorView, highlightActiveLine,
-	highlightActiveLineGutter, highlightSpecialChars, keymap, lineNumbers, rectangularSelection, tooltips,
-} from '@codemirror/view';
-import { basicDark } from 'cm6-theme-basic-dark';
+import { EditorView, keymap } from '@codemirror/view';
 import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { testDoc } from '../../doc-example.js';
+import { editorToPreview, handleEditorScroll } from '../actions/toggle-sidebyside.js';
+import { CodeMirrorSetup } from '../codemirror/codemirror-setup.js';
+import { toggleItalic } from '../codemirror/commands/toggle-italic.js';
 import { MirageMDE } from '../mirage-mde.js';
 import styles from './mirage-mde-editor.scss?inline';
 
@@ -37,60 +28,27 @@ export class EditorElement extends LitElement {
 		this.scope.editor = new EditorView({
 			doc:        testDoc,
 			extensions: [
-				lineNumbers(),
-				highlightActiveLineGutter(),
-				highlightSpecialChars(),
-				history(),
-				//foldGutter(),
-				drawSelection(),
-				dropCursor(),
-				EditorState.allowMultipleSelections.of(true),
-				indentOnInput(),
-				syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-				bracketMatching(),
-				closeBrackets(),
-				autocompletion(),
-				rectangularSelection(),
-				crosshairCursor(),
-				highlightActiveLine(),
-				highlightSelectionMatches(),
-				keymap.of([
-					...closeBracketsKeymap,
-					...defaultKeymap,
-					...searchKeymap,
-					...historyKeymap,
-					...foldKeymap,
-					...completionKeymap,
-					...lintKeymap,
-				]),
+				keymap.of([ { key: 'c-i', run: toggleItalic } ]),
+
 				EditorView.domEventHandlers({
-					scroll: (ev) => {
-						const preview = this.scope.gui.preview;
-						if (preview.editorScroll)
-							return preview.editorScroll = false;
-
-						preview.previewScroll = true;
-
-						const target = ev.target as HTMLElement;
-						const height = target.scrollHeight - target.clientHeight;
-						const ratio = target.scrollTop / height;
-						const move = (preview.scrollHeight - preview.clientHeight) * ratio;
-
-						preview.scrollTop = move;
-					},
+					scroll: (ev) => handleEditorScroll(ev, this.scope),
 				}),
-				EditorState.tabSize.of(3),
-				EditorView.lineWrapping,
-				markdown({
-					base:          markdownLanguage,
-					codeLanguages: languages,
-					addKeymap:     true,
-					extensions:    [],
+				EditorView.updateListener.of((update) => {
+					if (this.scope.options.host?.classList.contains('sidebyside')) {
+						if (update.docChanged)
+							editorToPreview(this.scope);
+					}
 				}),
-				basicDark,
+
+				// setup is added after, as codemirror has a first come first priority system.
+				// atleast for keybindings.
+				...CodeMirrorSetup,
 			],
 			parent: this.renderRoot,
 		});
+
+		// Do an initial conversion of the markdown to speed up opening the preview.
+		editorToPreview(this.scope);
 	}
 
 

@@ -1,33 +1,33 @@
 import { MirageMDE } from '../mirage-mde.js';
 
 
-let saved_overflow = '';
-let saved_height = '';
+const state = new WeakMap<MirageMDE, {
+	savedOverflow: string;
+	savedHeight: string;
+}>();
 
 
 /**
  * Toggle full screen of the editor.
  */
-export const toggleFullScreen = (
-	editor: MirageMDE,
-) => {
-	// Set fullscreen
-	const cm = editor.codemirror;
-	cm.setOption('fullScreen', !cm.getOption('fullScreen'));
-	const fullscreenState = cm.getOption('fullScreen');
+export const toggleFullScreen = (editor: MirageMDE) => {
+	const { host } = editor;
 
-	const { options: { host } } = editor;
+	const saved = state.get(editor) ?? { savedHeight: '', savedOverflow: '' };
+
+	const fullscreenState = !host.classList.contains('fullscreen');
 
 	// Prevent scrolling on body during fullscreen active
 	if (fullscreenState) {
-		saved_overflow = document.body.style.overflow;
-		saved_height = host?.style.height ?? '';
+		saved.savedHeight = host?.style.height ?? '';
+		saved.savedOverflow = document.body.style.overflow;
+
 		document.body.style.setProperty('overflow', 'hidden');
 		host?.style.setProperty('height', null);
 	}
 	else {
-		document.body.style.setProperty('overflow', saved_overflow);
-		host?.style.setProperty('height', saved_height);
+		document.body.style.setProperty('overflow', saved.savedOverflow);
+		host?.style.setProperty('height', saved.savedHeight);
 	}
 
 	host?.classList.toggle('fullscreen', fullscreenState);
@@ -35,4 +35,6 @@ export const toggleFullScreen = (
 
 	// Update toolbar button
 	editor.toolbarElements['fullscreen']?.value?.classList.toggle('active');
+
+	state.set(editor, saved);
 };

@@ -1,3 +1,4 @@
+import { Extension } from '@codemirror/state';
 import { LitElement } from 'lit';
 import { marked } from 'marked';
 
@@ -121,7 +122,8 @@ export interface SpellCheckerOptions {
 }
 
 export interface Options {
-	host?: LitElement;
+	extensions?: Extension[],
+	host: LitElement;
 	autofocus?: boolean;
 	autosave?: AutoSaveOptions;
 	autoRefresh?: boolean | { delay: number; };

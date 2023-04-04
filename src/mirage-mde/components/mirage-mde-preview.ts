@@ -4,6 +4,7 @@ import { css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { EnhancedElement } from '../../utilities/enhanced-element.js';
+import { handlePreviewScroll } from '../actions/toggle-sidebyside.js';
 import { MirageMDE } from '../mirage-mde.js';
 
 
@@ -37,22 +38,7 @@ export class PreviewElement extends EnhancedElement {
 		this.removeEventListener('scroll', this.handlePreviewScroll);
 	}
 
-	protected handlePreviewScroll = () => {
-		if (this.previewScroll)
-			return this.previewScroll = false;
-
-		this.editorScroll = true;
-
-		const editor = this.scope.editor;
-		const editorScrollHeight = editor.scrollDOM.scrollHeight;
-		const editorClientHeight = editor.scrollDOM.clientHeight;
-
-		const height = this.scrollHeight - this.clientHeight;
-		const ratio = this.scrollTop / height;
-		const move = (editorScrollHeight - editorClientHeight) * ratio;
-
-		editor.scrollDOM.scrollTo(0, move);
-	};
+	protected handlePreviewScroll = (ev: Event) => handlePreviewScroll(ev, this.scope);
 
 	protected override render() {
 		return html`

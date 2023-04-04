@@ -1,14 +1,12 @@
 import { MirageMDE } from '../mirage-mde.js';
 
 
-let editorToPreview = (
-	scope: MirageMDE,
-) => {
+export const editorToPreview = (scope: MirageMDE) => {
 	const { gui, options, editor } = scope;
 	if (!gui.preview)
 		return;
 
-	const newValue = options.previewRender?.(editor.state.sliceDoc()) ?? '';
+	const newValue = options.previewRender?.(editor.state.doc.toString()) ?? '';
 	gui.preview.setContent(newValue);
 };
 
@@ -17,8 +15,8 @@ let editorToPreview = (
  * Toggle side by side preview
  */
 export const toggleSideBySide = (scope: MirageMDE, force?: boolean) => {
-	const { guiClasses, options: { host } } = scope;
-	const cm = scope.codemirror;
+	const { guiClasses, host } = scope;
+
 	const show = !(force ?? host?.classList.contains('sidebyside'));
 	const previewButton = scope.toolbarElements['preview']?.value;
 	const sidebysideButton = scope.toolbarElements['side-by-side']?.value;
@@ -38,18 +36,48 @@ export const toggleSideBySide = (scope: MirageMDE, force?: boolean) => {
 		sidebysideButton?.classList.toggle('active', false);
 	}
 
-	if (show) {
-		//
+	if (show)
 		editorToPreview(scope);
-		//cm.on('update', () => editorToPreview(editor));
-	}
-	else {
-		//cm.off('update', () => editorToPreview(editor));
-	}
 
 	// Update host to apply new css classes.
 	host?.requestUpdate();
+};
 
-	// Refresh to rerender text after.
-	//setTimeout(() => cm.refresh());
+
+export const handleEditorScroll = (ev: Event, scope: MirageMDE) => {
+	const target = ev.target as HTMLElement | null;
+	if (!target)
+		return;
+
+	const preview = scope.gui.preview;
+	if (preview.editorScroll)
+		return preview.editorScroll = false;
+
+	preview.previewScroll = true;
+
+	const height = target.scrollHeight - target.clientHeight;
+	const ratio = target.scrollTop / height;
+	const move = (preview.scrollHeight - preview.clientHeight) * ratio;
+
+	preview.scrollTop = move;
+};
+
+
+export const handlePreviewScroll = (ev: Event, scope: MirageMDE) => {
+	const preview = scope.gui.preview;
+
+	if (preview.previewScroll)
+		return preview.previewScroll = false;
+
+	preview.editorScroll = true;
+
+	const editor = scope.editor;
+	const editorScrollHeight = editor.scrollDOM.scrollHeight;
+	const editorClientHeight = editor.scrollDOM.clientHeight;
+
+	const height = preview.scrollHeight - preview.clientHeight;
+	const ratio = preview.scrollTop / height;
+	const move = (editorScrollHeight - editorClientHeight) * ratio;
+
+	editor.scrollDOM.scrollTo(0, move);
 };
