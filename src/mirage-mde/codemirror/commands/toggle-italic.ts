@@ -1,18 +1,23 @@
 import { ChangeSpec } from '@codemirror/state';
 import { Command } from '@codemirror/view';
 
+import { findFirstWordToLastWord } from '../utils/string-helpers.js';
+
 
 export const toggleItalic: Command = (view) => {
+	const [ start, end ] = findFirstWordToLastWord(view.state)[0]!;
+
+
 	const transaction = view.state.changeByRange(range => {
 		const changes: ChangeSpec[] = [
 			{
-				from:   range.from,
-				to:     range.from,
+				from:   start,
+				to:     start,
 				insert: '*',
 			},
 			{
-				from:   range.to,
-				to:     range.to,
+				from:   end,
+				to:     end,
 				insert: '*',
 			},
 		];
@@ -24,13 +29,11 @@ export const toggleItalic: Command = (view) => {
 	});
 
 	if (!transaction.changes.empty) {
-		const { from, to } = view.state.selection.ranges[0]!;
-
 		view.dispatch(view.state.update(transaction));
 		view.dispatch({
 			selection: {
-				anchor: from,
-				head:   to + 2,
+				anchor: start,
+				head:   end + 2,
 			},
 		});
 	}

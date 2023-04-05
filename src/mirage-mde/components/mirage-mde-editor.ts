@@ -1,3 +1,4 @@
+import { syntaxTree } from '@codemirror/language';
 import { EditorView, keymap } from '@codemirror/view';
 import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -6,6 +7,8 @@ import { testDoc } from '../../doc-example.js';
 import { editorToPreview, handleEditorScroll } from '../actions/toggle-sidebyside.js';
 import { CodeMirrorSetup } from '../codemirror/codemirror-setup.js';
 import { toggleItalic } from '../codemirror/commands/toggle-italic.js';
+import { Tree } from '../codemirror/types/tree.js';
+import { isNumberInRange } from '../codemirror/utils/is-number-in-range.js';
 import { MirageMDE } from '../mirage-mde.js';
 import styles from './mirage-mde-editor.scss?inline';
 
@@ -38,6 +41,43 @@ export class EditorElement extends LitElement {
 						if (update.docChanged)
 							editorToPreview(this.scope);
 					}
+				}),
+				EditorView.updateListener.of(update => {
+					if (!update.selectionSet)
+						return;
+
+					const selection = update.state.selection.ranges[0]!;
+
+					const symbolMap: Record<string, string> = {
+						StrongEmphasis: 'bold',
+						Emphasis:       'italic',
+						Strikethrough:  'strikethrough',
+						OrderedList:    'ordered-list',
+						BulletList:     'unordered-list',
+						ATXHeading1:    'H1',
+						ATXHeading2:    'H2',
+						ATXHeading3:    'H3',
+						ATXHeading4:    'H4',
+						ATXHeading5:    'H5',
+						ATXHeading6:    'H6',
+					};
+
+					const activeSymbols: string[] = [];
+
+					const tree = (syntaxTree(update.state) as Tree).iterate({
+						enter: (node) => {
+							if (!isNumberInRange(node.from, node.to, selection.to))
+								return;
+
+							if (!symbolMap[node.name]!)
+								return;
+
+							activeSymbols.push(symbolMap[node.name]!);
+							//activeSymbols.push(node.name);
+						},
+					});
+
+					console.log(activeSymbols);
 				}),
 
 				// setup is added after, as codemirror has a first come first priority system.
