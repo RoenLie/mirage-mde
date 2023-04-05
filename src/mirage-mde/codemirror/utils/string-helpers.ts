@@ -1,27 +1,28 @@
 import { EditorState } from '@codemirror/state';
 
 
-const whitespace = [ ' ', '\t', '\n', '\r' ];
-
-
-export const findBeginningOfWord = (input: string, position: number): number | undefined => {
+export const findBeginningOfWord = (
+	input: string, position: number,
+) => {
 	if (position < 0 || position >= input.length)
 		return 0;
 
 	for (let i = position; i >= 0; i--) {
-		if (whitespace.includes(input[i]!))
+		if (!/[\w-]/.test(input[i]!))
 			return i - 1;
 	}
 
 	return 0;
 };
 
-export const findEndOfWord = (input: string, position: number): number | undefined => {
+export const findEndOfWord = (
+	input: string, position: number,
+) => {
 	if (position < 0 || position >= input.length)
 		return input.length - 1;
 
 	for (let i = position; i < input.length; i++) {
-		if (whitespace.includes(input[i]!))
+		if (!/[\w-]/.test(input[i]!))
 			return i + 1;
 	}
 
@@ -29,15 +30,14 @@ export const findEndOfWord = (input: string, position: number): number | undefin
 };
 
 export const cmFindBeginningOfWord = (
-	position: number,
-	state: EditorState,
-): number | undefined => {
+	position: number, state: EditorState,
+) => {
 	if (position < 0)
 		return 0;
 
 	for (let i = position; i >= 0; i--) {
 		const substring = state.doc.sliceString(i - 1, i);
-		if (whitespace.includes(substring))
+		if (!/[\w-]/.test(substring))
 			return i;
 	}
 
@@ -45,9 +45,8 @@ export const cmFindBeginningOfWord = (
 };
 
 export const cmfindEndOfWord = (
-	position: number,
-	state: EditorState,
-): number | undefined => {
+	position: number, state: EditorState,
+) => {
 	if (position < 0)
 		return 0;
 
@@ -58,22 +57,11 @@ export const cmfindEndOfWord = (
 		if (substring === undefined)
 			break;
 
-		if (whitespace.includes(substring))
+		if (!/[\w-]/.test(substring))
 			return i;
 
 		i++;
 	}
 
 	return i;
-};
-
-export const findFirstWordToLastWord = (state: EditorState) => {
-	const ranges = state.selection.ranges.map((value) => {
-		const start = cmFindBeginningOfWord(value.from, state);
-		const end = cmfindEndOfWord(value.to, state);
-
-		return [ start, end ];
-	});
-
-	return ranges as [start: number, end: number][];
 };

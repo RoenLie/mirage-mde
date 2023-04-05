@@ -11,7 +11,6 @@ import { basicDark } from 'cm6-theme-basic-dark';
 import { EditorView } from 'codemirror';
 
 import { toggleCheckbox } from './commands/toggle-checkbox.js';
-import { toggleItalic } from './commands/toggle-italic.js';
 import { undoTab } from './commands/undo-tab.js';
 
 
