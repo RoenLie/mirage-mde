@@ -1,4 +1,7 @@
+import { EditorView } from 'codemirror';
+
 import { MirageMDE } from '../mirage-mde.js';
+import { MMDECommand } from '../mirage-mde-types.js';
 
 
 const state = new WeakMap<MirageMDE, {
@@ -10,10 +13,10 @@ const state = new WeakMap<MirageMDE, {
 /**
  * Toggle full screen of the editor.
  */
-export const toggleFullScreen = (editor: MirageMDE) => {
-	const { host } = editor;
+export const toggleFullScreen: MMDECommand = (view: EditorView, scope: MirageMDE) => {
+	const { host } = scope;
 
-	const saved = state.get(editor) ?? { savedHeight: '', savedOverflow: '' };
+	const saved = state.get(scope) ?? { savedHeight: '', savedOverflow: '' };
 
 	const fullscreenState = !host.classList.contains('fullscreen');
 
@@ -34,7 +37,9 @@ export const toggleFullScreen = (editor: MirageMDE) => {
 	host?.requestUpdate();
 
 	// Update toolbar button
-	editor.toolbarElements['fullscreen']?.value?.classList.toggle('active');
+	scope.toolbarElements['fullscreen']?.value?.classList.toggle('active');
 
-	state.set(editor, saved);
+	state.set(scope, saved);
+
+	return true;
 };

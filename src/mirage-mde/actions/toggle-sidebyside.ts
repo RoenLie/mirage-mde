@@ -1,4 +1,7 @@
+import { EditorView } from 'codemirror';
+
 import { MirageMDE } from '../mirage-mde.js';
+import { MMDECommand } from '../mirage-mde-types.js';
 
 
 export const editorToPreview = (scope: MirageMDE) => {
@@ -14,7 +17,7 @@ export const editorToPreview = (scope: MirageMDE) => {
 /**
  * Toggle side by side preview
  */
-export const toggleSideBySide = (scope: MirageMDE, force?: boolean) => {
+export const toggleSideBySide: MMDECommand = (view: EditorView, scope: MirageMDE, force?: boolean) => {
 	const { guiClasses, host } = scope;
 
 	const show = !(force ?? host?.classList.contains('sidebyside'));
@@ -41,6 +44,8 @@ export const toggleSideBySide = (scope: MirageMDE, force?: boolean) => {
 
 	// Update host to apply new css classes.
 	host?.requestUpdate();
+
+	return true;
 };
 
 

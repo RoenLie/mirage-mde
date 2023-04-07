@@ -2,6 +2,7 @@ import './mirage-mde-icon.js';
 
 import { html, LitElement, nothing, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -11,8 +12,7 @@ import { actionRegister } from '../action-register.js';
 import { MirageMDE } from '../mirage-mde.js';
 import { Options, ToolbarButton } from '../mirage-mde-types.js';
 import { action } from '../utilities/create-action.js';
-import { fixShortcut, isMac } from '../utilities/fix-shortcut.js';
-import { getState } from '../utilities/get-state.js';
+import { hasCommonElement } from '../utilities/has-common-element.js';
 import { isMobile } from '../utilities/is-mobile.js';
 import styles from './mirage-mde-toolbar.scss?inline';
 
@@ -24,44 +24,17 @@ export class ToolbarElement extends LitElement {
 	@state() private items: Options['toolbar'] = [];
 
 	public create() {
-		//return;
-
 		this.items = this.scope.toolbar.filter(
 			action => !this.scope.options.hideIcons?.includes(action),
 		);
-
-		if (!this.items?.length)
-			return;
-
-		return;
-
-		const cm = this.scope.codemirror;
-		cm.on('cursorActivity', () => {
-			const stat = getState(cm);
-
-			for (let key in this.scope.toolbarElements) {
-				const ref = this.scope.toolbarElements[key];
-				const el = ref?.value;
-				if (!el)
-					continue;
-
-				if ([ 'fullscreen', 'side-by-side' ].includes(key))
-					continue;
-
-				if (stat[key])
-					el.classList.add('active');
-				else
-					el.classList.remove('active');
-			}
-		});
 	}
 
 	protected createTooltip(item: ToolbarButton) {
 		let tooltip = item.title ?? '';
 		if (item.shortcut)
-			tooltip += ' (' + fixShortcut(item.shortcut) + ')';
+			tooltip += ` ( ${ item.shortcut.toUpperCase().replace('C-', 'Ctrl ') } )`;
 
-		if (isMac) {
+		if (navigator.userAgent.includes('Mac OS X')) {
 			tooltip = tooltip.replace('Ctrl', '⌘');
 			tooltip = tooltip.replace('Alt', '⌥');
 		}
@@ -82,15 +55,17 @@ export class ToolbarElement extends LitElement {
 
 		const previewActive = !!this.scope.options.host?.classList.contains('preview');
 		const disabled = (!!item.noMobile && isMobile()) || (previewActive && !item.noDisable);
+		const active = hasCommonElement(this.scope.activeMarkers, item.marker ?? []);
 
 		return html`
 		<button
-			type      ="button"
-			title     =${ title }
 			tabindex  ="-1"
+			type      ="button"
+			class     =${ classMap({ active }) }
+			title     =${ title }
 			aria-label=${ item.title }
-			?disabled=${ disabled }
-			@click=${ listener }
+			?disabled =${ disabled }
+			@click    =${ listener }
 			${ ref(elRef) }
 		>
 			${ item?.text ?? nothing }

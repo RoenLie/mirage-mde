@@ -1,27 +1,21 @@
 import { ChangeSpec, EditorSelection } from '@codemirror/state';
-import { EditorView } from '@codemirror/view';
+import { EditorView } from 'codemirror';
 
-import { MMDECommand } from '../../mirage-mde-types.js';
-import { getNodesInRange, TextMarker, textMarkerValue } from '../listeners/get-state.js';
+import { getNodesInRange, LineMarker, lineMarkerValue } from '../listeners/get-state.js';
 import { arrayObjSum } from '../utils/array-helpers.js';
 import { isRangeInRanges } from '../utils/is-range-in-ranges.js';
 import { cmFindBeginningOfWord, cmfindEndOfWord } from '../utils/string-helpers.js';
 
 
-export const toggleStrikethrough: MMDECommand = (view) => toggleTextMarker(view, 'strikethrough');
-export const toggleItalic: MMDECommand = (view) => toggleTextMarker(view, 'italic');
-export const toggleBold: MMDECommand = (view) => toggleTextMarker(view, 'bold');
-
-
-export const toggleTextMarker = (view: EditorView, marker: TextMarker) => {
+export const toggleLineMarker = (view: EditorView, marker: LineMarker) => {
 	const state = view.state;
 	const ranges = view.state.selection.ranges;
-	const markerValue = textMarkerValue[marker];
+	const markerValue = lineMarkerValue[marker];
 
 	const activeMarkers = ranges.flatMap(range => getNodesInRange(state, range));
 
-	// Remove any active italic styles.
-	// If there were any italic styles to remove, dispatch those changes and finish.
+	// Remove any active marker.
+	// If there were any markers to remove, dispatch those changes and finish.
 	let transaction = state.changeByRange(range => {
 		const changes: ChangeSpec[] = [];
 
@@ -61,7 +55,7 @@ export const toggleTextMarker = (view: EditorView, marker: TextMarker) => {
 	}
 
 
-	// If there were no italics to remove. apply italic to the selected ranges
+	// If there were no markers to remove. apply marker to the selected ranges
 	transaction = view.state.changeByRange(range => {
 		let from = range.from;
 		let to = range.to;

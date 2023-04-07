@@ -1,10 +1,13 @@
+import { EditorView } from '@codemirror/view';
+
 import { MirageMDE } from '../mirage-mde.js';
+import { MMDECommand } from '../mirage-mde-types.js';
 
 
 /**
  * Preview action.
  */
-export const togglePreview = (editor: MirageMDE, force?: boolean) => {
+export const togglePreview: MMDECommand = (view: EditorView, editor: MirageMDE, force?: boolean) => {
 	const { gui, guiClasses, options, options: { host } } = editor;
 	const show = !(force ?? host?.classList.contains('preview'));
 	const previewButton = editor.toolbarElements['preview']?.value;
@@ -32,4 +35,6 @@ export const togglePreview = (editor: MirageMDE, force?: boolean) => {
 	// Update host to apply new css classes.
 	host?.requestUpdate();
 	gui.toolbar.requestUpdate();
+
+	return true;
 };

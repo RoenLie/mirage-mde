@@ -10,6 +10,7 @@ import {
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
 import { EditorView } from './codemirror/Codemirror.js';
+import { Marker } from './codemirror/listeners/get-state.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
 import { StatusbarElement } from './components/mirage-mde-statusbar.js';
@@ -54,15 +55,18 @@ export class MirageMDE {
 	public toolbar: (StringLiteral | BuiltInAction)[];
 	public toolbarElements: Record<string, Ref<HTMLElement>> = {};
 	public autosaveTimeoutId: number | undefined;
+	public activeMarkers: Marker[] = [];
 	public gui: GUIElements = {} as any;
 	public guiClasses: GUIClasses = {
-		editor:  {},
-		preview: {
-			hidden: true,
-		},
-		statusbar: {},
+		preview:   { hidden: true },
+		editor:    {},
 		toolbar:   {},
+		statusbar: {},
 	};
+
+	public get isSideBySideActive() {
+		return this.host.classList.contains('sidebyside');
+	}
 
 	constructor(options: Options = {} as any) {
 		this.options = options;
@@ -130,8 +134,8 @@ export class MirageMDE {
 		options.imageCSRFHeader   = options.imageCSRFHeader ?? false;
 
 		// If overlay mode is specified and combine is not provided, default it to true
-		if (options.overlayMode && options.overlayMode.combine === undefined)
-			options.overlayMode.combine = true;
+		//if (options.overlayMode && options.overlayMode.combine === undefined)
+		//	options.overlayMode.combine = true;
 	}
 
 

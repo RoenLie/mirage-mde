@@ -1,10 +1,14 @@
 import { Extension } from '@codemirror/state';
+import { EditorView } from 'codemirror';
 import { LitElement } from 'lit';
 import { marked } from 'marked';
 
 import { BuiltInAction, StringLiteral } from './action-register.js';
-import { CodeMirror } from './codemirror/Codemirror.js';
+import { Marker } from './codemirror/listeners/get-state.js';
 import { MirageMDE } from './mirage-mde.js';
+
+
+export type MMDECommand = (target: EditorView, scope: MirageMDE) => boolean
 
 
 export type RecordOf<T, K extends keyof any, V> = T & Record<K, V>;
@@ -27,8 +31,9 @@ export interface ToolbarDropdown extends ToolbarButtonBase {
 
 export interface ToolbarButton extends ToolbarButtonBase {
 	type: 'button';
-	action?: string | ((editor: MirageMDE) => void);
+	action?: string | MMDECommand;
 	text?: string;
+	marker?: Marker[];
 }
 
 export interface ToolbarSeparator {
@@ -112,15 +117,6 @@ export interface ImageErrorTextsOptions {
 	filesTooLarge?: string;
 }
 
-export interface OverlayModeOptions {
-	mode: CodeMirror.Mode<any>;
-	combine?: boolean;
-}
-
-export interface SpellCheckerOptions {
-	codeMirrorInstance: typeof CodeMirror;
-}
-
 export interface Options {
 	extensions?: Extension[],
 	host: LitElement;
@@ -141,7 +137,6 @@ export interface Options {
 	previewRender?: (markdownPlaintext: string) => string;
 	promptURLs?: boolean;
 	renderingConfig?: RenderingOptions;
-	spellChecker?: boolean | ((options: SpellCheckerOptions) => void);
 	inputStyle?: 'textarea' | 'contenteditable';
 	nativeSpellcheck?: boolean;
 	status?: (string | StatusBarItem)[];
@@ -151,7 +146,6 @@ export interface Options {
 	toolbarActions?: (ToolbarButton | ToolbarDropdown)[];
 	toolbarTooltips?: boolean;
 	theme?: string;
-	scrollbarStyle?: keyof CodeMirror.ScrollbarModels;
 	unorderedListStyle?: '*' | '-' | '+';
 	uploadImage?: boolean;
 	imageMaxSize?: number;
@@ -166,6 +160,5 @@ export interface Options {
 	errorMessages?: RecordOf<ImageErrorTextsOptions, string, string>;
 	errorCallback?: (errorMessage: string) => void;
 	promptTexts?: PromptTexts;
-	overlayMode?: OverlayModeOptions;
 	direction?: 'ltr' | 'rtl';
 }

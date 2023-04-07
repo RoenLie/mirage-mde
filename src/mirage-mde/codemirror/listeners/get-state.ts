@@ -1,29 +1,34 @@
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
-import { ViewUpdate } from '@codemirror/view';
 
 import { Tree } from '../types/tree.js';
 import { isRangeInRanges, type Range } from '../utils/is-range-in-ranges.js';
 
 
-export type Marker = [
+export type Marker = TextMarker | LineMarker | [
+	'link',
+	'image',
+][number];
+
+
+export type TextMarker = [
 	'bold',
 	'italic',
-	'strikethrough',
-	'ordered-list',
-	'unordered-list',
+	'strikethrough'
+][number];
+
+
+export type LineMarker = [
 	'H1',
 	'H2',
 	'H3',
 	'H4',
 	'H5',
 	'H6',
-	'link',
-	'image',
+	'blockquote',
+	'ordered-list',
+	'unordered-list',
 ][number];
-
-
-export type TextMarker = Extract<Marker, 'bold' | 'italic' | 'strikethrough'>
 
 
 const markerMap: Record<string, Marker> = {
@@ -40,6 +45,7 @@ const markerMap: Record<string, Marker> = {
 	ATXHeading6:    'H6',
 	Link:           'link',
 	Image:          'image',
+	Blockquote:     'blockquote',
 };
 
 
@@ -47,6 +53,19 @@ export const textMarkerValue: Record<TextMarker, string> = {
 	bold:          '**',
 	italic:        '*',
 	strikethrough: '~~',
+};
+
+
+export const lineMarkerValue: Record<LineMarker, string> = {
+	'ordered-list':   '* ',
+	'unordered-list': '1. ',
+	'blockquote':     '> ',
+	'H1':             '# ',
+	'H2':             '## ',
+	'H3':             '### ',
+	'H4':             '#### ',
+	'H5':             '##### ',
+	'H6':             '###### ',
 };
 
 
