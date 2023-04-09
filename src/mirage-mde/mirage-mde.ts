@@ -1,7 +1,8 @@
+import { StringLiteral } from '@roenlie/mimic/types';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
-import { actionRegister, BuiltInAction, defaultToolbar, StringLiteral } from './action-register.js';
+import { actionRegister, BuiltInAction, defaultToolbar, ToolbarItem } from './action-register.js';
 import { updateStatusBar } from './actions/update-status-bar.js';
 import {
 	uploadImage,
@@ -28,8 +29,8 @@ import {
 	Options,
 	ParsingOptions,
 	TimeFormatOptions,
-	ToolbarItem,
 } from './mirage-mde-types.js';
+import { BuildInStatus, defaultStatus, StatusBarItem, statusRegistry } from './status-register.js';
 import { autosave } from './utilities/autosave.js';
 import { deepMerge } from './utilities/deep-merge.js';
 import { markdown } from './utilities/markdown.js';
@@ -54,6 +55,8 @@ export class MirageMDE {
 	public element: HTMLTextAreaElement;
 	public toolbar: (StringLiteral | BuiltInAction)[];
 	public toolbarElements: Record<string, Ref<HTMLElement>> = {};
+	public statusbar: (StringLiteral | BuildInStatus)[];
+	public saved = false;
 	public autosaveTimeoutId: number | undefined;
 	public activeMarkers: Marker[] = [];
 	public gui: GUIElements = {} as any;
@@ -87,9 +90,17 @@ export class MirageMDE {
 		});
 
 		// Handle status bar
-		options.status ??= [ 'autosave', 'lines', 'words', 'cursor' ];
+		this.statusbar ??= [ ...options.statusbar ?? defaultStatus ];
+		options.statusbarStatuses?.forEach(status => {
+			let existing = (statusRegistry.get(status.name) ?? {}) as StatusBarItem;
+			if (existing)
+				statusRegistry.set(status.name, deepMerge([ existing, status ]));
+			else
+				statusRegistry.set(status.name, status);
+		});
+
 		if (options.uploadImage)
-			options.status.unshift('upload-image');
+			this.statusbar.unshift('upload-image');
 
 		// Add default preview rendering function
 		options.previewRender ??= (plainText) => markdown(this, plainText) ?? '';
@@ -105,10 +116,10 @@ export class MirageMDE {
 		options.insertTexts = deepMerge<InsertTextOptions>([ insertTexts as any, options.insertTexts || {} ]);
 
 		// Merging the promptTexts, with the given options
-		options.promptTexts = deepMerge([ promptTexts, options.promptTexts || {} ]);
+		options.promptTexts = deepMerge<typeof promptTexts>([ promptTexts, options.promptTexts || {} ]);
 
 		// Merging the blockStyles, with the given options
-		options.blockStyles = deepMerge([ blockStyles, options.blockStyles || {} ]);
+		options.blockStyles = deepMerge<typeof blockStyles>([ blockStyles, options.blockStyles || {} ]);
 
 		if (options.autosave) {
 			// Merging the Autosave timeFormat, with the given options
@@ -127,8 +138,8 @@ export class MirageMDE {
 		options.uploadImage       = options.uploadImage ?? false;
 		options.imageMaxSize      = options.imageMaxSize ?? 2097152; // 1024 * 1024 * 2
 		options.imageAccept       = options.imageAccept ?? 'image/png, image/jpeg, image/gif, image/avif';
-		options.imageTexts        = deepMerge([ imageTexts, options.imageTexts || {} ]);
-		options.errorMessages     = deepMerge([ errorMessages, options.errorMessages || {} ]);
+		options.imageTexts        = deepMerge<typeof imageTexts>([ imageTexts, options.imageTexts || {} ]);
+		options.errorMessages     = deepMerge<typeof errorMessages>([ errorMessages, options.errorMessages || {} ]);
 		options.imagePathAbsolute = options.imagePathAbsolute ?? false;
 		options.imageCSRFName     = options.imageCSRFName ?? 'csrfmiddlewaretoken';
 		options.imageCSRFHeader   = options.imageCSRFHeader ?? false;

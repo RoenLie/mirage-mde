@@ -1,3 +1,6 @@
+import { type EditorView } from '@codemirror/view';
+import { type StringLiteral } from '@roenlie/mimic/types';
+
 import { cleanBlock } from './actions/clean-block.js';
 import { drawHorizontalRule } from './actions/draw-horizontal-rule.js';
 import { drawImage } from './actions/draw-image.js';
@@ -8,15 +11,52 @@ import { redo, undo } from './actions/history.js';
 import { toggleBlockquote } from './actions/toggle-blockquote.js';
 import { toggleCodeBlock } from './actions/toggle-codeblock.js';
 import { toggleFullScreen } from './actions/toggle-fullscreen.js';
-import { toggleHeading1, toggleHeading2, toggleHeading3, toggleHeading4, toggleHeading6, toggleHeadingBigger, toggleHeadingSmaller } from './actions/toggle-heading.js';
+import {
+	toggleHeading1,
+	toggleHeading2,
+	toggleHeading3,
+	toggleHeading4,
+	toggleHeading6,
+	toggleHeadingBigger,
+	toggleHeadingSmaller,
+} from './actions/toggle-heading.js';
 import { toggleOrderedList, toggleUnorderedList } from './actions/toggle-list.js';
 import { togglePreview } from './actions/toggle-preview.js';
 import { toggleSideBySide } from './actions/toggle-sidebyside.js';
 import { toggleBold, toggleItalic, toggleStrikethrough } from './codemirror/commands/toggle-text-marker.js';
-import { ToolbarItem } from './mirage-mde-types.js';
+import { type Marker } from './codemirror/listeners/get-state.js';
+import { type MirageMDE } from './mirage-mde.js';
 
 
-export type StringLiteral = Record<never, never> & string;
+export type MMDECommand = (target: EditorView, scope: MirageMDE) => boolean
+
+export type ToolbarItem = ToolbarSeparator | ToolbarButton | ToolbarDropdown;
+
+export interface ToolbarButtonBase {
+	name: StringLiteral | BuiltInAction;
+	iconUrl?: string;
+	title?: string;
+	shortcut?: string;
+	noDisable?: boolean;
+	noMobile?: boolean;
+}
+
+export interface ToolbarDropdown extends ToolbarButtonBase {
+	type: 'dropdown';
+	children: (StringLiteral | BuiltInAction)[];
+}
+
+export interface ToolbarButton extends ToolbarButtonBase {
+	type: 'button';
+	action?: string | MMDECommand;
+	text?: string;
+	marker?: Marker[];
+}
+
+export interface ToolbarSeparator {
+	type: 'separator';
+}
+
 export type BuiltInAction = [
 	'separator',
 	'bold',

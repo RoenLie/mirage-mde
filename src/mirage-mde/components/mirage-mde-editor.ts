@@ -1,18 +1,15 @@
-//import * as iterators from '../../utilities/iterators.js';
-import '../../utilities/iterators.js';
-
-import { EditorView, KeyBinding, keymap } from '@codemirror/view';
+import { EditorView, type KeyBinding, keymap } from '@codemirror/view';
+import { iterate } from '@roenlie/mimic/iterators';
 import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import { testDoc } from '../../doc-example.js';
-import { iterate } from '../../utilities/iterators.js';
-import { actionRegister, BuiltInAction, StringLiteral } from '../action-register.js';
+import { actionRegister, MMDECommand, ToolbarButton } from '../action-register.js';
 import { editorToPreview, handleEditorScroll } from '../actions/toggle-sidebyside.js';
-import { CodeMirrorSetup } from '../codemirror/codemirror-setup.js';
-import { updateToolbarStateListener } from '../codemirror/listeners/set-toolbar-state.js';
-import { MirageMDE } from '../mirage-mde.js';
-import { MMDECommand, ToolbarButton, ToolbarItem } from '../mirage-mde-types.js';
+import { codeMirrorSetup } from '../codemirror/codemirror-setup.js';
+import { updateStatusbarListener } from '../codemirror/listeners/update-statusbar.js';
+import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
+import { type MirageMDE } from '../mirage-mde.js';
 import styles from './mirage-mde-editor.scss?inline';
 
 //const MMDEimageCache = new Map<string, any>();
@@ -30,38 +27,20 @@ export class EditorElement extends LitElement {
 	}
 
 	public create() {
-		const shortcuts: KeyBinding[] = iterate(actionRegister.entries())
-			.transform(([ , v ]) => v)
-			.transform(item => {
-				if (item.type !== 'button' || !item.shortcut || typeof item.action !== 'function')
+		const shortcuts = iterate(actionRegister)
+			.pipe(([ , v ]) => v.type === 'button' ? v : undefined)
+			.pipe(item => {
+				if (!item.shortcut || typeof item.action !== 'function')
 					return;
 
 				return item as Omit<ToolbarButton, 'action'> & { action: MMDECommand };
 			})
-			.transform(button => ({
+			.pipe((button): KeyBinding => ({
 				key:            button.shortcut,
 				run:            (view: EditorView) => button.action(view, this.scope),
 				preventDefault: true,
 			}))
 			.toArray();
-
-
-		//type Entry = [StringLiteral | BuiltInAction, ToolbarItem];
-		//const pipeline = iterate<Entry>()
-		//	.transform(([ , v ]) => v)
-		//	.transform(item => {
-		//		if (item.type !== 'button' || !item.shortcut || typeof item.action !== 'function')
-		//			return;
-
-		//		return item as Omit<ToolbarButton, 'action'> & { action: MMDECommand };
-		//	})
-		//	.transform(button => ({
-		//		key:            button.shortcut,
-		//		run:            (view: EditorView) => button.action(view, this.scope),
-		//		preventDefault: true,
-		//	}))
-		//	.toPipeline();
-
 
 		this.scope.editor = new EditorView({
 			doc:        testDoc,
@@ -81,10 +60,11 @@ export class EditorElement extends LitElement {
 					}
 				}),
 				EditorView.updateListener.of(update => updateToolbarStateListener(update, this.scope)),
+				EditorView.updateListener.of(update => updateStatusbarListener(update, this.scope)),
 
 				// setup is added after, as codemirror has a first come first priority system.
 				// atleast for keybindings.
-				...CodeMirrorSetup,
+				...codeMirrorSetup,
 			],
 			parent: this.renderRoot,
 		});

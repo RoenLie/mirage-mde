@@ -19,3 +19,44 @@
 	border-bottom: none;
 	background-color: var(--mmde-background-color);
 }
+
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+.cm-header-1 {
+	font-weight: 600;
+	font-size: 2em;
+}
+
+.cm-header-2 {
+	font-weight: 600;
+	font-size: 1.5em;
+}
+
+.cm-header-3 {
+	font-weight: 600;
+	font-size: 1.25em;
+}
+
+.cm-header-4 {
+	font-weight: 600;
+	font-size: 1em;
+}
+
+.cm-header-5 {
+	font-weight: 600;
+	font-size: .875em;
+}
+
+.cm-header-6 {
+	font-weight: 600;
+	font-size: .85em;
+	color: #8b949e;
+}

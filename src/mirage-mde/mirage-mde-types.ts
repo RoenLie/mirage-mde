@@ -1,44 +1,15 @@
-import { Extension } from '@codemirror/state';
-import { EditorView } from 'codemirror';
-import { LitElement } from 'lit';
+import { type Extension } from '@codemirror/state';
+import { RecordOf, type StringLiteral } from '@roenlie/mimic/types';
+import { type LitElement } from 'lit';
 import { marked } from 'marked';
 
-import { BuiltInAction, StringLiteral } from './action-register.js';
-import { Marker } from './codemirror/listeners/get-state.js';
-import { MirageMDE } from './mirage-mde.js';
+import {
+	type BuiltInAction,
+	type ToolbarButton,
+	type ToolbarDropdown,
+} from './action-register.js';
+import { type BuildInStatus, StatusBarItem } from './status-register.js';
 
-
-export type MMDECommand = (target: EditorView, scope: MirageMDE) => boolean
-
-
-export type RecordOf<T, K extends keyof any, V> = T & Record<K, V>;
-
-export type ToolbarItem = ToolbarSeparator | ToolbarButton | ToolbarDropdown;
-
-export interface ToolbarButtonBase {
-	name: StringLiteral | BuiltInAction;
-	iconUrl?: string;
-	title?: string;
-	shortcut?: string;
-	noDisable?: boolean;
-	noMobile?: boolean;
-}
-
-export interface ToolbarDropdown extends ToolbarButtonBase {
-	type: 'dropdown';
-	children: (StringLiteral | BuiltInAction)[];
-}
-
-export interface ToolbarButton extends ToolbarButtonBase {
-	type: 'button';
-	action?: string | MMDECommand;
-	text?: string;
-	marker?: Marker[];
-}
-
-export interface ToolbarSeparator {
-	type: 'separator';
-}
 
 export interface TimeFormatOptions {
 	locale?: string | string[];
@@ -93,13 +64,6 @@ export interface RenderingOptions {
 	singleLineBreaks?: boolean;
 }
 
-export interface StatusBarItem {
-	className: string;
-	value: string;
-	onUpdate: () => string;
-	onActivity: () => string;
-}
-
 export interface ImageTextsOptions {
 	sbInit?: string;
 	sbOnDragEnter?: string;
@@ -139,9 +103,10 @@ export interface Options {
 	renderingConfig?: RenderingOptions;
 	inputStyle?: 'textarea' | 'contenteditable';
 	nativeSpellcheck?: boolean;
-	status?: (string | StatusBarItem)[];
 	styleSelectedText?: boolean;
 	tabSize?: number;
+	statusbar?: (StringLiteral | BuildInStatus)[];
+	statusbarStatuses?: StatusBarItem[];
 	toolbar?: (StringLiteral | BuiltInAction)[];
 	toolbarActions?: (ToolbarButton | ToolbarDropdown)[];
 	toolbarTooltips?: boolean;
