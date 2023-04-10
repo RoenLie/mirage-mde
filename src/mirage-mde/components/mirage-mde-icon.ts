@@ -1,6 +1,6 @@
 import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import { requestIcon } from '../utilities/icon.js';
 
@@ -52,7 +52,7 @@ export class IconElement extends LitElement {
 	protected override render() {
 		return html`
 		<div role="img">
-			${ unsafeSVG(this.svg) }
+			${ unsafeHTML(this.svg) }
 		</div>
 		`;
 	}

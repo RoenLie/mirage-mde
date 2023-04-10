@@ -1,16 +1,73 @@
-import { EditorView, type KeyBinding, keymap } from '@codemirror/view';
+import {
+	autocompletion,
+	closeBrackets,
+	closeBracketsKeymap,
+	completionKeymap,
+} from '@codemirror/autocomplete';
+import {
+	defaultKeymap,
+	history,
+	historyKeymap,
+	insertTab,
+} from '@codemirror/commands';
+import {
+	markdown,
+	markdownLanguage,
+} from '@codemirror/lang-markdown';
+import {
+	bracketMatching,
+	defaultHighlightStyle,
+	foldKeymap,
+	HighlightStyle,
+	indentOnInput,
+	indentUnit,
+	syntaxHighlighting,
+} from '@codemirror/language';
+import { languages } from '@codemirror/language-data';
+import { lintKeymap } from '@codemirror/lint';
+import {
+	highlightSelectionMatches,
+	searchKeymap,
+} from '@codemirror/search';
+import { EditorState } from '@codemirror/state';
+import {
+	crosshairCursor,
+	drawSelection,
+	dropCursor,
+	EditorView,
+	highlightActiveLine,
+	highlightActiveLineGutter,
+	highlightSpecialChars,
+	type KeyBinding,
+	keymap,
+	lineNumbers,
+	rectangularSelection,
+} from '@codemirror/view';
+import { tags } from '@lezer/highlight';
 import { iterate } from '@roenlie/mimic/iterators';
-import { css, html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { basicDark } from 'cm6-theme-basic-dark';
+import {
+	css,
+	html,
+	LitElement,
+	unsafeCSS,
+} from 'lit';
+import {
+	customElement,
+	property,
+} from 'lit/decorators.js';
 
 import { testDoc } from '../../doc-example.js';
 import { actionRegister, MMDECommand, ToolbarButton } from '../action-register.js';
 import { editorToPreview, handleEditorScroll } from '../actions/toggle-sidebyside.js';
-import { codeMirrorSetup } from '../codemirror/codemirror-setup.js';
+import { toggleCheckbox } from '../codemirror/commands/toggle-checkbox.js';
+import { undoTab } from '../codemirror/commands/undo-tab.js';
+import { updatePreviewListener } from '../codemirror/listeners/update-preview.js';
 import { updateStatusbarListener } from '../codemirror/listeners/update-statusbar.js';
 import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
 import { type MirageMDE } from '../mirage-mde.js';
 import styles from './mirage-mde-editor.scss?inline';
+
 
 //const MMDEimageCache = new Map<string, any>();
 
@@ -43,30 +100,75 @@ export class EditorElement extends LitElement {
 			.toArray();
 
 		this.scope.editor = new EditorView({
-			doc:        testDoc,
-			extensions: [
-				// Consumer custom extensions.
-				...this.scope.options.extensions ?? [],
-
-				keymap.of(shortcuts),
-
-				EditorView.domEventHandlers({
-					scroll: (ev) => handleEditorScroll(ev, this.scope),
-				}),
-				EditorView.updateListener.of((update) => {
-					if (this.scope.isSideBySideActive) {
-						if (update.docChanged)
-							editorToPreview(this.scope);
-					}
-				}),
-				EditorView.updateListener.of(update => updateToolbarStateListener(update, this.scope)),
-				EditorView.updateListener.of(update => updateStatusbarListener(update, this.scope)),
-
-				// setup is added after, as codemirror has a first come first priority system.
-				// atleast for keybindings.
-				...codeMirrorSetup,
-			],
 			parent: this.renderRoot,
+			state:  EditorState.create({
+				doc:        testDoc,
+				extensions: [
+					// Consumer custom extensions.
+					...this.scope.options.extensions ?? [],
+
+					EditorView.updateListener.of(update => updateToolbarStateListener(update, this.scope)),
+					EditorView.updateListener.of(update => updateStatusbarListener(update, this.scope)),
+					EditorView.updateListener.of(update => updatePreviewListener(update, this.scope)),
+					EditorView.domEventHandlers({
+						scroll: (ev) => handleEditorScroll(ev, this.scope),
+					}),
+
+					history(),
+					dropCursor(),
+					lineNumbers(),
+					drawSelection(),
+					crosshairCursor(),
+					rectangularSelection(),
+
+					indentUnit.of('   '),
+					EditorView.lineWrapping,
+					EditorState.tabSize.of(3),
+					EditorState.allowMultipleSelections.of(true),
+
+					// editor language
+					markdown({
+						base:          markdownLanguage,
+						codeLanguages: languages,
+						addKeymap:     true,
+						extensions:    [],
+					}),
+
+					// keyboard behavior
+					indentOnInput(),
+					closeBrackets(),
+					autocompletion(),
+					keymap.of([
+						...shortcuts,
+						{ key: 'Tab', run: insertTab, shift: undoTab },
+						{ key: 'c-d', run: toggleCheckbox },
+						...closeBracketsKeymap,
+						...defaultKeymap,
+						...searchKeymap,
+						...historyKeymap,
+						...foldKeymap,
+						...completionKeymap,
+						...lintKeymap,
+					]),
+
+					// Styles
+					bracketMatching(),
+					highlightActiveLine(),
+					highlightActiveLineGutter(),
+					highlightSpecialChars(),
+					highlightSelectionMatches(),
+					basicDark,
+					syntaxHighlighting(HighlightStyle.define([
+						{ tag: tags.heading1, class: 'cm-header-1' },
+						{ tag: tags.heading2, class: 'cm-header-2' },
+						{ tag: tags.heading3, class: 'cm-header-3' },
+						{ tag: tags.heading4, class: 'cm-header-4' },
+						{ tag: tags.heading5, class: 'cm-header-5' },
+						{ tag: tags.heading6, class: 'cm-header-6' },
+					])),
+					syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+				],
+			}),
 		});
 
 		// Do an initial conversion of the markdown to speed up opening the preview.

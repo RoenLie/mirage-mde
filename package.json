@@ -16,13 +16,13 @@
 	"scripts": {
 		"dev": "vite",
 		"dev:codespaces": "vite dev --host",
-		"build": "vite build && tsc --project ./src/tsconfig.json",
-		"build:preview": "vite --config ./build/vite.config.ts build",
-		"preview": "vite --config ./build/vite.config.ts preview",
+		"build": "tsc --project ./src/tsconfig.json && vite build",
+		"build:preview": "vite --config ./vite.config.preview.ts build",
+		"preview": "vite --config ./vite.config.preview.ts preview",
 		"updatedeps": "pnpm update --latest --interactive",
 		"typecheck": "tsc --project ./tsconfig.json",
 		"test": "vitest --config ./test/vite.config.ts",
-		"increment-version": "node --loader tsm ./build/increment-version.ts"
+		"increment-version": "pnpm mimic increment-version"
 	},
 	"dependencies": {
 		"@codemirror/autocomplete": "^6.4.2",
@@ -34,13 +34,9 @@
 		"@codemirror/search": "^6.3.0",
 		"@codemirror/state": "^6.2.0",
 		"@codemirror/view": "^6.9.3",
-		"@lezer/common": "^1.0.2",
 		"@lezer/highlight": "^1.1.4",
-		"@lezer/markdown": "^1.0.2",
 		"@roenlie/mimic": "^0.0.3",
 		"cm6-theme-basic-dark": "^0.2.0",
-		"codemirror": "^6.0.1",
-		"codemirror-spell-checker": "1.1.2",
 		"highlight.js": "^11.7.0",
 		"lit": "^2.7.2",
 		"marked": "^4.3.0",
@@ -50,7 +46,6 @@
 		"@roenlie/eslint-config": "^1.0.0",
 		"@roenlie/mimic-nodejs": "^0.0.4",
 		"@roenlie/tsconfig": "^1.0.0",
-		"@types/codemirror": "^5.60.4",
 		"@types/marked": "^4.0.8",
 		"@types/node": "18.15.11",
 		"@typescript-eslint/eslint-plugin": "^5.57.1",
@@ -64,7 +59,6 @@
 		"tsm": "^2.3.0",
 		"typescript": "^5.0.4",
 		"vite": "^4.2.1",
-		"vite-plugin-inspect": "^0.7.19",
 		"vitest": "^0.30.0"
 	}
 }

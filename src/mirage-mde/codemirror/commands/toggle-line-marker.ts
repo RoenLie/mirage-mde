@@ -1,5 +1,5 @@
 import { ChangeSpec, EditorSelection } from '@codemirror/state';
-import { EditorView } from 'codemirror';
+import { EditorView } from '@codemirror/view';
 
 import { getNodesInRange, LineMarker, lineMarkerValue } from '../listeners/get-state.js';
 import { arrayObjSum } from '../utils/array-helpers.js';

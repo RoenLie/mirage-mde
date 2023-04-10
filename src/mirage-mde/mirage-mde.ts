@@ -1,3 +1,4 @@
+import { EditorView } from '@codemirror/view';
 import { StringLiteral } from '@roenlie/mimic/types';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
@@ -10,7 +11,6 @@ import {
 	uploadImagesUsingCustomFunction,
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
-import { EditorView } from './codemirror/Codemirror.js';
 import { Marker } from './codemirror/listeners/get-state.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
@@ -75,7 +75,7 @@ export class MirageMDE {
 		this.options = options;
 
 		// Assign the host.
-		this.host = options.host;
+		this.host = options.host!;
 
 		// Handle toolbar
 		this.toolbar = [ ...options.toolbar ?? defaultToolbar ];
@@ -143,10 +143,6 @@ export class MirageMDE {
 		options.imagePathAbsolute = options.imagePathAbsolute ?? false;
 		options.imageCSRFName     = options.imageCSRFName ?? 'csrfmiddlewaretoken';
 		options.imageCSRFHeader   = options.imageCSRFHeader ?? false;
-
-		// If overlay mode is specified and combine is not provided, default it to true
-		//if (options.overlayMode && options.overlayMode.combine === undefined)
-		//	options.overlayMode.combine = true;
 	}
 
 

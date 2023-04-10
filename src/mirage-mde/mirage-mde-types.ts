@@ -83,7 +83,7 @@ export interface ImageErrorTextsOptions {
 
 export interface Options {
 	extensions?: Extension[],
-	host: LitElement;
+	host?: LitElement;
 	autofocus?: boolean;
 	autosave?: AutoSaveOptions;
 	autoRefresh?: boolean | { delay: number; };
