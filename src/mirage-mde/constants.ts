@@ -1,4 +1,6 @@
-import { type RecordOf } from './mirage-mde-types.js';
+import { RecordOf } from '@roenlie/mimic/types';
+
+import { BlockStyleOptions, ImageErrorTextsOptions, PromptTexts } from './mirage-mde-types.js';
 
 
 const _insertTexts = {
@@ -12,11 +14,10 @@ const _insertTexts = {
 export const insertTexts: RecordOf<typeof _insertTexts, string, string[]> = _insertTexts;
 
 
-const _promptTexts = {
+export const promptTexts: PromptTexts = {
 	link:  'URL for the link:',
 	image: 'URL of the image:',
 };
-export const promptTexts: RecordOf<typeof _promptTexts, string, string> = _promptTexts;
 
 
 const _timeFormat = {
@@ -33,12 +34,11 @@ export const timeFormat: RecordOf<
 > = _timeFormat;
 
 
-const _blockStyles = {
+export const blockStyles: BlockStyleOptions = {
 	'bold':   '**',
 	'code':   '```',
 	'italic': '*',
 };
-export const blockStyles: RecordOf<typeof _blockStyles, string, string> = _blockStyles;
 
 
 /**
@@ -60,11 +60,10 @@ export const imageTexts: RecordOf<typeof _imageTexts, string, string> = _imageTe
  * Errors displayed to the user, using the `errorCallback` option. Can be used for
  * customization or internationalization.
  */
-const _errorMessages = {
+export const errorMessages: ImageErrorTextsOptions = {
 	noFileGiven:    'You must select a file.',
 	typeNotAllowed: 'This image type is not allowed.',
-	ficonstooLarge: 'Image #image_name# is too big (#image_size#).\n' +
+	fileTooLarge:   'Image #image_name# is too big (#image_size#).\n' +
         'Maximum file size is #image_max_size#.',
 	importError: 'Something went wrong when uploading the image #image_name#.',
 };
-export const errorMessages: RecordOf<typeof _errorMessages, string, string> = _errorMessages;

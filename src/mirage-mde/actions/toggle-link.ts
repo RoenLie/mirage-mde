@@ -1,5 +1,4 @@
 import { MirageMDE } from '../mirage-mde.js';
-import { getState } from '../utilities/get-state.js';
 import { _replaceSelection } from '../utilities/replace-selection.js';
 
 
@@ -13,7 +12,8 @@ export const _toggleLink = (
 		return;
 
 	const cm = editor.codemirror;
-	const stat = getState(cm);
+	//const stat = getState(cm);
+	const state = undefined;
 	const active = stat[type]!;
 	if (!active) {
 		_replaceSelection(cm, active, startEnd, url);

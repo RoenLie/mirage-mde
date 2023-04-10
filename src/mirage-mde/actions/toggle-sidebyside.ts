@@ -1,15 +1,15 @@
-import { EditorView } from 'codemirror';
+import { EditorView } from '@codemirror/view';
 
+import { MMDECommand } from '../action-register.js';
 import { MirageMDE } from '../mirage-mde.js';
-import { MMDECommand } from '../mirage-mde-types.js';
 
 
-export const editorToPreview = (scope: MirageMDE) => {
+export const editorToPreview = async (scope: MirageMDE) => {
 	const { gui, options, editor } = scope;
 	if (!gui.preview)
 		return;
 
-	const newValue = options.previewRender?.(editor.state.doc.toString()) ?? '';
+	const newValue = options.previewRender?.(editor.state.doc.toString()) ?? Promise.resolve('');
 	gui.preview.setContent(newValue);
 };
 

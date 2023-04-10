@@ -1,5 +1,3 @@
-import { marked } from 'marked';
-
 import { MirageMDE } from '../mirage-mde.js';
 import { addAnchorTargetBlank } from './add-anchor-target.js';
 
@@ -7,22 +5,23 @@ import { addAnchorTargetBlank } from './add-anchor-target.js';
 /**
  * Default markdown render.
  */
-export const markdown = (editor: MirageMDE, text: string) => {
-	if (!marked)
-		return;
+export const markdown = async (editor: MirageMDE, text: string) => {
+	const [ marked, hljs ] = await Promise.all([
+		import('marked').then(m => m.marked),
+		import('highlight.js').then(m => m.default),
+	]);
 
 	const { renderingConfig } = editor.options;
 
 	// Initialize
 	const markedOptions = renderingConfig?.markedOptions ?? {};
+	markedOptions.breaks = !(renderingConfig?.singleLineBreaks === false);
 
-	markedOptions.breaks = !!(renderingConfig?.singleLineBreaks === false);
-
-	if (renderingConfig?.codeSyntaxHighlighting === true && renderingConfig.hljs) {
+	if (renderingConfig?.codeSyntaxHighlighting === true) {
 		markedOptions.highlight = (code, language) => {
-			return language && renderingConfig.hljs.getLanguage(language)
-				? renderingConfig.hljs.highlight(code, { language }).value
-				: renderingConfig.hljs.highlightAuto(code).value;
+			return language && hljs.getLanguage(language)
+				? hljs.highlight(code, { language }).value
+				: hljs.highlightAuto(code).value;
 		};
 	}
 

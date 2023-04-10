@@ -1,34 +1,6 @@
 import { EditorState } from '@codemirror/state';
 
 
-export const findBeginningOfWord = (
-	input: string, position: number,
-) => {
-	if (position < 0 || position >= input.length)
-		return 0;
-
-	for (let i = position; i >= 0; i--) {
-		if (!/[\w-]/.test(input[i]!))
-			return i - 1;
-	}
-
-	return 0;
-};
-
-export const findEndOfWord = (
-	input: string, position: number,
-) => {
-	if (position < 0 || position >= input.length)
-		return input.length - 1;
-
-	for (let i = position; i < input.length; i++) {
-		if (!/[\w-]/.test(input[i]!))
-			return i + 1;
-	}
-
-	return input.length - 1;
-};
-
 export const cmFindBeginningOfWord = (
 	position: number, state: EditorState,
 ) => {
@@ -44,6 +16,7 @@ export const cmFindBeginningOfWord = (
 	return 0;
 };
 
+
 export const cmfindEndOfWord = (
 	position: number, state: EditorState,
 ) => {
@@ -51,9 +24,9 @@ export const cmfindEndOfWord = (
 		return 0;
 
 	let i = position;
-	// eslint-disable-next-line no-constant-condition
-	while (true) {
-		const substring = state.doc.sliceString(i, i + 1);
+	let substring = '';
+	while (substring !== undefined) {
+		substring = state.doc.sliceString(i, i + 1);
 		if (substring === undefined)
 			break;
 

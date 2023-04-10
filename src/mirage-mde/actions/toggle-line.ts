@@ -1,4 +1,3 @@
-import { getState } from '../utilities/get-state.js';
 
 
 export const _toggleLine = (
@@ -14,7 +13,8 @@ export const _toggleLine = (
 	const listRegexp = /^(\s*)(\*|-|\+|\d*\.)(\s+)/;
 	const whitespacesRegexp = /^\s*/;
 
-	const stat = getState(cm);
+	//const stat = getState(cm);
+	const state = undefined;
 	const startPoint = cm.getCursor('start');
 	const endPoint = cm.getCursor('end');
 	const repl: Record<string, RegExp> = {

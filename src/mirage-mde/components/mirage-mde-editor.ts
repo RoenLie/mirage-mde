@@ -57,7 +57,6 @@ import {
 	property,
 } from 'lit/decorators.js';
 
-import { testDoc } from '../../doc-example.js';
 import { actionRegister, MMDECommand, ToolbarButton } from '../action-register.js';
 import { editorToPreview, handleEditorScroll } from '../actions/toggle-sidebyside.js';
 import { toggleCheckbox } from '../codemirror/commands/toggle-checkbox.js';
@@ -99,75 +98,82 @@ export class EditorElement extends LitElement {
 			}))
 			.toArray();
 
+
+		const extensions = [
+			// Consumer custom extensions.
+			...this.scope.options.extensions ?? [],
+
+			EditorView.updateListener.of(update => updateToolbarStateListener(update, this.scope)),
+			EditorView.updateListener.of(update => updateStatusbarListener(update, this.scope)),
+			EditorView.updateListener.of(update => updatePreviewListener(update, this.scope)),
+			EditorView.domEventHandlers({
+				scroll: (ev) => handleEditorScroll(ev, this.scope),
+			}),
+
+			history(),
+			dropCursor(),
+			drawSelection(),
+			crosshairCursor(),
+			rectangularSelection(),
+
+			indentUnit.of(' '.repeat(this.scope.options.tabSize!)),
+			EditorState.tabSize.of(this.scope.options.tabSize!),
+			EditorState.allowMultipleSelections.of(true),
+
+			// editor language
+			markdown({
+				base:          markdownLanguage,
+				codeLanguages: languages,
+				addKeymap:     true,
+				extensions:    [],
+			}),
+
+			// keyboard behavior
+			indentOnInput(),
+			closeBrackets(),
+			autocompletion(),
+			keymap.of([
+				...shortcuts,
+				{ key: 'Tab', run: insertTab, shift: undoTab },
+				{ key: 'c-d', run: toggleCheckbox },
+				...closeBracketsKeymap,
+				...defaultKeymap,
+				...searchKeymap,
+				...historyKeymap,
+				...foldKeymap,
+				...completionKeymap,
+				...lintKeymap,
+			]),
+
+			// Styles
+			bracketMatching(),
+			highlightActiveLine(),
+			highlightActiveLineGutter(),
+			highlightSpecialChars(),
+			highlightSelectionMatches(),
+			basicDark,
+			syntaxHighlighting(HighlightStyle.define([
+				{ tag: tags.heading1, class: 'cm-header-1' },
+				{ tag: tags.heading2, class: 'cm-header-2' },
+				{ tag: tags.heading3, class: 'cm-header-3' },
+				{ tag: tags.heading4, class: 'cm-header-4' },
+				{ tag: tags.heading5, class: 'cm-header-5' },
+				{ tag: tags.heading6, class: 'cm-header-6' },
+			])),
+			syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+		];
+
+		if (this.scope.options.lineWrapping)
+			extensions.push(EditorView.lineWrapping);
+		if (this.scope.options.lineNumbers)
+			extensions.push(lineNumbers());
+
+
 		this.scope.editor = new EditorView({
 			parent: this.renderRoot,
 			state:  EditorState.create({
-				doc:        testDoc,
-				extensions: [
-					// Consumer custom extensions.
-					...this.scope.options.extensions ?? [],
-
-					EditorView.updateListener.of(update => updateToolbarStateListener(update, this.scope)),
-					EditorView.updateListener.of(update => updateStatusbarListener(update, this.scope)),
-					EditorView.updateListener.of(update => updatePreviewListener(update, this.scope)),
-					EditorView.domEventHandlers({
-						scroll: (ev) => handleEditorScroll(ev, this.scope),
-					}),
-
-					history(),
-					dropCursor(),
-					lineNumbers(),
-					drawSelection(),
-					crosshairCursor(),
-					rectangularSelection(),
-
-					indentUnit.of('   '),
-					EditorView.lineWrapping,
-					EditorState.tabSize.of(3),
-					EditorState.allowMultipleSelections.of(true),
-
-					// editor language
-					markdown({
-						base:          markdownLanguage,
-						codeLanguages: languages,
-						addKeymap:     true,
-						extensions:    [],
-					}),
-
-					// keyboard behavior
-					indentOnInput(),
-					closeBrackets(),
-					autocompletion(),
-					keymap.of([
-						...shortcuts,
-						{ key: 'Tab', run: insertTab, shift: undoTab },
-						{ key: 'c-d', run: toggleCheckbox },
-						...closeBracketsKeymap,
-						...defaultKeymap,
-						...searchKeymap,
-						...historyKeymap,
-						...foldKeymap,
-						...completionKeymap,
-						...lintKeymap,
-					]),
-
-					// Styles
-					bracketMatching(),
-					highlightActiveLine(),
-					highlightActiveLineGutter(),
-					highlightSpecialChars(),
-					highlightSelectionMatches(),
-					basicDark,
-					syntaxHighlighting(HighlightStyle.define([
-						{ tag: tags.heading1, class: 'cm-header-1' },
-						{ tag: tags.heading2, class: 'cm-header-2' },
-						{ tag: tags.heading3, class: 'cm-header-3' },
-						{ tag: tags.heading4, class: 'cm-header-4' },
-						{ tag: tags.heading5, class: 'cm-header-5' },
-						{ tag: tags.heading6, class: 'cm-header-6' },
-					])),
-					syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-				],
+				doc: this.scope.options.initialValue,
+				extensions,
 			}),
 		});
 

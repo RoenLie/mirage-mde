@@ -32,8 +32,8 @@ dependencies:
     specifier: ^1.1.4
     version: 1.1.4
   '@roenlie/mimic':
-    specifier: ^0.0.3
-    version: 0.0.3
+    specifier: ^0.0.6
+    version: 0.0.6
   cm6-theme-basic-dark:
     specifier: ^0.2.0
     version: 0.2.0(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.3)(@lezer/highlight@1.1.4)
@@ -784,8 +784,8 @@ packages:
       - '@swc/helpers'
     dev: true
 
-  /@roenlie/mimic@0.0.3:
-    resolution: {integrity: sha512-uE1CuR5Y/2I3VPizNkDfeLJBYiQL6USED2x6v89uR/soPby5Zwm9pHz4hIW7F6RpJMI9lb8cULZyqd0lw/dx4w==}
+  /@roenlie/mimic@0.0.6:
+    resolution: {integrity: sha512-SGYGCmashBjAkzQ7tF9FwpPdnD5hIE/Li2CoCfZV/nRvy9YNH/yDwYd04CFxKScMd10tXgcJJUWdz3KZbYM7Bg==}
     dependencies:
       nanoid: 4.0.2
       tslib: 2.5.0

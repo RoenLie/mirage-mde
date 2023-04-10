@@ -3,8 +3,6 @@ import './components/mirage-mde-toolbar.js';
 import './components/mirage-mde-statusbar.js';
 import './components/mirage-mde-preview.js';
 
-// @ts-expect-error
-import hljs from 'highlight.js';
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from 'lit/decorators/custom-element.js';
@@ -25,17 +23,9 @@ export class MirageMDEElement extends LitElement {
 		await this.updateComplete;
 
 		this.scope = new MirageMDE({
-			host:                  this,
-			toolbarTooltips:       true,
-			uploadImage:           false,
-			previewImagesInEditor: false,
-			lineNumbers:           true,
-			autosave:              undefined,
-			renderingConfig:       {
-				singleLineBreaks:       false,
-				codeSyntaxHighlighting: true,
-				hljs:                   hljs,
-			},
+			host:        this,
+			uploadImage: false,
+			autosave:    undefined,
 			...this.options,
 		});
 
@@ -61,21 +51,25 @@ export class MirageMDEElement extends LitElement {
 		return html`
 		<mirage-mde-toolbar
 			.scope=${ this.scope }
+			style="grid-area:toolbar;"
 			class=${ classMap(this.scope?.guiClasses.toolbar ?? {}) }
 		></mirage-mde-toolbar>
 
 		<mirage-mde-editor
 			.scope=${ this.scope }
+			style="grid-area:editor;"
 			class=${ classMap(this.scope?.guiClasses.editor ?? {}) }
 		></mirage-mde-editor>
 
 		<mirage-mde-preview
 			.scope=${ this.scope }
+			style="grid-area:sidebyside;"
 			class=${ classMap(this.scope?.guiClasses.preview ?? {}) }
 		></mirage-mde-preview>
 
 		<mirage-mde-statusbar
 			.scope=${ this.scope }
+			style="grid-area:statusbar;"
 			class=${ classMap(this.scope?.guiClasses.statusbar ?? {}) }
 		></mirage-mde-statusbar>
 		`;
@@ -126,18 +120,6 @@ export class MirageMDEElement extends LitElement {
 		}
 		.hidden {
 			display: none;
-		}
-		mirage-mde-toolbar {
-			grid-area: toolbar;
-		}
-		mirage-mde-editor {
-			grid-area: editor;
-		}
-		mirage-mde-statusbar {
-			grid-area: statusbar;
-		}
-		mirage-mde-preview {
-			grid-area: sidebyside;
 		}
 		`,
 	];

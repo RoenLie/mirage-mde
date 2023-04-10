@@ -1,5 +1,4 @@
 import { MirageMDE } from '../mirage-mde.js';
-import { getState } from '../utilities/get-state.js';
 import { humanFileSize } from '../utilities/human-file-size.js';
 import { _replaceSelection } from '../utilities/replace-selection.js';
 
@@ -241,29 +240,29 @@ export const uploadImageUsingCustomFunction = function(
  * Action executed after an image have been successfully imported on the server.
  */
 export const afterImageUploaded = (editor: MirageMDE, url: string) => {
-	const cm = editor.codemirror;
-	const stat = getState(cm);
-	const options = editor.options;
-	const imageName = url.substr(url.lastIndexOf('/') + 1);
-	const ext = imageName.substring(imageName.lastIndexOf('.') + 1).replace(/\?.*$/, '').toLowerCase();
+	//const cm = editor.codemirror;
+	//const stat = getState(cm);
+	//const options = editor.options;
+	//const imageName = url.substr(url.lastIndexOf('/') + 1);
+	//const ext = imageName.substring(imageName.lastIndexOf('.') + 1).replace(/\?.*$/, '').toLowerCase();
 
-	// Check if media is an image
-	if ([ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'apng', 'avif', 'webp' ].includes(ext)) {
-		_replaceSelection(cm, !!stat.image, options.insertTexts?.uploadedImage as any, url);
-	}
-	else {
-		const text_link = (options.insertTexts?.link ?? [ '', '' ]) as [string, string];
-		text_link[0] = '[' + imageName;
-		_replaceSelection(cm, !!stat.link, text_link, url);
-	}
+	//// Check if media is an image
+	//if ([ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'apng', 'avif', 'webp' ].includes(ext)) {
+	//	_replaceSelection(cm, !!stat.image, options.insertTexts?.uploadedImage as any, url);
+	//}
+	//else {
+	//	const text_link = (options.insertTexts?.link ?? [ '', '' ]) as [string, string];
+	//	text_link[0] = '[' + imageName;
+	//	_replaceSelection(cm, !!stat.link, text_link, url);
+	//}
 
-	// show uploaded image filename for 1000ms
-	editor.updateStatusBar(
-		'upload-image',
-		editor.options.imageTexts?.sbOnUploaded?.replace('#image_name#', imageName) ?? '',
-	);
+	//// show uploaded image filename for 1000ms
+	//editor.updateStatusBar(
+	//	'upload-image',
+	//	editor.options.imageTexts?.sbOnUploaded?.replace('#image_name#', imageName) ?? '',
+	//);
 
-	setTimeout(() => {
-		editor.updateStatusBar('upload-image', editor.options.imageTexts?.sbInit ?? '');
-	}, 1000);
+	//setTimeout(() => {
+	//	editor.updateStatusBar('upload-image', editor.options.imageTexts?.sbInit ?? '');
+	//}, 1000);
 };

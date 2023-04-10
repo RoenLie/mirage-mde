@@ -1,5 +1,6 @@
 import './mirage-mde-icon.js';
 
+import { hasCommonElement } from '@roenlie/mimic/array';
 import { html, LitElement, nothing, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -8,11 +9,9 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
 
-import { actionRegister } from '../action-register.js';
+import { actionRegister, ToolbarButton } from '../action-register.js';
 import { MirageMDE } from '../mirage-mde.js';
-import { Options, ToolbarButton } from '../mirage-mde-types.js';
-import { action } from '../utilities/create-action.js';
-import { hasCommonElement } from '../utilities/has-common-element.js';
+import { Options } from '../mirage-mde-types.js';
 import { isMobile } from '../utilities/is-mobile.js';
 import styles from './mirage-mde-toolbar.scss?inline';
 
@@ -47,7 +46,10 @@ export class ToolbarElement extends LitElement {
 
 		const listener = (ev: Event) => {
 			ev.preventDefault();
-			action(item, this.scope)();
+			if (typeof item.action === 'function')
+				item.action(this.scope.editor, this.scope);
+			if (typeof item.action === 'string')
+				globalThis.open(item.action, '_blank');
 		};
 
 		const elRef = createRef<HTMLElement>();

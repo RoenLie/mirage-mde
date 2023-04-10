@@ -1,9 +1,9 @@
 import { ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
+import { arrayObjSum } from '@roenlie/mimic/array';
+import { isRangeInRanges } from '@roenlie/mimic/validation';
 
 import { getNodesInRange, LineMarker, lineMarkerValue } from '../listeners/get-state.js';
-import { arrayObjSum } from '../utils/array-helpers.js';
-import { isRangeInRanges } from '../utils/is-range-in-ranges.js';
 import { cmFindBeginningOfWord, cmfindEndOfWord } from '../utils/string-helpers.js';
 
 

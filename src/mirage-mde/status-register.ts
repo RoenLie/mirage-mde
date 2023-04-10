@@ -1,8 +1,8 @@
 import { type EditorView, type ViewUpdate } from '@codemirror/view';
+import { wordCount } from '@roenlie/mimic/string';
 import { type StringLiteral } from '@roenlie/mimic/types';
 
 import { type MirageMDE } from './mirage-mde.js';
-import { wordCount } from './utilities/word-count.js';
 
 
 export interface StatusBarItem {
@@ -108,10 +108,7 @@ export const statusRegistry = new Map<StringLiteral, StatusBarItem>([
 			</div>
 			`,
 			onAnyUpdate: (item, update, scope) => {
-				if (!scope.saved)
-					item.value = 'autosaved';
-				else
-					item.value = '';
+				item.value = scope.lastSaved;
 			},
 		},
 	],

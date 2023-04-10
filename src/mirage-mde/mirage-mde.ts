@@ -1,5 +1,7 @@
 import { EditorView } from '@codemirror/view';
+import { deepMerge } from '@roenlie/mimic/structs';
 import { StringLiteral } from '@roenlie/mimic/types';
+import hljs from 'highlight.js';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
@@ -25,14 +27,17 @@ import {
 	timeFormat,
 } from './constants.js';
 import {
+	BlockStyleOptions,
+	ImageErrorTextsOptions,
+	ImageTextsOptions,
 	InsertTextOptions,
 	Options,
 	ParsingOptions,
+	PromptTexts,
 	TimeFormatOptions,
 } from './mirage-mde-types.js';
 import { BuildInStatus, defaultStatus, StatusBarItem, statusRegistry } from './status-register.js';
 import { autosave } from './utilities/autosave.js';
-import { deepMerge } from './utilities/deep-merge.js';
 import { markdown } from './utilities/markdown.js';
 import { openBrowseFileWindow } from './utilities/open-file-window.js';
 import { value } from './utilities/value.js';
@@ -52,11 +57,13 @@ export class MirageMDE {
 	public options: Options;
 	public host: LitElement;
 	public editor: EditorView;
+	public hljs = hljs;
 	public element: HTMLTextAreaElement;
 	public toolbar: (StringLiteral | BuiltInAction)[];
 	public toolbarElements: Record<string, Ref<HTMLElement>> = {};
 	public statusbar: (StringLiteral | BuildInStatus)[];
 	public saved = false;
+	public lastSaved = '';
 	public autosaveTimeoutId: number | undefined;
 	public activeMarkers: Marker[] = [];
 	public gui: GUIElements = {} as any;
@@ -102,8 +109,26 @@ export class MirageMDE {
 		if (options.uploadImage)
 			this.statusbar.unshift('upload-image');
 
+		options.renderingConfig = deepMerge([
+			{
+				singleLineBreaks:       true,
+				codeSyntaxHighlighting: true,
+				//hljs:                   hljs,
+			},
+			//options.renderingConfig ?? {},
+		]);
+
+		// linewrapping defaults to true.
+		options.lineWrapping ??= true;
+
+		// Default to showing line numbers.
+		options.lineNumbers ??= true;
+
+		// Default tab size of 3 spaces.
+		options.tabSize ??= 3;
+
 		// Add default preview rendering function
-		options.previewRender ??= (plainText) => markdown(this, plainText) ?? '';
+		options.previewRender ??= (plainText) => markdown(this, plainText);
 
 		// Set default options for parsing config
 		options.parsingConfig = deepMerge<ParsingOptions>([
@@ -116,10 +141,10 @@ export class MirageMDE {
 		options.insertTexts = deepMerge<InsertTextOptions>([ insertTexts as any, options.insertTexts || {} ]);
 
 		// Merging the promptTexts, with the given options
-		options.promptTexts = deepMerge<typeof promptTexts>([ promptTexts, options.promptTexts || {} ]);
+		options.promptTexts = deepMerge<PromptTexts>([ promptTexts, options.promptTexts || {} ]);
 
 		// Merging the blockStyles, with the given options
-		options.blockStyles = deepMerge<typeof blockStyles>([ blockStyles, options.blockStyles || {} ]);
+		options.blockStyles = deepMerge<BlockStyleOptions>([ blockStyles, options.blockStyles || {} ]);
 
 		if (options.autosave) {
 			// Merging the Autosave timeFormat, with the given options
@@ -138,8 +163,8 @@ export class MirageMDE {
 		options.uploadImage       = options.uploadImage ?? false;
 		options.imageMaxSize      = options.imageMaxSize ?? 2097152; // 1024 * 1024 * 2
 		options.imageAccept       = options.imageAccept ?? 'image/png, image/jpeg, image/gif, image/avif';
-		options.imageTexts        = deepMerge<typeof imageTexts>([ imageTexts, options.imageTexts || {} ]);
-		options.errorMessages     = deepMerge<typeof errorMessages>([ errorMessages, options.errorMessages || {} ]);
+		options.imageTexts        = deepMerge<ImageTextsOptions>([ imageTexts, options.imageTexts || {} ]);
+		options.errorMessages     = deepMerge<ImageErrorTextsOptions>([ errorMessages, options.errorMessages || {} ]);
 		options.imagePathAbsolute = options.imagePathAbsolute ?? false;
 		options.imageCSRFName     = options.imageCSRFName ?? 'csrfmiddlewaretoken';
 		options.imageCSRFHeader   = options.imageCSRFHeader ?? false;
@@ -156,8 +181,13 @@ export class MirageMDE {
 	public uploadImages = uploadImages.bind(this);
 	public uploadImageUsingCustomFunction = uploadImageUsingCustomFunction.bind(this);
 	public uploadImagesUsingCustomFunction = uploadImagesUsingCustomFunction.bind(this);
-	public isPreviewActive = () => {
-		return this.options.host?.classList.contains('preview');
-	};
+
+	public isPreviewActive() {
+		return this.host?.classList.contains('preview');
+	}
+
+	public isFullscreenActive() {
+		return this.host.classList.contains('fullscreen');
+	}
 
 }

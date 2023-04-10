@@ -1,7 +1,7 @@
 import { EditorView } from '@codemirror/view';
 
+import { MMDECommand } from '../action-register.js';
 import { MirageMDE } from '../mirage-mde.js';
-import { MMDECommand } from '../mirage-mde-types.js';
 
 
 /**
@@ -21,7 +21,7 @@ export const togglePreview: MMDECommand = (view: EditorView, editor: MirageMDE, 
 		previewButton?.classList.toggle('active', true);
 		sidebysideButton?.classList.toggle('active', false);
 
-		const value = options.previewRender?.(editor.value()) ?? '';
+		const value = options.previewRender?.(editor.value()) ?? Promise.resolve('');
 		gui.preview.setContent(value);
 	}
 	else {

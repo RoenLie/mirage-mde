@@ -11,13 +11,13 @@
 		"emitDeclarationOnly": true,
 		"incremental": false,
 		"types": [
-			"vite/client"
+			"vite/client",
 		]
 	},
 	"include": [
 		"./**/*.ts",
 		"./**/*.d.ts",
-		"./**/*.js"
+		"./**/*.js",
 	],
 	"exclude": [
 		"./**/*.test.ts",

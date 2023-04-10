@@ -14,7 +14,7 @@
 		"README.md"
 	],
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite --config ./vite.config.preview.ts",
 		"dev:codespaces": "vite dev --host",
 		"build": "tsc --project ./src/tsconfig.json && vite build",
 		"build:preview": "vite --config ./vite.config.preview.ts build",
@@ -35,7 +35,7 @@
 		"@codemirror/state": "^6.2.0",
 		"@codemirror/view": "^6.9.3",
 		"@lezer/highlight": "^1.1.4",
-		"@roenlie/mimic": "^0.0.3",
+		"@roenlie/mimic": "^0.0.6",
 		"cm6-theme-basic-dark": "^0.2.0",
 		"highlight.js": "^11.7.0",
 		"lit": "^2.7.2",

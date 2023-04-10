@@ -1,24 +1,28 @@
 import './mirage-mde-display.js';
 
-import { css, html } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { EnhancedElement } from '../../utilities/enhanced-element.js';
 import { handlePreviewScroll } from '../actions/toggle-sidebyside.js';
 import { MirageMDE } from '../mirage-mde.js';
 
 
 @customElement('mirage-mde-preview')
-export class PreviewElement extends EnhancedElement {
+export class PreviewElement extends LitElement {
 
 	@property({ type: Object }) public scope: MirageMDE;
-	@state() protected htmlContent: string;
+	@state() protected htmlContent: string | Promise<string>;
 	public editorScroll = false;
 	public previewScroll = false;
 	protected isCreated = false;
 
-	public setContent(htmlString: string) {
-		this.htmlContent = htmlString;
+	public setContent(htmlString: string): void
+	public setContent(htmlString: Promise<string>): Promise<string>
+	public setContent(htmlString: any): any {
+		if (typeof htmlString === 'string')
+			this.htmlContent = htmlString;
+		else if (htmlString)
+			return htmlString.then((s: string) => this.htmlContent = s);
 	}
 
 	public create() {

@@ -1,5 +1,5 @@
 import { type Extension } from '@codemirror/state';
-import { RecordOf, type StringLiteral } from '@roenlie/mimic/types';
+import { type StringLiteral } from '@roenlie/mimic/types';
 import { type LitElement } from 'lit';
 import { marked } from 'marked';
 
@@ -58,7 +58,6 @@ export interface PromptTexts {
 
 export interface RenderingOptions {
 	codeSyntaxHighlighting?: boolean;
-	hljs?: any;
 	markedOptions?: marked.MarkedOptions;
 	sanitizerFunction?: (html: string) => string;
 	singleLineBreaks?: boolean;
@@ -89,7 +88,6 @@ export interface Options {
 	autoRefresh?: boolean | { delay: number; };
 	blockStyles?: BlockStyleOptions;
 	hideIcons?: (StringLiteral | BuiltInAction)[];
-	indentWithTabs?: boolean;
 	initialValue?: string;
 	insertTexts?: InsertTextOptions;
 	lineNumbers?: boolean;
@@ -98,19 +96,15 @@ export interface Options {
 	placeholder?: string;
 	previewImagesInEditor?: boolean;
 	imagesPreviewHandler?: (src: string) => string;
-	previewRender?: (markdownPlaintext: string) => string;
+	previewRender?: (markdownPlaintext: string) => Promise<string>;
 	promptURLs?: boolean;
 	renderingConfig?: RenderingOptions;
-	inputStyle?: 'textarea' | 'contenteditable';
-	nativeSpellcheck?: boolean;
-	styleSelectedText?: boolean;
 	tabSize?: number;
 	statusbar?: (StringLiteral | BuildInStatus)[];
 	statusbarStatuses?: StatusBarItem[];
 	toolbar?: (StringLiteral | BuiltInAction)[];
 	toolbarActions?: (ToolbarButton | ToolbarDropdown)[];
 	toolbarTooltips?: boolean;
-	theme?: string;
 	unorderedListStyle?: '*' | '-' | '+';
 	uploadImage?: boolean;
 	imageMaxSize?: number;
@@ -122,7 +116,7 @@ export interface Options {
 	imageCSRFName?: string;
 	imageCSRFHeader?: boolean;
 	imageTexts?: ImageTextsOptions;
-	errorMessages?: RecordOf<ImageErrorTextsOptions, string, string>;
+	errorMessages?: ImageErrorTextsOptions;
 	errorCallback?: (errorMessage: string) => void;
 	promptTexts?: PromptTexts;
 	direction?: 'ltr' | 'rtl';

@@ -1,8 +1,8 @@
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
+import { isRangeInRanges, Range } from '@roenlie/mimic/validation';
 
 import { Tree } from '../types/tree.js';
-import { isRangeInRanges, type Range } from '../utils/is-range-in-ranges.js';
 
 
 export type Marker = TextMarker | LineMarker | [
