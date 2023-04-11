@@ -3,6 +3,7 @@ import './components/mirage-mde-toolbar.js';
 import './components/mirage-mde-statusbar.js';
 import './components/mirage-mde-preview.js';
 
+//import './utilities/sudoku.js';
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from 'lit/decorators/custom-element.js';
