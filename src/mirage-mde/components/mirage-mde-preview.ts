@@ -3,7 +3,7 @@ import './mirage-mde-display.js';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { handlePreviewScroll } from '../actions/toggle-sidebyside.js';
+import { handlePreviewScroll } from '../codemirror/commands/toggle-sidebyside.js';
 import { MirageMDE } from '../mirage-mde.js';
 
 

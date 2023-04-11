@@ -43,7 +43,8 @@ import {
 	lineNumbers,
 	rectangularSelection,
 } from '@codemirror/view';
-import { tags } from '@lezer/highlight';
+import { styleTags, Tag, tags } from '@lezer/highlight';
+import { MarkdownConfig } from '@lezer/markdown';
 import { iterate } from '@roenlie/mimic/iterators';
 import { basicDark } from 'cm6-theme-basic-dark';
 import {
@@ -58,15 +59,14 @@ import {
 } from 'lit/decorators.js';
 
 import { actionRegister, MMDECommand, ToolbarButton } from '../action-register.js';
-import { editorToPreview, handleEditorScroll } from '../actions/toggle-sidebyside.js';
 import { toggleCheckbox } from '../codemirror/commands/toggle-checkbox.js';
+import { editorToPreview, handleEditorScroll } from '../codemirror/commands/toggle-sidebyside.js';
 import { undoTab } from '../codemirror/commands/undo-tab.js';
 import { updatePreviewListener } from '../codemirror/listeners/update-preview.js';
 import { updateStatusbarListener } from '../codemirror/listeners/update-statusbar.js';
 import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
 import { type MirageMDE } from '../mirage-mde.js';
 import styles from './mirage-mde-editor.scss?inline';
-
 
 //const MMDEimageCache = new Map<string, any>();
 
@@ -75,10 +75,41 @@ import styles from './mirage-mde-editor.scss?inline';
 export class EditorElement extends LitElement {
 
 	@property({ type: Object }) public scope: MirageMDE;
-	protected documentOnKeyDown: (ev: KeyboardEvent) => any;
+	protected globalShortcuts: KeyBinding[] = [];
+	protected documentOnKeyDown = (ev: KeyboardEvent) => {
+		const pressedKey = ev.key.toUpperCase();
+		const modifierMap: Record<string, string> = {
+			'c-': 'ctrlKey',
+			'a-': 'altKey',
+			's-': 'shiftKey',
+		};
+
+		this.globalShortcuts.forEach(({ key, preventDefault, run }) => {
+			if (!key)
+				return;
+
+			const parts = key.replace(/-/g, '- ').split(' ');
+			const modifiers = parts.filter(p => p.includes('-')).map(m => modifierMap[m]!);
+			const requiredKey = parts.filter(p => !p.includes('-')).at(0)?.toUpperCase();
+
+			if (modifiers.every(m => (ev as any)[m]) && pressedKey === requiredKey) {
+				if (preventDefault)
+					ev.preventDefault();
+
+				run?.(this.scope.editor);
+			}
+		});
+	};
+
+	public override connectedCallback(): void {
+		super.connectedCallback();
+
+		globalThis.addEventListener('keydown', this.documentOnKeyDown);
+	}
 
 	public override disconnectedCallback() {
 		super.disconnectedCallback();
+
 		globalThis.removeEventListener('keydown', this.documentOnKeyDown);
 	}
 
@@ -91,12 +122,33 @@ export class EditorElement extends LitElement {
 
 				return item as Omit<ToolbarButton, 'action'> & { action: MMDECommand };
 			})
-			.pipe((button): KeyBinding => ({
-				key:            button.shortcut,
-				run:            (view: EditorView) => button.action(view, this.scope),
-				preventDefault: true,
-			}))
+			.pipe((button) => {
+				const keybinding: KeyBinding = {
+					key:            button.shortcut,
+					run:            (view: EditorView) => button.action(view, this.scope),
+					preventDefault: true,
+				};
+
+				if (button.global)
+					this.globalShortcuts.push(keybinding);
+				else
+					return keybinding;
+			})
 			.toArray();
+
+
+		const customTags = {
+			headingMark: Tag.define(),
+			table:       Tag.define(),
+		};
+
+		const MarkStylingExtension: MarkdownConfig = {
+			props: [
+				styleTags({
+					HeaderMark: customTags.headingMark,
+				}),
+			],
+		};
 
 
 		const extensions = [
@@ -125,7 +177,7 @@ export class EditorElement extends LitElement {
 				base:          markdownLanguage,
 				codeLanguages: languages,
 				addKeymap:     true,
-				extensions:    [],
+				extensions:    [ MarkStylingExtension ],
 			}),
 
 			// keyboard behavior
@@ -159,9 +211,11 @@ export class EditorElement extends LitElement {
 				{ tag: tags.heading4, class: 'cm-header-4' },
 				{ tag: tags.heading5, class: 'cm-header-5' },
 				{ tag: tags.heading6, class: 'cm-header-6' },
+				{ tag: customTags.headingMark, class: 'ͼ1m cm-heading-mark' },
 			])),
 			syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
 		];
+
 
 		if (this.scope.options.lineWrapping)
 			extensions.push(EditorView.lineWrapping);

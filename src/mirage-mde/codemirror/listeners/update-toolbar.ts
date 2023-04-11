@@ -14,6 +14,7 @@ export const updateToolbarStateListener = (update: ViewUpdate, scope: MirageMDE)
 		return;
 
 	const nodes = ranges.flatMap(range => getNodesInRange(state, range));
+
 	scope.activeMarkers = nodes.map(node => node.marker);
 	scope.gui.toolbar.requestUpdate();
 };

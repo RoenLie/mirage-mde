@@ -10,7 +10,6 @@ import { drawUploadedImage } from './actions/draw-uploaded-image.js';
 import { redo, undo } from './actions/history.js';
 import { toggleBlockquote } from './actions/toggle-blockquote.js';
 import { toggleCodeBlock } from './actions/toggle-codeblock.js';
-import { toggleFullScreen } from './actions/toggle-fullscreen.js';
 import {
 	toggleHeading1,
 	toggleHeading2,
@@ -21,8 +20,9 @@ import {
 	toggleHeadingSmaller,
 } from './actions/toggle-heading.js';
 import { toggleOrderedList, toggleUnorderedList } from './actions/toggle-list.js';
-import { togglePreview } from './actions/toggle-preview.js';
-import { toggleSideBySide } from './actions/toggle-sidebyside.js';
+import { toggleFullScreen } from './codemirror/commands/toggle-fullscreen.js';
+import { togglePreview } from './codemirror/commands/toggle-preview.js';
+import { toggleSideBySide } from './codemirror/commands/toggle-sidebyside.js';
 import { toggleBold, toggleItalic, toggleStrikethrough } from './codemirror/commands/toggle-text-marker.js';
 import { type Marker } from './codemirror/listeners/get-state.js';
 import { type MirageMDE } from './mirage-mde.js';
@@ -37,6 +37,7 @@ export interface ToolbarButtonBase {
 	iconUrl?: string;
 	title?: string;
 	shortcut?: string;
+	global?: boolean;
 	noDisable?: boolean;
 	noMobile?: boolean;
 }
@@ -368,7 +369,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 			type:      'button',
 			name:      'preview',
 			action:    togglePreview,
-			shortcut:  'Cmd-P',
+			shortcut:  'c-p',
+			global:    true,
 			iconUrl:   'https://icons.getbootstrap.com/assets/icons/eye.svg',
 			noDisable: true,
 			title:     'Toggle Preview',

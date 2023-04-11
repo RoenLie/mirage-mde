@@ -1,6 +1,6 @@
 import { ViewUpdate } from '@codemirror/view';
 
-import { editorToPreview } from '../../actions/toggle-sidebyside.js';
+import { editorToPreview } from '../commands/toggle-sidebyside.js';
 import { MirageMDE } from '../../mirage-mde.js';
 
 

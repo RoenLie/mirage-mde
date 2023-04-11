@@ -35,6 +35,7 @@
 		"@codemirror/state": "^6.2.0",
 		"@codemirror/view": "^6.9.3",
 		"@lezer/highlight": "^1.1.4",
+		"@lezer/markdown": "^1.0.2",
 		"@roenlie/mimic": "^0.0.6",
 		"cm6-theme-basic-dark": "^0.2.0",
 		"highlight.js": "^11.7.0",
@@ -60,5 +61,10 @@
 		"typescript": "^5.0.4",
 		"vite": "^4.2.1",
 		"vitest": "^0.30.0"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"highlight.js@11.7.0": "patches/highlight.js@11.7.0.patch"
+		}
 	}
 }
