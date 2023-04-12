@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { css, CSSResult, CSSResultGroup, CSSResultOrNative, html, LitElement, render, supportsAdoptingStyleSheets, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -80,14 +80,23 @@ export const popoutPreview: MMDECommand = (view, scope) => {
 	winDarkCodeStyle.innerHTML = codeDarkStyles;
 
 	winHandle?.document.head.appendChild(winBodyStyle);
-	winHandle?.document.head.appendChild(winDarkMarkdownStyle);
-	winHandle?.document.head.appendChild(winLightMarkdownStyle);
-	winHandle?.document.head.appendChild(winDarkCodeStyle);
+	//winHandle?.document.head.appendChild(winDarkMarkdownStyle);
+	//winHandle?.document.head.appendChild(winLightMarkdownStyle);
+	//winHandle?.document.head.appendChild(winDarkCodeStyle);
 
-	const previewEl = document.createElement('mirage-mde-window');
-	previewEl.scope = scope;
+	render(html`
+	<mirage-mde-window
+		.scope=${ scope }
+	></mirage-mde-window>
+	`, winHandle!.document.body);
 
-	winHandle?.document.body.appendChild(previewEl);
+
+	//const windowEl = document.createElement('mirage-mde-window');
+	//windowEl.scope = scope;
+	//windowEl.style.display = 'none';
+	//document.body.appendChild(windowEl);
+	//winHandle!.document.body.appendChild(windowEl);
+	//windowEl.style.display = '';
 
 	const previewButton = scope.toolbarElements['popout']?.value;
 	previewButton?.classList.toggle('active', true);
@@ -122,10 +131,15 @@ export class WindowElement extends LitElement {
 		return this;
 	}
 
-	public override connectedCallback(): void {
-		super.connectedCallback();
-		this.scope.gui.window = this;
+	//protected adoptedCallback() {
+	//	// Adopt the old styles into the new document
+	//	adoptStyles(this.shadowRoot!, (this.constructor as typeof LitElement).styles!, this.ownerDocument.defaultView!);
+	//}
 
+	public override connectedCallback() {
+		super.connectedCallback();
+
+		this.scope.gui.window = this;
 		editorToPreview(this.scope);
 	}
 
@@ -146,8 +160,47 @@ export class WindowDisplayElement extends LitElement {
 	@property() public theme: 'light' | 'dark' = 'dark';
 	@property() public content = '';
 
+	//protected override createRenderRoot() {
+	//	return this;
+	//}
+
+
 	protected override createRenderRoot() {
-		return this;
+		const renderRoot = this.shadowRoot ?? this.attachShadow(
+			(this.constructor as any).shadowRootOptions,
+		);
+
+		// When adoptedStyleSheets are shimmed, they are inserted into the
+		// shadowRoot by createRenderRoot. Adjust the renderBefore node so that
+		// any styles in Lit content render before adoptedStyleSheets. This is
+		// important so that adoptedStyleSheets have precedence over styles in
+		// the shadowRoot.
+		this.renderOptions.renderBefore ??= renderRoot!.firstChild as ChildNode;
+
+		adoptStyles(
+			renderRoot,
+			((this.constructor as typeof LitElement).styles ?? []) as CSSResultOrNative[],
+			this.ownerDocument.defaultView!,
+		);
+
+		// adoptStyles(
+		//   renderRoot,
+		//   (this.constructor as typeof ReactiveElement).elementStyles
+		// );
+
+		return renderRoot;
+	}
+
+
+	protected adoptedCallback() {
+		// Adopt the old styles into the new document
+		if (this.shadowRoot) {
+			adoptStyles(
+				this.shadowRoot,
+				((this.constructor as typeof LitElement).styles ?? []) as CSSResultOrNative[],
+				this.ownerDocument.defaultView!,
+			);
+		}
 	}
 
 	protected override render() {
@@ -158,6 +211,25 @@ export class WindowDisplayElement extends LitElement {
 		`;
 	}
 
+	public static override styles = [
+		unsafeCSS(markdownDarkStyles),
+		unsafeCSS(markdownLightStyles),
+		unsafeCSS(codeDarkStyles),
+		css`
+		:host {
+			display: grid;
+		}
+		.markdown-body {
+			padding: 4px;
+			word-break: break-word;
+			place-self: start center;
+
+			width: clamp(500px, 70vw, 800px);
+			border-radius: 4px;
+		}
+		`,
+	];
+
 }
 
 
@@ -167,3 +239,87 @@ declare global {
 		'mirage-mde-window-display': WindowDisplayElement;
 	}
 }
+
+
+// This function migrates styles from a custom element's constructe stylesheet to a new document.
+export function adoptStyles(shadowRoot: ShadowRoot, styles: Array<CSSResultOrNative>, defaultView: Window) {
+	// If the browser supports adopting stylesheets
+	if (supportsAdoptingStyleSheets) {
+		// If the styles is an array of CSSResultGroup Objects
+		// This happens when styles is passed an array i.e. => static styles = [css`${styles1}`, css`${styles2}`] in the component
+		if ((styles as CSSResultGroup[])?.length) {
+			// Define the sheets array by mapping the array of CSSResultGroup objects
+			const sheets = (styles as CSSResultGroup[]).map(s => {
+				// Create a new stylesheet in the context of the owner document's window
+				// We have to cast defaultView as any due to typescript definition not allowing us to call CSSStyleSheet in this conext
+				// We have to cast CSSStyleSheet as <any> due to typescript definition not containing replaceSync for CSSStyleSheet
+				const sheet = (new (defaultView as any).CSSStyleSheet() as any);
+
+				// Update the new sheet with the old styles
+				sheet.replaceSync(s);
+
+				// Return the sheet
+				return sheet;
+			});
+
+			// Set adoptedStyleSheets with the new styles (must be an array)
+			(shadowRoot as any).adoptedStyleSheets = sheets;
+		}
+		else {
+			// Create a new stylesheet in the context of the owner document's window
+			// We have to cast defaultView as any due to typescript definition not allowing us to call CSSStyleSheet in this conext
+			// We have to cast CSSStyleSheet as <any> due to typescript definition not containing replaceSync for CSSStyleSheet
+			const sheet = (new (defaultView as any).CSSStyleSheet() as any);
+
+			// Update the new sheet with the old styles
+			sheet.replaceSync(styles);
+
+			// Set adoptedStyleSheets with the new styles (must be an array)
+			(shadowRoot as any).adoptedStyleSheets = [ sheet ];
+		}
+	}
+	else {
+		styles.forEach((s) => {
+			const style = document.createElement('style');
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const nonce = (globalThis as any)['litNonce'];
+			if (nonce !== undefined)
+				style.setAttribute('nonce', nonce);
+
+			style.textContent = (s as CSSResult).cssText;
+			shadowRoot.appendChild(style);
+		});
+	}
+}
+
+
+/**
+ * Applies the given styles to a `shadowRoot`. When Shadow DOM is
+ * available but `adoptedStyleSheets` is not, styles are appended to the
+ * `shadowRoot` to [mimic spec behavior](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
+ * Note, when shimming is used, any styles that are subsequently placed into
+ * the shadowRoot should be placed *before* any shimmed adopted styles. This
+ * will match spec behavior that gives adopted sheets precedence over styles in
+ * shadowRoot.
+ */
+//export const adoptStyles = (
+//	renderRoot: ShadowRoot,
+//	styles: Array<CSSResultOrNative>,
+//) => {
+//	if (supportsAdoptingStyleSheets) {
+//	  (renderRoot as ShadowRoot).adoptedStyleSheets = styles.map((s) =>
+//		 s instanceof CSSStyleSheet ? s : s.styleSheet!);
+//	}
+//	else {
+//	  styles.forEach((s) => {
+//		 const style = document.createElement('style');
+//		 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//		 const nonce = (global as any)['litNonce'];
+//		 if (nonce !== undefined)
+//				style.setAttribute('nonce', nonce);
+
+//		 style.textContent = (s as CSSResult).cssText;
+//		 renderRoot.appendChild(style);
+//	  });
+//	}
+//};
