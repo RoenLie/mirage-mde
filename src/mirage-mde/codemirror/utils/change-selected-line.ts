@@ -1,4 +1,4 @@
-import { EditorSelection, EditorState, Line } from '@codemirror/state';
+import { ChangeSpec, EditorSelection, EditorState, Line } from '@codemirror/state';
 
 
 export const changeBySelectedLine = (
@@ -7,7 +7,8 @@ export const changeBySelectedLine = (
 	let atLine = -1;
 
 	return state.changeByRange(range => {
-		let changes: any[] = [];
+		const changes: ChangeSpec[] = [];
+
 		for (let pos = range.from; pos <= range.to;) {
 			let line = state.doc.lineAt(pos);
 			if (line.number > atLine && (range.empty || range.to > line.from)) {
@@ -17,11 +18,14 @@ export const changeBySelectedLine = (
 
 			pos = line.to + 1;
 		}
-		let changeSet = state.changes(changes);
+		const changeSet = state.changes(changes);
 
 		return {
 			changes,
-			range: EditorSelection.range(changeSet.mapPos(range.anchor, 1), changeSet.mapPos(range.head, 1)),
+			range: EditorSelection.range(
+				changeSet.mapPos(range.anchor, 1),
+				changeSet.mapPos(range.head, 1),
+			),
 		};
 	});
 };

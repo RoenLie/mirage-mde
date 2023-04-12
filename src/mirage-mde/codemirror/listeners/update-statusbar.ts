@@ -2,7 +2,7 @@ import { EditorView, ViewUpdate } from '@codemirror/view';
 import { weakmapGetLazy } from '@roenlie/mimic/structs';
 
 import { MirageMDE } from '../../mirage-mde.js';
-import { statusRegistry } from '../../status-register.js';
+import { statusRegistry } from '../../registry/status-registry.js';
 
 
 const metadata = new WeakMap<EditorView, {initialized: boolean;}>();

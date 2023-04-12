@@ -1,33 +1,62 @@
+import { ChangeSpec, EditorSelection } from '@codemirror/state';
+import { EditorView } from '@codemirror/view';
+import { isRangeInRanges } from '@roenlie/mimic/validation';
+
+import { getAllNodesInRange } from '../codemirror/listeners/get-state.js';
 import { MirageMDE } from '../mirage-mde.js';
+import { MMDECommand } from '../registry/action-registry.js';
 
 
 /**
  * Action for clean block (remove headline, list, blockquote code, markers)
  */
-export const cleanBlock = (editor: MirageMDE) => {
-	_cleanBlock(editor.codemirror);
-};
+export const cleanBlock: MMDECommand = (view: EditorView) => {
+	const markValidator = (mark: {
+		from: number;
+		to: number;
+		name: string;
+	}) => {
+		return [
+			mark.name.includes('Mark'),
+			mark.name === 'HorizontalRule',
+		].some(Boolean);
+	};
 
+	const nodes = view.state.selection.ranges.flatMap(
+		range => getAllNodesInRange(view.state, range),
+	).filter(markValidator);
 
-const _cleanBlock = (cm: CodeMirror.Editor) => {
-	const lastElement = cm.getWrapperElement().lastElementChild as HTMLElement | null;
-	if (lastElement?.classList.contains('editor-preview-active'))
-		return;
+	const transaction = view.state.changeByRange(range => {
+		const changes: ChangeSpec[] = [];
 
-	const startPoint = cm.getCursor('start');
-	const endPoint = cm.getCursor('end');
-	let text;
+		nodes.forEach(node => {
+			if (!isRangeInRanges([ range ], node))
+				return;
 
-	for (let line = startPoint.line; line <= endPoint.line; line++) {
-		text = cm.getLine(line);
-		text = text.replace(/^[ ]*([# ]+|\*|-|[> ]+|[0-9]+(.|\)))[ ]*/, '');
-
-		cm.replaceRange(text, {
-			line: line,
-			ch:   0,
-		}, {
-			line: line,
-			ch:   99999999999999,
+			changes.push({
+				from:   node.from,
+				to:     node.to,
+				insert: '',
+			});
 		});
-	}
+
+		const changeSet = view.state.changes(changes);
+
+		return {
+			changes,
+			range: EditorSelection.range(
+				changeSet.mapPos(range.anchor, 1),
+				changeSet.mapPos(range.head, 1),
+			),
+		};
+	});
+
+
+	if (!transaction.changes.empty)
+		view.dispatch(view.state.update(transaction));
+
+
+	view.focus();
+
+	return true;
 };

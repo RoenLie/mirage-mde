@@ -5,14 +5,13 @@ import hljs from 'highlight.js';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
-import { actionRegister, BuiltInAction, defaultToolbar, ToolbarItem } from './action-register.js';
-import { updateStatusBar } from './actions/update-status-bar.js';
 import {
 	uploadImage,
 	uploadImages,
 	uploadImagesUsingCustomFunction,
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
+import { WindowElement } from './codemirror/commands/popout-preview.js';
 import { Marker } from './codemirror/listeners/get-state.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
@@ -22,7 +21,6 @@ import {
 	blockStyles,
 	errorMessages,
 	imageTexts,
-	insertTexts,
 	promptTexts,
 	timeFormat,
 } from './constants.js';
@@ -30,13 +28,19 @@ import {
 	BlockStyleOptions,
 	ImageErrorTextsOptions,
 	ImageTextsOptions,
-	InsertTextOptions,
 	Options,
 	ParsingOptions,
 	PromptTexts,
 	TimeFormatOptions,
 } from './mirage-mde-types.js';
-import { BuildInStatus, defaultStatus, StatusBarItem, statusRegistry } from './status-register.js';
+import { actionRegister, BuiltInAction, defaultToolbar, ToolbarItem } from './registry/action-registry.js';
+import { drawRegistry } from './registry/draw-registry.js';
+import {
+	BuildInStatus,
+	defaultStatus,
+	StatusBarItem,
+	statusRegistry,
+} from './registry/status-registry.js';
 import { autosave } from './utilities/autosave.js';
 import { markdown } from './utilities/markdown.js';
 import { openBrowseFileWindow } from './utilities/open-file-window.js';
@@ -48,6 +52,7 @@ type GUIElements = {
 	preview: PreviewElement;
 	toolbar: ToolbarElement;
 	statusbar: StatusbarElement;
+	window?: WindowElement;
 }
 type GUIClasses = Record<keyof GUIElements, Partial<Record<'hidden', boolean>>>;
 
@@ -72,10 +77,23 @@ export class MirageMDE {
 		editor:    {},
 		toolbar:   {},
 		statusbar: {},
+		window:    {},
 	};
 
 	public get isSideBySideActive() {
 		return this.host.classList.contains('sidebyside');
+	}
+
+	public get isPreviewActive() {
+		return this.host?.classList.contains('preview');
+	}
+
+	public get isFullscreenActive() {
+		return this.host.classList.contains('fullscreen');
+	}
+
+	public get isWindowActive() {
+		return !!this.gui.window;
 	}
 
 	constructor(options: Options = {} as any) {
@@ -138,7 +156,9 @@ export class MirageMDE {
 		]);
 
 		// Merging the insertTexts, with the given options
-		options.insertTexts = deepMerge<InsertTextOptions>([ insertTexts as any, options.insertTexts || {} ]);
+		options.drawables?.forEach(({ name, value }) => {
+			drawRegistry.set(name, value);
+		});
 
 		// Merging the promptTexts, with the given options
 		options.promptTexts = deepMerge<PromptTexts>([ promptTexts, options.promptTexts || {} ]);
@@ -174,7 +194,6 @@ export class MirageMDE {
 	public value(val: string | undefined): MirageMDE
 	public value(val?: undefined): string
 	public value(val: any): any { return value(this, val); }
-	public updateStatusBar = updateStatusBar.bind(this);
 	public openBrowseFileWindow = openBrowseFileWindow.bind(this);
 	public autosave = autosave.bind(this);
 	public uploadImage = uploadImage.bind(this);
@@ -182,12 +201,5 @@ export class MirageMDE {
 	public uploadImageUsingCustomFunction = uploadImageUsingCustomFunction.bind(this);
 	public uploadImagesUsingCustomFunction = uploadImagesUsingCustomFunction.bind(this);
 
-	public isPreviewActive() {
-		return this.host?.classList.contains('preview');
-	}
-
-	public isFullscreenActive() {
-		return this.host.classList.contains('fullscreen');
-	}
 
 }

@@ -7,8 +7,8 @@ import {
 	type BuiltInAction,
 	type ToolbarButton,
 	type ToolbarDropdown,
-} from './action-register.js';
-import { type BuildInStatus, StatusBarItem } from './status-register.js';
+} from './registry/action-registry.js';
+import { type BuildInStatus, StatusBarItem } from './registry/status-registry.js';
 
 
 export interface TimeFormatOptions {
@@ -32,14 +32,6 @@ export interface BlockStyleOptions {
 	bold?: string;
 	code?: string;
 	italic?: string;
-}
-
-export interface InsertTextOptions {
-	horizontalRule?: [string, string];
-	image?: [string, string];
-	link?: [string, string];
-	table?: [string, string];
-	uploadedImage?: [string, string];
 }
 
 export interface ParsingOptions {
@@ -89,7 +81,6 @@ export interface Options {
 	blockStyles?: BlockStyleOptions;
 	hideIcons?: (StringLiteral | BuiltInAction)[];
 	initialValue?: string;
-	insertTexts?: InsertTextOptions;
 	lineNumbers?: boolean;
 	lineWrapping?: boolean;
 	parsingConfig?: ParsingOptions;
@@ -105,6 +96,7 @@ export interface Options {
 	toolbar?: (StringLiteral | BuiltInAction)[];
 	toolbarActions?: (ToolbarButton | ToolbarDropdown)[];
 	toolbarTooltips?: boolean;
+	drawables?: {name: string; value: string}[];
 	unorderedListStyle?: '*' | '-' | '+';
 	uploadImage?: boolean;
 	imageMaxSize?: number;

@@ -8,6 +8,7 @@ import { Tree } from '../types/tree.js';
 export type Marker = TextMarker | LineMarker | [
 	'link',
 	'image',
+	'fencedcode'
 ][number];
 
 
@@ -46,6 +47,7 @@ const markerMap: Record<string, Marker> = {
 	Link:           'link',
 	Image:          'image',
 	Blockquote:     'blockquote',
+	FencedCode:     'fencedcode',
 };
 
 
@@ -82,8 +84,6 @@ export const getNodesInRange = (state: EditorState, range: Range) => {
 			if (!isRangeInRanges([ { from: node.from, to: node.to } ], range))
 				return;
 
-			console.log(node.name);
-
 			const name = markerMap[node.name];
 			if (!name)
 				return;
@@ -93,6 +93,30 @@ export const getNodesInRange = (state: EditorState, range: Range) => {
 				name:   node.name,
 				from:   node.from,
 				to:     node.to,
+			});
+		},
+	});
+
+	return activeSymbols;
+};
+
+
+export const getAllNodesInRange = (state: EditorState, range: Range) => {
+	const activeSymbols: ({
+		from: number;
+		to: number;
+		name: string;
+	})[] = [];
+
+	(syntaxTree(state) as Tree).iterate({
+		enter: ({ node }) => {
+			if (!isRangeInRanges([ { from: node.from, to: node.to } ], range))
+				return;
+
+			activeSymbols.push({
+				name: node.name,
+				from: node.from,
+				to:   node.to,
 			});
 		},
 	});

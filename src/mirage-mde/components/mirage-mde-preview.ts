@@ -11,7 +11,7 @@ import { MirageMDE } from '../mirage-mde.js';
 export class PreviewElement extends LitElement {
 
 	@property({ type: Object }) public scope: MirageMDE;
-	@state() protected htmlContent: string | Promise<string>;
+	@state() protected htmlContent: string | Promise<string> = '';
 	public editorScroll = false;
 	public previewScroll = false;
 	protected isCreated = false;

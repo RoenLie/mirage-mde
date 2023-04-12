@@ -6,7 +6,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { when } from 'lit/directives/when.js';
 
 import { MirageMDE } from '../mirage-mde.js';
-import { StatusBarItem, statusRegistry } from '../status-register.js';
+import { StatusBarItem, statusRegistry } from '../registry/status-registry.js';
 import styles from './mirage-mde-statusbar.scss?inline';
 
 

@@ -1,44 +1,32 @@
-export const _replaceSelection = (
-	cm: CodeMirror.Editor,
-	active: boolean,
-	startEnd: [string, string],
-	url?: string,
-) => {
-	const lastElement = cm.getWrapperElement().lastElementChild as HTMLElement | null;
-	if (lastElement?.classList.contains('editor-preview-active'))
-		return;
+import { ChangeSpec, EditorSelection } from '@codemirror/state';
+import { EditorView } from '@codemirror/view';
 
-	let text;
-	let start = startEnd[0]!;
-	let end = startEnd[1]!;
-	const startPoint: any = {};
-	const endPoint: any = {};
-	Object.assign(startPoint, cm.getCursor('start'));
-	Object.assign(endPoint, cm.getCursor('end'));
 
-	if (url) {
-		start = start.replace('#url#', url);  // url is in start for upload-image
-		end = end.replace('#url#', url);
-	}
+export const replaceSelection = (view: EditorView, replacement: string) => {
+	const transaction = view.state.changeByRange(range => {
+		const changes: ChangeSpec[] = [];
 
-	if (active) {
-		text = cm.getLine(startPoint.line);
-		start = text.slice(0, startPoint.ch);
-		end = text.slice(startPoint.ch);
-		cm.replaceRange(start + end, {
-			line: startPoint.line,
-			ch:   0,
+		changes.push({
+			from:   range.from,
+			to:     range.to,
+			insert: replacement,
 		});
-	}
-	else {
-		text = cm.getSelection();
-		cm.replaceSelection(start + text + end);
 
-		startPoint.ch += start.length;
-		if (startPoint !== endPoint)
-			endPoint.ch += start.length;
-	}
+		const changeSet = view.state.changes(changes);
 
-	cm.setSelection(startPoint, endPoint);
-	cm.focus();
+		return {
+			changes,
+			range: EditorSelection.range(
+				changeSet.mapPos(range.anchor, 1),
+				changeSet.mapPos(range.head, 1),
+			),
+		};
+	});
+
+	if (!transaction.changes.empty)
+		view.dispatch(view.state.update(transaction));
+
+	view.focus();
+
+	return true;
 };

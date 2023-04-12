@@ -43,7 +43,11 @@ import {
 	lineNumbers,
 	rectangularSelection,
 } from '@codemirror/view';
-import { styleTags, Tag, tags } from '@lezer/highlight';
+import {
+	styleTags,
+	Tag,
+	tags,
+} from '@lezer/highlight';
 import { MarkdownConfig } from '@lezer/markdown';
 import { iterate } from '@roenlie/mimic/iterators';
 import { basicDark } from 'cm6-theme-basic-dark';
@@ -58,14 +62,21 @@ import {
 	property,
 } from 'lit/decorators.js';
 
-import { actionRegister, MMDECommand, ToolbarButton } from '../action-register.js';
 import { toggleCheckbox } from '../codemirror/commands/toggle-checkbox.js';
-import { editorToPreview, handleEditorScroll } from '../codemirror/commands/toggle-sidebyside.js';
+import {
+	editorToPreview,
+	handleEditorScroll,
+} from '../codemirror/commands/toggle-sidebyside.js';
 import { undoTab } from '../codemirror/commands/undo-tab.js';
 import { updatePreviewListener } from '../codemirror/listeners/update-preview.js';
 import { updateStatusbarListener } from '../codemirror/listeners/update-statusbar.js';
 import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
 import { type MirageMDE } from '../mirage-mde.js';
+import {
+	actionRegister,
+	MMDECommand,
+	ToolbarButton,
+} from '../registry/action-registry.js';
 import styles from './mirage-mde-editor.scss?inline';
 
 //const MMDEimageCache = new Map<string, any>();

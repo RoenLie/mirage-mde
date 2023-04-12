@@ -3,17 +3,6 @@ import { RecordOf } from '@roenlie/mimic/types';
 import { BlockStyleOptions, ImageErrorTextsOptions, PromptTexts } from './mirage-mde-types.js';
 
 
-const _insertTexts = {
-	link:           [ '[', '](#url#)' ],
-	image:          [ '![', '](#url#)' ],
-	uploadedImage:  [ '![](#url#)', '' ],
-	// uploadedImage: ['![](#url#)\n', ''], // TODO: New line insertion doesn't work here.
-	table:          [ '', '\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text     | Text     |\n\n' ],
-	horizontalRule: [ '', '\n\n-----\n\n' ],
-};
-export const insertTexts: RecordOf<typeof _insertTexts, string, string[]> = _insertTexts;
-
-
 export const promptTexts: PromptTexts = {
 	link:  'URL for the link:',
 	image: 'URL of the image:',

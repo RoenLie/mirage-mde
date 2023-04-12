@@ -1,31 +1,24 @@
 import { type EditorView } from '@codemirror/view';
 import { type StringLiteral } from '@roenlie/mimic/types';
 
-import { cleanBlock } from './actions/clean-block.js';
-import { drawHorizontalRule } from './actions/draw-horizontal-rule.js';
-import { drawImage } from './actions/draw-image.js';
-import { drawLink } from './actions/draw-link.js';
-import { drawTable } from './actions/draw-table.js';
-import { drawUploadedImage } from './actions/draw-uploaded-image.js';
-import { redo, undo } from './actions/history.js';
-import { toggleBlockquote } from './actions/toggle-blockquote.js';
-import { toggleCodeBlock } from './actions/toggle-codeblock.js';
-import {
-	toggleHeading1,
-	toggleHeading2,
-	toggleHeading3,
-	toggleHeading4,
-	toggleHeading6,
-	toggleHeadingBigger,
-	toggleHeadingSmaller,
-} from './actions/toggle-heading.js';
-import { toggleOrderedList, toggleUnorderedList } from './actions/toggle-list.js';
-import { toggleFullScreen } from './codemirror/commands/toggle-fullscreen.js';
-import { togglePreview } from './codemirror/commands/toggle-preview.js';
-import { toggleSideBySide } from './codemirror/commands/toggle-sidebyside.js';
-import { toggleBold, toggleItalic, toggleStrikethrough } from './codemirror/commands/toggle-text-marker.js';
-import { type Marker } from './codemirror/listeners/get-state.js';
-import { type MirageMDE } from './mirage-mde.js';
+import { cleanBlock } from '../actions/clean-block.js';
+import { toggleBlockquote } from '../actions/toggle-blockquote.js';
+import { toggleOrderedList, toggleUnorderedList } from '../actions/toggle-list.js';
+import { drawHorizontalRule } from '../codemirror/commands/draw-horizontal-rule.js';
+import { drawImage } from '../codemirror/commands/draw-image.js';
+import { drawLink } from '../codemirror/commands/draw-link.js';
+import { drawTable } from '../codemirror/commands/draw-table.js';
+import { drawUploadedImage } from '../codemirror/commands/draw-uploaded-image.js';
+import { redo, undo } from '../codemirror/commands/history.js';
+import { popoutPreview } from '../codemirror/commands/popout-preview.js';
+import { toggleCodeBlock } from '../codemirror/commands/toggle-codeblock.js';
+import { toggleFullScreen } from '../codemirror/commands/toggle-fullscreen.js';
+import { toggleHeading } from '../codemirror/commands/toggle-heading.js';
+import { togglePreview } from '../codemirror/commands/toggle-preview.js';
+import { toggleSideBySide } from '../codemirror/commands/toggle-sidebyside.js';
+import { toggleBold, toggleItalic, toggleStrikethrough } from '../codemirror/commands/toggle-text-marker.js';
+import { type Marker } from '../codemirror/listeners/get-state.js';
+import { type MirageMDE } from '../mirage-mde.js';
 
 
 export type MMDECommand = (target: EditorView, scope: MirageMDE) => boolean
@@ -59,7 +52,6 @@ export interface ToolbarSeparator {
 }
 
 export type BuiltInAction = [
-	'separator',
 	'bold',
 	'italic',
 	'strikethrough',
@@ -82,9 +74,11 @@ export type BuiltInAction = [
 	'preview',
 	'side-by-side',
 	'fullscreen',
+	'popout',
 	'guide',
 	'undo',
 	'redo',
+	'separator',
 	'separator-1',
 	'separator-2',
 	'separator-3',
@@ -120,6 +114,7 @@ export const defaultToolbar: BuiltInAction[] = [
 	'preview',
 	'side-by-side',
 	'fullscreen',
+	'popout',
 	'separator-5',
 	'undo',
 	'redo',
@@ -173,7 +168,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading', {
 			type:    'button',
 			name:    'heading',
-			action:  toggleHeadingSmaller as any,
+			action:  (view) => toggleHeading(view, { direction: 'smaller' }),
 			iconUrl: 'https://icons.getbootstrap.com/assets/icons/type.svg',
 			title:   'Heading',
 			marker:  [ 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ],
@@ -183,7 +178,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-bigger', {
 			type:     'button',
 			name:     'heading-bigger',
-			action:   toggleHeadingBigger as any,
+			action:   (view) => toggleHeading(view, { direction: 'bigger' }),
 			shortcut: 'Shift-Cmd-H',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/arrow-up-short.svg',
 			title:    'Bigger Heading',
@@ -193,7 +188,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-smaller', {
 			type:     'button',
 			name:     'heading-smaller',
-			action:   toggleHeadingSmaller as any,
+			action:   (view) => toggleHeading(view, { direction: 'smaller' }),
 			shortcut: 'Cmd-H',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/arrow-down-short.svg',
 			title:    'Smaller Heading',
@@ -203,8 +198,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-1', {
 			type:     'button',
 			name:     'heading-1',
-			action:   toggleHeading1 as any,
-			shortcut: 'Ctrl+Alt+1',
+			action:   (view) => toggleHeading(view, { size: 1 }),
+			shortcut: 'c-1',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/type-h1.svg',
 			title:    'H1 heading',
 			marker:   [ 'H1' ],
@@ -214,8 +209,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-2', {
 			type:     'button',
 			name:     'heading-2',
-			action:   toggleHeading2 as any,
-			shortcut: 'Ctrl+Alt+2',
+			action:   (view) => toggleHeading(view, { size: 2 }),
+			shortcut: 'c-2',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/type-h2.svg',
 			title:    'H2 heading',
 			marker:   [ 'H2' ],
@@ -225,8 +220,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-3', {
 			type:     'button',
 			name:     'heading-3',
-			action:   toggleHeading3 as any,
-			shortcut: 'Ctrl+Alt+3',
+			action:   (view) => toggleHeading(view, { size: 3 }),
+			shortcut: 'c-3',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/type-h3.svg',
 			title:    'H3 heading',
 			marker:   [ 'H3' ],
@@ -236,8 +231,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-4', {
 			type:     'button',
 			name:     'heading-4',
-			action:   toggleHeading4 as any,
-			shortcut: 'Ctrl+Alt+4',
+			action:   (view) => toggleHeading(view, { size: 4 }),
+			shortcut: 'c-4',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/type-h1.svg',
 			title:    'H4 heading',
 			marker:   [ 'H4' ],
@@ -247,8 +242,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-5', {
 			type:     'button',
 			name:     'heading-5',
-			action:   toggleHeading6 as any,
-			shortcut: 'Ctrl+Alt+5',
+			action:   (view) => toggleHeading(view, { size: 5 }),
+			shortcut: 'c-5',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/type-h2.svg',
 			title:    'H5 heading',
 			marker:   [ 'H5' ],
@@ -258,8 +253,8 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'heading-6', {
 			type:     'button',
 			name:     'heading-6',
-			action:   toggleHeading6 as any,
-			shortcut: 'Ctrl+Alt+6',
+			action:   (view) => toggleHeading(view, { size: 6 }),
+			shortcut: 'c-6',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/type-h3.svg',
 			title:    'H6 heading',
 			marker:   [ 'H6' ],
@@ -269,7 +264,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'code', {
 			type:     'button',
 			name:     'code',
-			action:   toggleCodeBlock as any,
+			action:   toggleCodeBlock,
 			shortcut: 'Cmd-Alt-C',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/code.svg',
 			title:    'Code',
@@ -321,7 +316,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'link', {
 			type:     'button',
 			name:     'link',
-			action:   drawLink as any,
+			action:   drawLink,
 			shortcut: 'Cmd-K',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/link.svg',
 			title:    'Create Link',
@@ -331,7 +326,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'image', {
 			type:     'button',
 			name:     'image',
-			action:   drawImage as any,
+			action:   drawImage,
 			shortcut: 'Cmd-Alt-I',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/image.svg',
 			title:    'Insert Image',
@@ -341,7 +336,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'upload-image', {
 			type:    'button',
 			name:    'upload-image',
-			action:  drawUploadedImage as any,
+			action:  drawUploadedImage,
 			iconUrl: 'https://icons.getbootstrap.com/assets/icons/cloud-arrow-up.svg',
 			title:   'Import an image',
 		},
@@ -350,7 +345,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'table', {
 			type:    'button',
 			name:    'table',
-			action:  drawTable as any,
+			action:  drawTable,
 			iconUrl: 'https://icons.getbootstrap.com/assets/icons/table.svg',
 			title:   'Insert Table',
 		},
@@ -359,7 +354,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'horizontal-rule', {
 			type:    'button',
 			name:    'horizontal-rule',
-			action:  drawHorizontalRule as any,
+			action:  drawHorizontalRule,
 			iconUrl: 'https://icons.getbootstrap.com/assets/icons/dash-lg.svg',
 			title:   'Insert Horizontal Line',
 		},
@@ -397,6 +392,15 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 			title:     'Toggle Fullscreen',
 			noDisable: true,
 			noMobile:  true,
+		},
+	],
+	[
+		'popout', {
+			type:    'button',
+			name:    'popout',
+			action:  popoutPreview,
+			title:   'Open preview in external window',
+			iconUrl: 'https://icons.getbootstrap.com/assets/icons/box-arrow-up-right.svg',
 		},
 	],
 	[

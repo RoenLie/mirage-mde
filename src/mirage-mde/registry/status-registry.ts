@@ -2,7 +2,7 @@ import { type EditorView, type ViewUpdate } from '@codemirror/view';
 import { wordCount } from '@roenlie/mimic/string';
 import { type StringLiteral } from '@roenlie/mimic/types';
 
-import { type MirageMDE } from './mirage-mde.js';
+import { type MirageMDE } from '../mirage-mde.js';
 
 
 export interface StatusBarItem {

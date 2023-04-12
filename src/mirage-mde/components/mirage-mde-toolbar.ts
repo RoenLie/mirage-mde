@@ -9,9 +9,9 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
 
-import { actionRegister, ToolbarButton } from '../action-register.js';
 import { MirageMDE } from '../mirage-mde.js';
 import { Options } from '../mirage-mde-types.js';
+import { actionRegister, ToolbarButton } from '../registry/action-registry.js';
 import { isMobile } from '../utilities/is-mobile.js';
 import styles from './mirage-mde-toolbar.scss?inline';
 

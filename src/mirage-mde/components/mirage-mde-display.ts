@@ -1,9 +1,8 @@
 import { css, html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import { MirageMDE } from '../mirage-mde.js';
 import codeDarkStyles from '../styles/code-dark.scss?inline';
 import markdownDarkStyles from '../styles/markdown-dark.scss?inline';
 import markdownLightStyles from '../styles/markdown-light.scss?inline';
@@ -12,25 +11,13 @@ import markdownLightStyles from '../styles/markdown-light.scss?inline';
 @customElement('mirage-mde-display')
 export class DisplayElement extends LitElement {
 
-	@property({ type: Object }) public scope: MirageMDE;
 	@property() public theme: 'light' | 'dark' = 'dark';
-	@property() public set content(v: string | Promise<string>) {
-		if (typeof v === 'string') {
-			this._content = v;
-		}
-		else if (v) {
-			v.then(r => {
-				this._content = r;
-			});
-		}
-	}
-
-	@state() private _content: string;
+	@property() public content = '';
 
 	protected override render() {
 		return html`
 		<div class=${ classMap({ 'markdown-body': true, [this.theme]: true }) }>
-			${ unsafeHTML(this._content) }
+			${ unsafeHTML(this.content) }
 		</div>
 		`;
 	}

@@ -3,7 +3,7 @@ import { EditorView } from '@codemirror/view';
 import { arrayObjSum } from '@roenlie/mimic/array';
 import { isRangeInRanges } from '@roenlie/mimic/validation';
 
-import { type MMDECommand } from '../../action-register.js';
+import { type MMDECommand } from '../../registry/action-registry.js';
 import { getNodesInRange, TextMarker, textMarkerValue } from '../listeners/get-state.js';
 import { cmFindBeginningOfWord, cmfindEndOfWord } from '../utils/string-helpers.js';
 
@@ -56,6 +56,7 @@ export const toggleTextMarker = (view: EditorView, marker: TextMarker) => {
 
 	if (!transaction.changes.empty) {
 		view.dispatch(view.state.update(transaction));
+		view.focus();
 
 		return true;
 	}
@@ -98,6 +99,7 @@ export const toggleTextMarker = (view: EditorView, marker: TextMarker) => {
 	if (!transaction.changes.empty)
 		view.dispatch(view.state.update(transaction));
 
+	view.focus();
 
 	return true;
 };

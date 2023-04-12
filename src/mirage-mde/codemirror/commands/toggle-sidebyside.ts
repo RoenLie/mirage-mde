@@ -1,16 +1,17 @@
 import { EditorView } from '@codemirror/view';
 
-import { MMDECommand } from '../../action-register.js';
 import { MirageMDE } from '../../mirage-mde.js';
+import { MMDECommand } from '../../registry/action-registry.js';
 
 
 export const editorToPreview = async (scope: MirageMDE) => {
 	const { gui, options, editor } = scope;
-	if (!gui.preview)
+	if (!gui.preview && !gui.window)
 		return;
 
 	const newValue = options.previewRender?.(editor.state.doc.toString()) ?? Promise.resolve('');
 	gui.preview.setContent(newValue);
+	gui.window?.setContent(newValue);
 };
 
 
@@ -55,16 +56,27 @@ export const handleEditorScroll = (ev: Event, scope: MirageMDE) => {
 		return;
 
 	const preview = scope.gui.preview;
-	if (preview.editorScroll)
-		return preview.editorScroll = false;
+	if (preview) {
+		if (preview.editorScroll)
+			return preview.editorScroll = false;
 
-	preview.previewScroll = true;
+		preview.previewScroll = true;
 
-	const height = target.scrollHeight - target.clientHeight;
-	const ratio = target.scrollTop / height;
-	const move = (preview.scrollHeight - preview.clientHeight) * ratio;
+		const height = target.scrollHeight - target.clientHeight;
+		const ratio = target.scrollTop / height;
+		const move = (preview.scrollHeight - preview.clientHeight) * ratio;
 
-	preview.scrollTop = move;
+		preview.scrollTop = move;
+	}
+
+	const popout = scope.gui.window?.ownerDocument;
+	if (popout) {
+		const height = target.scrollHeight - target.clientHeight;
+		const ratio = target.scrollTop / height;
+		const move = (popout.body.scrollHeight - popout.body.clientHeight) * ratio;
+
+		popout.body.scrollTop = move;
+	}
 };
 
 

@@ -8,7 +8,7 @@ export const _toggleBlock = (
 	start_chars: string,
 	end_chars?: string,
 ) => {
-	if (!editor.codemirror || editor.isPreviewActive())
+	if (!editor.codemirror || editor.isPreviewActive)
 		return;
 
 	end_chars = (typeof end_chars === 'undefined') ? start_chars : end_chars;
