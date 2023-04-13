@@ -8,7 +8,6 @@ import {
 	defaultKeymap,
 	history,
 	historyKeymap,
-	insertTab,
 } from '@codemirror/commands';
 import {
 	markdown,
@@ -62,12 +61,12 @@ import {
 	property,
 } from 'lit/decorators.js';
 
+import { insertTab, removeTab } from '../codemirror/commands/tab-list.js';
 import { toggleCheckbox } from '../codemirror/commands/toggle-checkbox.js';
 import {
 	editorToPreview,
 	handleEditorScroll,
 } from '../codemirror/commands/toggle-sidebyside.js';
-import { undoTab } from '../codemirror/commands/undo-tab.js';
 import { updatePreviewListener } from '../codemirror/listeners/update-preview.js';
 import { updateStatusbarListener } from '../codemirror/listeners/update-statusbar.js';
 import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
@@ -133,7 +132,7 @@ export class EditorElement extends LitElement {
 
 				return item as Omit<ToolbarButton, 'action'> & { action: MMDECommand };
 			})
-			.pipe((button) => {
+			.pipe(button => {
 				const keybinding: KeyBinding = {
 					key:            button.shortcut,
 					run:            (view: EditorView) => button.action(view, this.scope),
@@ -197,7 +196,11 @@ export class EditorElement extends LitElement {
 			autocompletion(),
 			keymap.of([
 				...shortcuts,
-				{ key: 'Tab', run: insertTab, shift: undoTab },
+				{
+					key:   'Tab',
+					run:   view => insertTab(view, this.scope),
+					shift: view => removeTab(view, this.scope),
+				},
 				{ key: 'c-d', run: toggleCheckbox },
 				...closeBracketsKeymap,
 				...defaultKeymap,

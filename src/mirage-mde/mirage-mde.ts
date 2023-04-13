@@ -11,12 +11,12 @@ import {
 	uploadImagesUsingCustomFunction,
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
-import { WindowElement } from './codemirror/commands/popout-preview.js';
 import { Marker } from './codemirror/listeners/get-state.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
 import { StatusbarElement } from './components/mirage-mde-statusbar.js';
 import { ToolbarElement } from './components/mirage-mde-toolbar.js';
+import { WindowElement } from './components/mirage-mde-window.js';
 import {
 	blockStyles,
 	errorMessages,

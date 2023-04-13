@@ -34,7 +34,10 @@ export const undoTab: Command = (view) => {
 			isPreviousCharTab = true;
 
 
-		return { changes: { from, to }, range: EditorSelection.cursor(from) };
+		return {
+			changes: { from, to },
+			range:   EditorSelection.cursor(from),
+		};
 	});
 
 	if (isPreviousCharTab)

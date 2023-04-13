@@ -1,6 +1,4 @@
 import { MirageMDE } from '../mirage-mde.js';
-import { humanFileSize } from '../utilities/human-file-size.js';
-import { _replaceSelection } from '../utilities/replace-selection.js';
 
 
 /**
@@ -20,20 +18,20 @@ export const uploadImages = function(
 	onSuccess?: Function,
 	onError?: Function,
 ) {
-	if (files.length === 0)
-		return;
+//	if (files.length === 0)
+//		return;
 
-	const names = [];
-	for (let i = 0; i < files.length; i++) {
-		names.push(files[i]!.name);
-		this.uploadImage(files[i]!, onSuccess, onError);
-	}
+	//	const names = [];
+	//	for (let i = 0; i < files.length; i++) {
+	//		names.push(files[i]!.name);
+	//		this.uploadImage(files[i]!, onSuccess, onError);
+	//	}
 
-	this.updateStatusBar(
-		'upload-image',
-		this.options.imageTexts?.sbOnDrop
-			?.replace('#images_names#', names.join(', ')) ?? '',
-	);
+//	this.updateStatusBar(
+//		'upload-image',
+//		this.options.imageTexts?.sbOnDrop
+//			?.replace('#images_names#', names.join(', ')) ?? '',
+//	);
 };
 
 
@@ -52,19 +50,19 @@ export const uploadImagesUsingCustomFunction = function(
 	imageUploadFunction: Function,
 	files: FileList,
 ) {
-	if (files.length === 0)
-		return;
+//	if (files.length === 0)
+//		return;
 
-	const names = [];
-	for (let i = 0; i < files.length; i++) {
-		names.push(files[i]!.name);
-		this.uploadImageUsingCustomFunction(imageUploadFunction, files[i]!);
-	}
-	this.updateStatusBar(
-		'upload-image',
-		this.options.imageTexts?.sbOnDrop
-			?.replace('#images_names#', names.join(', ')) ?? '',
-	);
+//	const names = [];
+//	for (let i = 0; i < files.length; i++) {
+//		names.push(files[i]!.name);
+//		this.uploadImageUsingCustomFunction(imageUploadFunction, files[i]!);
+//	}
+//	this.updateStatusBar(
+//		'upload-image',
+//		this.options.imageTexts?.sbOnDrop
+//			?.replace('#images_names#', names.join(', ')) ?? '',
+//	);
 };
 
 
@@ -83,115 +81,115 @@ export const uploadImage = function(
 	onSuccess?: Function,
 	onError?: Function,
 ) {
-	onSuccess ??= (imageUrl: string) => {
-		afterImageUploaded(this, imageUrl);
-	};
+//	onSuccess ??= (imageUrl: string) => {
+//		afterImageUploaded(this, imageUrl);
+//	};
 
-	const onErrorSup = (errorMessage: string) => {
-		// show error on status bar and reset after 10000ms
-		this.updateStatusBar('upload-image', errorMessage);
+	//	const onErrorSup = (errorMessage: string) => {
+	//		// show error on status bar and reset after 10000ms
+	//		this.updateStatusBar('upload-image', errorMessage);
 
-		setTimeout(() => {
-			this.updateStatusBar('upload-image', this.options?.imageTexts?.sbInit ?? '');
-		}, 10000);
+	//		setTimeout(() => {
+	//			this.updateStatusBar('upload-image', this.options?.imageTexts?.sbInit ?? '');
+	//		}, 10000);
 
-		// run custom error handler
-		if (onError && typeof onError === 'function')
-			onError(errorMessage);
+	//		// run custom error handler
+	//		if (onError && typeof onError === 'function')
+	//			onError(errorMessage);
 
-		// run error handler from options, this alerts the message.
-		this.options.errorCallback?.(errorMessage);
-	};
+	//		// run error handler from options, this alerts the message.
+	//		this.options.errorCallback?.(errorMessage);
+	//	};
 
-	const fillErrorMessage = (errorMessage: string) => {
-		const { imageTexts, imageMaxSize = 0 } = this.options;
-		if (!imageTexts)
-			throw ('');
+	//	const fillErrorMessage = (errorMessage: string) => {
+	//		const { imageTexts, imageMaxSize = 0 } = this.options;
+	//		if (!imageTexts)
+	//			throw ('');
 
-		const units = imageTexts?.sizeUnits?.split(',') ?? [];
+	//		const units = imageTexts?.sizeUnits?.split(',') ?? [];
 
-		return errorMessage
-			.replace('#image_name#', file.name)
-			.replace('#image_size#', humanFileSize(file.size, units))
-			.replace('#image_max_size#', humanFileSize(imageMaxSize, units));
-	};
+	//		return errorMessage
+	//			.replace('#image_name#', file.name)
+	//			.replace('#image_size#', humanFileSize(file.size, units))
+	//			.replace('#image_max_size#', humanFileSize(imageMaxSize, units));
+	//	};
 
-	if (file.size > (this.options?.imageMaxSize ?? 0)) {
-		onErrorSup(fillErrorMessage(this.options?.errorMessages?.filesTooLarge ?? ''));
+	//	if (file.size > (this.options?.imageMaxSize ?? 0)) {
+	//		onErrorSup(fillErrorMessage(this.options?.errorMessages?.filesTooLarge ?? ''));
 
-		return;
-	}
+	//		return;
+	//	}
 
-	const formData = new FormData();
-	formData.append('image', file);
+	//	const formData = new FormData();
+	//	formData.append('image', file);
 
-	// insert CSRF body token if provided in config.
-	if (this.options.imageCSRFToken && !this.options.imageCSRFHeader)
-		formData.append(this.options?.imageCSRFName ?? '', this.options.imageCSRFToken);
+	//	// insert CSRF body token if provided in config.
+	//	if (this.options.imageCSRFToken && !this.options.imageCSRFHeader)
+	//		formData.append(this.options?.imageCSRFName ?? '', this.options.imageCSRFToken);
 
-	const request = new XMLHttpRequest();
-	request.upload.onprogress = (event) => {
-		if (event.lengthComputable) {
-			const progress = '' + Math.round((event.loaded * 100) / event.total);
+	//	const request = new XMLHttpRequest();
+	//	request.upload.onprogress = (event) => {
+	//		if (event.lengthComputable) {
+	//			const progress = '' + Math.round((event.loaded * 100) / event.total);
 
-			this.updateStatusBar(
-				'upload-image',
-				(this.options?.imageTexts?.sbProgress ?? '')
-					.replace('#file_name#', file.name).replace('#progress#', progress),
-			);
-		}
-	};
-	request.open('POST', this.options?.imageUploadEndpoint ?? '');
+	//			this.updateStatusBar(
+	//				'upload-image',
+	//				(this.options?.imageTexts?.sbProgress ?? '')
+	//					.replace('#file_name#', file.name).replace('#progress#', progress),
+	//			);
+	//		}
+	//	};
+	//	request.open('POST', this.options?.imageUploadEndpoint ?? '');
 
-	// insert CSRF header token if provided in config.
-	if (this.options.imageCSRFToken && this.options.imageCSRFHeader)
-		request.setRequestHeader(this.options?.imageCSRFName ?? '', this.options.imageCSRFToken);
+	//	// insert CSRF header token if provided in config.
+	//	if (this.options.imageCSRFToken && this.options.imageCSRFHeader)
+	//		request.setRequestHeader(this.options?.imageCSRFName ?? '', this.options.imageCSRFToken);
 
-	request.onload = () => {
-		let response: {
-			data?: {
-				filePath: string;
-			};
-			error?: string;
-		};
+	//	request.onload = () => {
+	//		let response: {
+	//			data?: {
+	//				filePath: string;
+	//			};
+	//			error?: string;
+	//		};
 
-		try {
-			response = JSON.parse(request.responseText);
-		}
-		catch (error) {
-			console.error('MirageMDE: The server did not return a valid json.');
-			onErrorSup(fillErrorMessage(this.options.errorMessages!.importError!));
+	//		try {
+	//			response = JSON.parse(request.responseText);
+	//		}
+	//		catch (error) {
+	//			console.error('MirageMDE: The server did not return a valid json.');
+	//			onErrorSup(fillErrorMessage(this.options.errorMessages!.importError!));
 
-			return;
-		}
-		if (request.status === 200 && response && !response.error && response.data && response.data.filePath) {
-			onSuccess?.((this.options.imagePathAbsolute ? '' : (window.location.origin + '/')) + response.data.filePath);
-		}
-		else {
-			if (response.error && response.error in this.options.errorMessages!) {  // preformatted error message
-				onErrorSup(fillErrorMessage(this.options.errorMessages?.[response.error] ?? ''));
-			}
-			else if (response.error) {  // server side generated error message
-				onErrorSup(fillErrorMessage(response.error));
-			}
-			else {  //unknown error
-				console.error('MirageMDE: Received an unexpected response after uploading the image.'
-                    + request.status + ' (' + request.statusText + ')');
+	//			return;
+	//		}
+	//		if (request.status === 200 && response && !response.error && response.data && response.data.filePath) {
+	//			onSuccess?.((this.options.imagePathAbsolute ? '' : (window.location.origin + '/')) + response.data.filePath);
+	//		}
+	//		else {
+	//			if (response.error && response.error in this.options.errorMessages!) {  // preformatted error message
+	//				onErrorSup(fillErrorMessage(this.options.errorMessages?.[response.error] ?? ''));
+	//			}
+	//			else if (response.error) {  // server side generated error message
+	//				onErrorSup(fillErrorMessage(response.error));
+	//			}
+	//			else {  //unknown error
+	//				console.error('MirageMDE: Received an unexpected response after uploading the image.'
+	//                    + request.status + ' (' + request.statusText + ')');
 
-				onErrorSup(fillErrorMessage(this.options.errorMessages?.importError ?? ''));
-			}
-		}
-	};
+	//				onErrorSup(fillErrorMessage(this.options.errorMessages?.importError ?? ''));
+	//			}
+	//		}
+	//	};
 
-	request.onerror = (event) => {
-		const target = event.target as XMLHttpRequest;
+	//	request.onerror = (event) => {
+	//		const target = event.target as XMLHttpRequest;
 
-		console.error('MirageMDE: An unexpected error occurred when trying to upload the image.'
-            + target.status + ' (' + target.statusText + ')');
-		onErrorSup(this.options.errorMessages?.importError ?? '');
-	};
+	//		console.error('MirageMDE: An unexpected error occurred when trying to upload the image.'
+	//            + target.status + ' (' + target.statusText + ')');
+	//		onErrorSup(this.options.errorMessages?.importError ?? '');
+	//	};
 
-	request.send(formData);
+//	request.send(formData);
 };
 
 
@@ -206,33 +204,33 @@ export const uploadImageUsingCustomFunction = function(
 	imageUploadFunction: Function,
 	file: File,
 ) {
-	const onSuccess = (imageUrl: string) => {
-		afterImageUploaded(this, imageUrl);
-	};
+//	const onSuccess = (imageUrl: string) => {
+//		afterImageUploaded(this, imageUrl);
+//	};
 
-	const onError = (errorMessage: string) => {
-		const filledErrorMessage = fillErrorMessage(errorMessage);
-		// show error on status bar and reset after 10000ms
-		this.updateStatusBar('upload-image', filledErrorMessage);
+	//	const onError = (errorMessage: string) => {
+	//		const filledErrorMessage = fillErrorMessage(errorMessage);
+	//		// show error on status bar and reset after 10000ms
+	//		this.updateStatusBar('upload-image', filledErrorMessage);
 
-		setTimeout(() => {
-			this.updateStatusBar('upload-image', this.options.imageTexts?.sbInit ?? '');
-		}, 10000);
+	//		setTimeout(() => {
+	//			this.updateStatusBar('upload-image', this.options.imageTexts?.sbInit ?? '');
+	//		}, 10000);
 
-		// run error handler from options, this alerts the message.
-		this.options.errorCallback?.(filledErrorMessage);
-	};
+	//		// run error handler from options, this alerts the message.
+	//		this.options.errorCallback?.(filledErrorMessage);
+	//	};
 
-	const fillErrorMessage = (errorMessage: string) => {
-		const units = this.options.imageTexts?.sizeUnits?.split(',') ?? [];
+	//	const fillErrorMessage = (errorMessage: string) => {
+	//		const units = this.options.imageTexts?.sizeUnits?.split(',') ?? [];
 
-		return errorMessage
-			.replace('#image_name#', file.name)
-			.replace('#image_size#', humanFileSize(file.size, units))
-			.replace('#image_max_size#', humanFileSize(this.options.imageMaxSize ?? 0, units));
-	};
+	//		return errorMessage
+	//			.replace('#image_name#', file.name)
+	//			.replace('#image_size#', humanFileSize(file.size, units))
+	//			.replace('#image_max_size#', humanFileSize(this.options.imageMaxSize ?? 0, units));
+	//	};
 
-	imageUploadFunction.apply(this, [ file, onSuccess, onError ]);
+//	imageUploadFunction.apply(this, [ file, onSuccess, onError ]);
 };
 
 

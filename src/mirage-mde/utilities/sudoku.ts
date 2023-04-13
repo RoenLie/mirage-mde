@@ -451,6 +451,19 @@ class SudokuBacktracker {
 }
 
 
+const gridSmall = `
+0 0 2 3 6 0 0 0 0
+0 0 0 4 5 0 9 6 0
+0 0 4 0 0 0 0 0 5
+0 0 0 0 0 0 0 2 8
+0 0 0 0 0 8 1 5 0
+3 0 0 0 0 0 0 0 0
+2 0 0 0 0 1 0 0 7
+0 0 0 9 8 3 0 0 0
+4 1 0 0 0 5 0 0 0
+`.split('\n').filter(Boolean).map(r => r.split(' ').map(s => Number(s)));
+
+
 const gridMedium = `
 0 0 12 6 0 0 7 0 18 0 5 24 0 10 1 0 0 4 0 0 0 0 0 0 0
 2 0 19 0 13 0 0 0 10 0 0 0 0 0 0 0 0 18 5 0 0 0 0 0 1
@@ -485,17 +498,17 @@ console.log('is initially valid:', isValidSudoku(result));
 
 let start;
 
-const solver = new SudokuSolver(gridMedium);
+//const solver = new SudokuSolver(gridSmall);
 
-start = performance.now();
-result = solver.solve();
-console.log('solver', performance.now() - start);
-console.log(result);
+//start = performance.now();
+//result = solver.solve();
+//console.log('solver', performance.now() - start);
+//console.log(result);
 
-console.log('is valid?', isValidSudoku(result));
+//console.log('is valid?', isValidSudoku(result));
 
 
-const backtrackSolver = new SudokuBacktracker(result);
+const backtrackSolver = new SudokuBacktracker(gridSmall);
 
 start = performance.now();
 result = backtrackSolver.solve();

@@ -1,9 +1,7 @@
 import { type EditorView } from '@codemirror/view';
 import { type StringLiteral } from '@roenlie/mimic/types';
 
-import { cleanBlock } from '../actions/clean-block.js';
-import { toggleBlockquote } from '../actions/toggle-blockquote.js';
-import { toggleOrderedList, toggleUnorderedList } from '../actions/toggle-list.js';
+import { cleanBlock } from '../codemirror/commands/clean-block.js';
 import { drawHorizontalRule } from '../codemirror/commands/draw-horizontal-rule.js';
 import { drawImage } from '../codemirror/commands/draw-image.js';
 import { drawLink } from '../codemirror/commands/draw-link.js';
@@ -14,7 +12,9 @@ import { popoutPreview } from '../codemirror/commands/popout-preview.js';
 import { toggleCodeBlock } from '../codemirror/commands/toggle-codeblock.js';
 import { toggleFullScreen } from '../codemirror/commands/toggle-fullscreen.js';
 import { toggleHeading } from '../codemirror/commands/toggle-heading.js';
+import { toggleOrderedList, toggleUnorderedList } from '../codemirror/commands/toggle-list.js';
 import { togglePreview } from '../codemirror/commands/toggle-preview.js';
+import { toggleQuote } from '../codemirror/commands/toggle-quote.js';
 import { toggleSideBySide } from '../codemirror/commands/toggle-sidebyside.js';
 import { toggleBold, toggleItalic, toggleStrikethrough } from '../codemirror/commands/toggle-text-marker.js';
 import { type Marker } from '../codemirror/listeners/get-state.js';
@@ -101,6 +101,7 @@ export const defaultToolbar: BuiltInAction[] = [
 	'heading-3',
 	'separator-2',
 	'code',
+	'quote',
 	'ordered-list',
 	'unordered-list',
 	'clean-block',
@@ -274,7 +275,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'quote', {
 			type:     'button',
 			name:     'quote',
-			action:   toggleBlockquote as any,
+			action:   toggleQuote,
 			shortcut: 'Cmd-\'',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/quote.svg',
 			title:    'Quote',
@@ -284,7 +285,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'ordered-list', {
 			type:     'button',
 			name:     'ordered-list',
-			action:   toggleOrderedList as any,
+			action:   toggleOrderedList,
 			shortcut: 'Cmd-Alt-L',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/list-ol.svg',
 			title:    'Numbered List',
@@ -295,7 +296,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'unordered-list', {
 			type:     'button',
 			name:     'unordered-list',
-			action:   toggleUnorderedList as any,
+			action:   toggleUnorderedList,
 			shortcut: 'Cmd-L',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/list-ul.svg',
 			title:    'Generic List',
@@ -306,7 +307,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'clean-block', {
 			type:     'button',
 			name:     'clean-block',
-			action:   cleanBlock as any,
+			action:   cleanBlock,
 			shortcut: 'Cmd-E',
 			iconUrl:  'https://icons.getbootstrap.com/assets/icons/eraser.svg',
 			title:    'Clean block',
@@ -407,7 +408,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'undo', {
 			type:    'button',
 			name:    'undo',
-			action:  undo as any,
+			action:  undo,
 			iconUrl: 'https://icons.getbootstrap.com/assets/icons/arrow-counterclockwise.svg',
 			title:   'Undo',
 		},
@@ -416,7 +417,7 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 		'redo', {
 			type:    'button',
 			name:    'redo',
-			action:  redo as any,
+			action:  redo,
 			iconUrl: 'https://icons.getbootstrap.com/assets/icons/arrow-clockwise.svg',
 			title:   'Redo',
 		},

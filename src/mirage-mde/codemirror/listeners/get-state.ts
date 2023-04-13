@@ -27,6 +27,8 @@ export type LineMarker = [
 	'H5',
 	'H6',
 	'blockquote',
+	'quotemark',
+	'listmark',
 	'ordered-list',
 	'unordered-list',
 ][number];
@@ -38,6 +40,7 @@ const markerMap: Record<string, Marker> = {
 	Strikethrough:  'strikethrough',
 	OrderedList:    'ordered-list',
 	BulletList:     'unordered-list',
+	ListMark:       'listmark',
 	ATXHeading1:    'H1',
 	ATXHeading2:    'H2',
 	ATXHeading3:    'H3',
@@ -47,6 +50,7 @@ const markerMap: Record<string, Marker> = {
 	Link:           'link',
 	Image:          'image',
 	Blockquote:     'blockquote',
+	QuoteMark:      'quotemark',
 	FencedCode:     'fencedcode',
 };
 
@@ -61,7 +65,9 @@ export const textMarkerValue: Record<TextMarker, string> = {
 export const lineMarkerValue: Record<LineMarker, string> = {
 	'ordered-list':   '* ',
 	'unordered-list': '1. ',
+	'listmark':       '',
 	'blockquote':     '> ',
+	'quotemark':      '>',
 	'H1':             '# ',
 	'H2':             '## ',
 	'H3':             '### ',
@@ -83,6 +89,9 @@ export const getNodesInRange = (state: EditorState, range: Range) => {
 		enter: ({ node }) => {
 			if (!isRangeInRanges([ { from: node.from, to: node.to } ], range))
 				return;
+
+			console.log(node.name);
+
 
 			const name = markerMap[node.name];
 			if (!name)
