@@ -1,7 +1,6 @@
 import { EditorView } from '@codemirror/view';
 import { deepMerge } from '@roenlie/mimic/structs';
 import { StringLiteral } from '@roenlie/mimic/types';
-import hljs from 'highlight.js';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
@@ -62,8 +61,6 @@ export class MirageMDE {
 	public options: Options;
 	public host: LitElement;
 	public editor: EditorView;
-	public hljs = hljs;
-	public element: HTMLTextAreaElement;
 	public toolbar: (StringLiteral | BuiltInAction)[];
 	public toolbarElements: Record<string, Ref<HTMLElement>> = {};
 	public statusbar: (StringLiteral | BuildInStatus)[];
@@ -131,9 +128,8 @@ export class MirageMDE {
 			{
 				singleLineBreaks:       true,
 				codeSyntaxHighlighting: true,
-				//hljs:                   hljs,
 			},
-			//options.renderingConfig ?? {},
+			options.renderingConfig ?? {},
 		]);
 
 		// linewrapping defaults to true.

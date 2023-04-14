@@ -22,6 +22,8 @@ export const popoutPreview: MMDECommand = (view, scope) => {
 
 	const winHandle = window.open(undefined, 'window-preview', windowCfg)!;
 
+	const previewFont = getComputedStyle(scope.host).getPropertyValue('--mmde-preview-family');
+
 	render(html`
 	<style>
 		body {
@@ -29,11 +31,12 @@ export const popoutPreview: MMDECommand = (view, scope) => {
 			background-color: black;
 			color: white;
 			min-height: 100dvh;
-			margin: 0;
-			padding: 0;
+			font-family: ${ previewFont };
 		}
 		* {
 			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
 		}
 		*::-webkit-scrollbar {
 			width: 12px;

@@ -90,9 +90,6 @@ export const getNodesInRange = (state: EditorState, range: Range) => {
 			if (!isRangeInRanges([ { from: node.from, to: node.to } ], range))
 				return;
 
-			console.log(node.name);
-
-
 			const name = markerMap[node.name];
 			if (!name)
 				return;

@@ -53,6 +53,10 @@ export interface RenderingOptions {
 	markedOptions?: marked.MarkedOptions;
 	sanitizerFunction?: (html: string) => string;
 	singleLineBreaks?: boolean;
+	preprocessor?: {
+		regexp: RegExp,
+		replacer: (...match: string[]) => string | Promise<string>;
+	}[]
 }
 
 export interface ImageTextsOptions {

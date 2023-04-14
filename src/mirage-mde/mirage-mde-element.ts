@@ -3,7 +3,6 @@ import './components/mirage-mde-toolbar.js';
 import './components/mirage-mde-statusbar.js';
 import './components/mirage-mde-preview.js';
 
-//import './utilities/sudoku.js';
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from 'lit/decorators/custom-element.js';
@@ -33,13 +32,13 @@ export class MirageMDEElement extends LitElement {
 		this.requestUpdate();
 		await this.updateComplete;
 
-		const editor    = this.renderRoot.querySelector('mirage-mde-editor');
+		const editor = this.renderRoot.querySelector('mirage-mde-editor');
 		this.scope.gui.editor = editor!;
 
-		const toolbar   = this.renderRoot.querySelector('mirage-mde-toolbar');
+		const toolbar = this.renderRoot.querySelector('mirage-mde-toolbar');
 		this.scope.gui.toolbar = toolbar!;
 
-		const preview   = this.renderRoot.querySelector('mirage-mde-preview');
+		const preview = this.renderRoot.querySelector('mirage-mde-preview');
 		this.scope.gui.preview = preview!;
 
 		const statusbar = this.renderRoot.querySelector('mirage-mde-statusbar');
@@ -87,12 +86,11 @@ export class MirageMDEElement extends LitElement {
 			--mmde-scrollbg: rgb(30 40 50 / 75%);
 			--mmde-scrollthumb: rgb(52, 70, 88);
 			--mmde-scrollsize: 12px;
+			--mmde-editor-family: Helvetica;
+			--mmde-preview-family: Helvetica;
 		}
 		:host {
-			font-family: Helvetica;
 			overflow: hidden;
-			resize: vertical;
-
 			display: grid;
 			grid-template: "toolbar" auto
 								"editor" 1fr

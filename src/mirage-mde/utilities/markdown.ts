@@ -5,13 +5,13 @@ import { addAnchorTargetBlank } from './add-anchor-target.js';
 /**
  * Default markdown render.
  */
-export const markdown = async (editor: MirageMDE, text: string) => {
+export const markdown = async (scope: MirageMDE, text: string) => {
 	const [ marked, hljs ] = await Promise.all([
 		import('marked').then(m => m.marked),
 		import('highlight.js').then(m => m.default),
 	]);
 
-	const { renderingConfig } = editor.options;
+	const { renderingConfig } = scope.options;
 
 	// Initialize
 	const markedOptions = renderingConfig?.markedOptions ?? {};
@@ -27,6 +27,10 @@ export const markdown = async (editor: MirageMDE, text: string) => {
 
 	// Set options
 	marked.setOptions(markedOptions);
+
+	// Custom async replacement pipeline.
+	for (const { regexp, replacer } of renderingConfig?.preprocessor ?? [])
+		text = await replaceAsync(text, regexp, replacer);
 
 	// Convert the markdown to HTML
 	let htmlText = marked.parse(text);
@@ -69,4 +73,20 @@ export const removeListStyleWhenCheckbox = (htmlText: string): string => {
 	}
 
 	return htmlDoc.documentElement.innerHTML;
+};
+
+
+const replaceAsync = async (
+	text: string,
+	regexp: RegExp,
+	replacerFunction: (...match: string[]) => string | Promise<string>,
+) => {
+	const replacements = await Promise.all(
+		Array.from(text.matchAll(regexp),
+			match => replacerFunction(...match)),
+	);
+
+	let i = 0;
+
+	return text.replace(regexp, () => replacements[i++]!);
 };

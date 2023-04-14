@@ -11,13 +11,13 @@ export const value = (scope: MirageMDE, val?: string): MirageMDE | string => {
 		return state.doc.toString();
 	}
 	else {
-		state.update({
+		scope.editor.dispatch(state.update({
 			changes: {
 				from:   0,
 				to:     state.doc.length,
 				insert: val,
 			},
-		});
+		}));
 
 		return scope;
 	}

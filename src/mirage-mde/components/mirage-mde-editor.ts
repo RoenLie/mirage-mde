@@ -249,7 +249,6 @@ export class EditorElement extends LitElement {
 		requestIdleCallback(() => editorToPreview(this.scope));
 	}
 
-
 	//public create() {
 	//	const scope = this.scope;
 	//	const options = scope.options;
@@ -536,7 +535,7 @@ export class EditorElement extends LitElement {
 			background: var(--mmde-scrollbg);
 		}
 		:host .cm-scroller {
-			font-family: Helvetica;
+			font-family: var(--mmde-editor-family);
 		}
 		:host .cm-gutters {
 			background-color: rgb(25, 34, 43);
