@@ -1,5 +1,5 @@
 import { type Extension } from '@codemirror/state';
-import { type StringLiteral } from '@roenlie/mimic/types';
+import { type StringLiteral } from '@roenlie/mimic-core/types';
 import { type LitElement } from 'lit';
 import { marked } from 'marked';
 

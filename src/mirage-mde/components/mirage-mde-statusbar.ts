@@ -1,4 +1,4 @@
-import { iterate } from '@roenlie/mimic/iterators';
+import { iterate } from '@roenlie/mimic-core/iterators';
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
@@ -6,7 +6,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { when } from 'lit/directives/when.js';
 
 import { MirageMDE } from '../mirage-mde.js';
-import { StatusBarItem, statusRegistry } from '../registry/status-registry.js';
+import { StatusBarItem } from '../registry/status-registry.js';
 import styles from './mirage-mde-statusbar.scss?inline';
 
 
@@ -17,7 +17,7 @@ export class StatusbarElement extends LitElement {
 	@state() protected items: StatusBarItem[] = [];
 
 	public create() {
-		this.items = iterate(statusRegistry)
+		this.items = iterate(this.scope.registry.status)
 			.pipe(([ name, item ]) => {
 				if (this.scope.statusbar.includes(name))
 					return item;

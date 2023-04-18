@@ -1,5 +1,5 @@
 import { type EditorView } from '@codemirror/view';
-import { type StringLiteral } from '@roenlie/mimic/types';
+import { type StringLiteral } from '@roenlie/mimic-core/types';
 
 import { cleanBlock } from '../codemirror/commands/clean-block.js';
 import { drawHorizontalRule } from '../codemirror/commands/draw-horizontal-rule.js';
@@ -124,7 +124,7 @@ export const defaultToolbar: BuiltInAction[] = [
 ];
 
 
-export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem>([
+export const builtInActions: [StringLiteral | BuiltInAction, ToolbarItem][] = [
 	[ 'separator',   { type: 'separator' } ],
 	[ 'separator-1', { type: 'separator' } ],
 	[ 'separator-2', { type: 'separator' } ],
@@ -432,4 +432,4 @@ export const actionRegister = new Map<StringLiteral | BuiltInAction, ToolbarItem
 			noDisable: true,
 		},
 	],
-]);
+];

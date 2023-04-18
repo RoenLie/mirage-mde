@@ -1,7 +1,7 @@
 import { ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import { iterate } from '@roenlie/mimic/iterators';
-import { isRangeInRanges } from '@roenlie/mimic/validation';
+import { iterate } from '@roenlie/mimic-core/iterators';
+import { isRangeInRanges } from '@roenlie/mimic-core/validation';
 
 import { getNodesInRange } from '../listeners/get-state.js';
 

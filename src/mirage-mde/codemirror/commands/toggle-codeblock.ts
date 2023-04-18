@@ -1,6 +1,6 @@
 import { ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import { isRangeInRanges } from '@roenlie/mimic/validation';
+import { isRangeInRanges } from '@roenlie/mimic-core/validation';
 
 import { MirageMDE } from '../../mirage-mde.js';
 import { MMDECommand } from '../../registry/action-registry.js';

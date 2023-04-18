@@ -48,7 +48,7 @@ import {
 	tags,
 } from '@lezer/highlight';
 import { MarkdownConfig } from '@lezer/markdown';
-import { iterate } from '@roenlie/mimic/iterators';
+import { iterate } from '@roenlie/mimic-core/iterators';
 import { basicDark } from 'cm6-theme-basic-dark';
 import {
 	css,
@@ -72,7 +72,6 @@ import { updateStatusbarListener } from '../codemirror/listeners/update-statusba
 import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
 import { type MirageMDE } from '../mirage-mde.js';
 import {
-	actionRegister,
 	MMDECommand,
 	ToolbarButton,
 } from '../registry/action-registry.js';
@@ -124,7 +123,7 @@ export class EditorElement extends LitElement {
 	}
 
 	public create() {
-		const shortcuts = iterate(actionRegister)
+		const shortcuts = iterate(this.scope.registry.action)
 			.pipe(([ , v ]) => v.type === 'button' ? v : undefined)
 			.pipe(item => {
 				if (!item.shortcut || typeof item.action !== 'function')

@@ -1,6 +1,3 @@
-import { StringLiteral } from '@roenlie/mimic/types';
-
-
 export type BuiltInDrawables = [
 	'table',
 	'horizontalRule',
@@ -10,7 +7,7 @@ export type BuiltInDrawables = [
 ][number];
 
 
-export const drawRegistry = new Map<StringLiteral | BuiltInDrawables, string>([
+export const builtInDraws: [string, string][] = [
 	[
 		'table', `
 		| Column 1 | Column 2 | Column 3 |
@@ -26,4 +23,4 @@ export const drawRegistry = new Map<StringLiteral | BuiltInDrawables, string>([
 	[ 'link', `[' '](#url#)` ],
 	[ 'image', `![' '](#url#)` ],
 	[ 'uploadedImage', `![](#url#)` ],
-]);
+];

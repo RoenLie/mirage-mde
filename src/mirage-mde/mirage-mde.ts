@@ -1,6 +1,6 @@
 import { EditorView } from '@codemirror/view';
-import { deepMerge } from '@roenlie/mimic/structs';
-import { StringLiteral } from '@roenlie/mimic/types';
+import { deepMerge } from '@roenlie/mimic-core/structs';
+import { StringLiteral } from '@roenlie/mimic-core/types';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
@@ -11,6 +11,7 @@ import {
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
 import { Marker } from './codemirror/listeners/get-state.js';
+import { performAction } from './codemirror/utils/perform-action.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
 import { StatusbarElement } from './components/mirage-mde-statusbar.js';
@@ -32,13 +33,12 @@ import {
 	PromptTexts,
 	TimeFormatOptions,
 } from './mirage-mde-types.js';
-import { actionRegister, BuiltInAction, defaultToolbar, ToolbarItem } from './registry/action-registry.js';
-import { drawRegistry } from './registry/draw-registry.js';
+import { BuiltInAction, defaultToolbar, ToolbarItem } from './registry/action-registry.js';
+import { createRegistry } from './registry/registry.js';
 import {
 	BuildInStatus,
 	defaultStatus,
 	StatusBarItem,
-	statusRegistry,
 } from './registry/status-registry.js';
 import { autosave } from './utilities/autosave.js';
 import { markdown } from './utilities/markdown.js';
@@ -68,6 +68,7 @@ export class MirageMDE {
 	public lastSaved = '';
 	public autosaveTimeoutId: number | undefined;
 	public activeMarkers: Marker[] = [];
+	public registry = createRegistry(this);
 	public gui: GUIElements = {} as any;
 	public guiClasses: GUIClasses = {
 		preview:   { hidden: true },
@@ -104,21 +105,21 @@ export class MirageMDE {
 
 		// Register any additional toolbar actions.
 		options.toolbarActions?.forEach(action => {
-			let existing = (actionRegister.get(action.name) ?? {}) as ToolbarItem;
+			let existing = (this.registry.action.get(action.name) ?? {}) as ToolbarItem;
 			if (action.type === existing.type)
-				actionRegister.set(action.name, deepMerge<ToolbarItem>([ existing, action ]));
+				this.registry.action.set(action.name, deepMerge<ToolbarItem>([ existing, action ]));
 			else
-				actionRegister.set(action.name, action);
+				this.registry.action.set(action.name, action);
 		});
 
 		// Handle status bar
 		this.statusbar ??= [ ...options.statusbar ?? defaultStatus ];
 		options.statusbarStatuses?.forEach(status => {
-			let existing = (statusRegistry.get(status.name) ?? {}) as StatusBarItem;
+			let existing = (this.registry.status.get(status.name) ?? {}) as StatusBarItem;
 			if (existing)
-				statusRegistry.set(status.name, deepMerge([ existing, status ]));
+				this.registry.status.set(status.name, deepMerge([ existing, status ]));
 			else
-				statusRegistry.set(status.name, status);
+				this.registry.status.set(status.name, status);
 		});
 
 		if (options.uploadImage)
@@ -153,7 +154,7 @@ export class MirageMDE {
 
 		// Merging the insertTexts, with the given options
 		options.drawables?.forEach(({ name, value }) => {
-			drawRegistry.set(name, value);
+			this.registry.draw.set(name, value);
 		});
 
 		// Merging the promptTexts, with the given options
@@ -186,10 +187,6 @@ export class MirageMDE {
 		options.imageCSRFHeader   = options.imageCSRFHeader ?? false;
 	}
 
-
-	public value(val: string | undefined): MirageMDE
-	public value(val?: undefined): string
-	public value(val: any): any { return value(this, val); }
 	public openBrowseFileWindow = openBrowseFileWindow.bind(this);
 	public autosave = autosave.bind(this);
 	public uploadImage = uploadImage.bind(this);
@@ -197,5 +194,98 @@ export class MirageMDE {
 	public uploadImageUsingCustomFunction = uploadImageUsingCustomFunction.bind(this);
 	public uploadImagesUsingCustomFunction = uploadImagesUsingCustomFunction.bind(this);
 
+	// Public Actions
+	public value(val: string | undefined): MirageMDE
+	public value(val?: undefined): string
+	public value(val: any): any { return value(this, val); }
+
+	public toggleBold() {
+		performAction(this, this.registry.action.get('bold'));
+	}
+
+	public toggleItalic() {
+		performAction(this, this.registry.action.get('italic'));
+	}
+
+	public toggleStrikethrough() {
+		performAction(this, this.registry.action.get('strikethrough'));
+	}
+
+	public toggleCodeBlock() {
+		performAction(this, this.registry.action.get('code'));
+	}
+
+	public toggleQuote() {
+		performAction(this, this.registry.action.get('quote'));
+	}
+
+	public toggleList(type: 'ordered' | 'unordered') {
+		performAction(this, this.registry.action.get(type + '-list'));
+	}
+
+	public togglePreview() {
+		performAction(this, this.registry.action.get('preview'));
+	}
+
+	public toggleSizeBySize() {
+		performAction(this, this.registry.action.get('side-by-side'));
+	}
+
+	public toggleFullscreen() {
+		performAction(this, this.registry.action.get('fullscreen'));
+	}
+
+	public toggleHeading() {
+		performAction(this, this.registry.action.get('heading'));
+	}
+
+	public headingBigger() {
+		performAction(this, this.registry.action.get('heading-bigger'));
+	}
+
+	public headingSmaller() {
+		performAction(this, this.registry.action.get('heading-smaller'));
+	}
+
+	public setHeadingLevel(size: 1|2|3|4|5|6) {
+		const action = this.registry.action.get('heading-' + size);
+		performAction(this, action);
+	}
+
+	public cleanBlock() {
+		performAction(this, this.registry.action.get('clean-block'));
+	}
+
+	public drawLink() {
+		performAction(this, this.registry.action.get('link'));
+	}
+
+	public drawImage() {
+		performAction(this, this.registry.action.get('image'));
+	}
+
+	public drawUploadedImage() {
+		performAction(this, this.registry.action.get('upload-image'));
+	}
+
+	public drawTable() {
+		performAction(this, this.registry.action.get('table'));
+	}
+
+	public drawLine() {
+		performAction(this, this.registry.action.get('horizontal-rule'));
+	}
+
+	public popoutPreview() {
+		performAction(this, this.registry.action.get('popout'));
+	}
+
+	public undo() {
+		performAction(this, this.registry.action.get('undo'));
+	}
+
+	public redo() {
+		performAction(this, this.registry.action.get('redo'));
+	}
 
 }

@@ -1,15 +1,14 @@
-import { deIndent } from '@roenlie/mimic/string';
+import { deIndent } from '@roenlie/mimic-core/string';
 
 import { MMDECommand } from '../../registry/action-registry.js';
-import { drawRegistry } from '../../registry/draw-registry.js';
 import { replaceSelection } from '../../utilities/replace-selection.js';
 
 
 /**
  * Action for drawing a table.
  */
-export const drawTable: MMDECommand = (view) => {
-	const text = deIndent(drawRegistry.get('table') ?? '');
+export const drawTable: MMDECommand = (view, scope) => {
+	const text = deIndent(scope.registry.draw.get('table') ?? '');
 	replaceSelection(view, text);
 
 	return true;

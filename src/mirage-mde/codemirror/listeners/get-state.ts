@@ -1,6 +1,6 @@
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
-import { isRangeInRanges, Range } from '@roenlie/mimic/validation';
+import { isRangeInRanges, Range } from '@roenlie/mimic-core/validation';
 
 import { Tree } from '../types/tree.js';
 

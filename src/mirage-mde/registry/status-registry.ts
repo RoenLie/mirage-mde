@@ -1,6 +1,6 @@
 import { type EditorView, type ViewUpdate } from '@codemirror/view';
-import { wordCount } from '@roenlie/mimic/string';
-import { type StringLiteral } from '@roenlie/mimic/types';
+import { wordCount } from '@roenlie/mimic-core/string';
+import { type StringLiteral } from '@roenlie/mimic-core/types';
 
 import { type MirageMDE } from '../mirage-mde.js';
 
@@ -33,7 +33,7 @@ export const defaultStatus: BuildInStatus[] = [
 ];
 
 
-export const statusRegistry = new Map<StringLiteral, StatusBarItem>([
+export const builtInStatuses: [StringLiteral, StatusBarItem][] = [
 	[
 		'words', {
 			name:     'words',
@@ -125,4 +125,4 @@ export const statusRegistry = new Map<StringLiteral, StatusBarItem>([
 			},
 		},
 	],
-]);
+];

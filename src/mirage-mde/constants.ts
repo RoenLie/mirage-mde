@@ -1,4 +1,4 @@
-import { RecordOf } from '@roenlie/mimic/types';
+import { RecordOf } from '@roenlie/mimic-core/types';
 
 import { BlockStyleOptions, ImageErrorTextsOptions, PromptTexts } from './mirage-mde-types.js';
 
