@@ -26,6 +26,7 @@ export const togglePreview: MMDECommand = (
 
 		const value = options.previewRender?.(editor.value()) ?? Promise.resolve('');
 		gui.preview.setContent(value);
+		gui.preview.style.width = 'auto';
 	}
 	else {
 		refocus = true;

@@ -27,7 +27,7 @@ export class DisplayElement extends LitElement {
 		unsafeCSS(markdownLightStyles),
 		unsafeCSS(codeDarkStyles),
 		css`
-		* {
+		:host, * {
 			box-sizing: border-box;
 		}
 		:host {

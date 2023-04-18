@@ -68,7 +68,7 @@ export class MirageMDE {
 	public lastSaved = '';
 	public autosaveTimeoutId: number | undefined;
 	public activeMarkers: Marker[] = [];
-	public registry = createRegistry(this);
+	public registry = createRegistry();
 	public gui: GUIElements = {} as any;
 	public guiClasses: GUIClasses = {
 		preview:   { hidden: true },

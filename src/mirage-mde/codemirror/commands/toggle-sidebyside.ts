@@ -32,6 +32,12 @@ export const toggleSideBySide: MMDECommand = (view: EditorView, scope: MirageMDE
 		host?.classList.toggle('preview', false);
 		previewButton?.classList.toggle('active', false);
 		sidebysideButton?.classList.toggle('active', true);
+
+		const width = getComputedStyle(scope.gui.preview).width;
+		if (!width || width === 'auto') {
+			const hostWidth = scope.host.offsetWidth;
+			scope.gui.preview.style.width = hostWidth / 2 + 'px';
+		}
 	}
 	else {
 		guiClasses.editor['hidden'] = false;

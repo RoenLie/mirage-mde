@@ -2,12 +2,15 @@ import './components/mirage-mde-editor.js';
 import './components/mirage-mde-toolbar.js';
 import './components/mirage-mde-statusbar.js';
 import './components/mirage-mde-preview.js';
+import './components/mirage-mde-dragbar.js';
 
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { customElement } from 'lit/decorators/custom-element.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { when } from 'lit/directives/when.js';
 
+import { type DragbarElement } from './components/mirage-mde-dragbar.js';
 import { MirageMDE } from './mirage-mde.js';
 import { type Options } from './mirage-mde-types.js';
 
@@ -47,6 +50,10 @@ export class MirageMDEElement extends LitElement {
 		[ editor, toolbar, statusbar, preview ].forEach(el => el?.create());
 	}
 
+	protected handlePreviewDrag = () => {
+
+	};
+
 	protected override render() {
 		return html`
 		<mirage-mde-toolbar
@@ -60,6 +67,20 @@ export class MirageMDEElement extends LitElement {
 			style="grid-area:editor;"
 			class=${ classMap(this.scope?.guiClasses.editor ?? {}) }
 		></mirage-mde-editor>
+
+		${ when(this.scope?.isSideBySideActive, () => html`
+		<mirage-mde-dragbar
+			style="grid-area:sidebyside;position: absolute;height: 100%;"
+			.handledrag=${ ((): DragbarElement['handledrag'] => {
+				return {
+					orientation: 'right' as const,
+					host:        this,
+					wrapperQry:  () => this,
+					elementQry:  () => this.scope!.gui.preview,
+				};
+			})() }
+		></mirage-mde-dragbar>
+		`) }
 
 		<mirage-mde-preview
 			.scope=${ this.scope }
@@ -90,6 +111,7 @@ export class MirageMDEElement extends LitElement {
 			--mmde-preview-family: Helvetica;
 		}
 		:host {
+			position: relative;
 			overflow: hidden;
 			display: grid;
 			grid-template: "toolbar" auto
@@ -107,7 +129,7 @@ export class MirageMDEElement extends LitElement {
 			grid-template: "toolbar toolbar" auto
 								"editor sidebyside" 1fr
 								"statusbar statusbar" Auto
-								/ 1fr 1fr
+								/ 1fr auto
 		}
 		:host(.fullscreen) {
 			position: fixed;
@@ -119,6 +141,14 @@ export class MirageMDEElement extends LitElement {
 		}
 		.hidden {
 			display: none;
+		}
+		.drag-handle {
+			grid-area: sidebyside;
+			position: absolute;
+			height: 100%;
+			width: 2px;
+			background-color: hotpink;
+			cursor: grab;
 		}
 		`,
 	];

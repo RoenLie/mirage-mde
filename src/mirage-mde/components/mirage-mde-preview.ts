@@ -54,7 +54,7 @@ export class PreviewElement extends LitElement {
 
 	public static override styles = [
 		css`
-		* {
+		:host, * {
 			box-sizing: border-box;
 		}
 		:host {

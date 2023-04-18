@@ -13,17 +13,10 @@ export type Registry = {
 }
 
 
-export const registries = new WeakMap<MirageMDE, Registry>();
-
-
-export const createRegistry = (scope: MirageMDE): Registry => {
-	const registry = {
+export const createRegistry = (): Registry => {
+	return {
 		action: new Map(builtInActions),
 		status: new Map(builtInStatuses),
 		draw:   new Map(builtInDraws),
 	};
-
-	registries.set(scope, registry);
-
-	return registry;
 };
