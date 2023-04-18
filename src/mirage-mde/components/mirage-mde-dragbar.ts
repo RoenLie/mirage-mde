@@ -81,10 +81,7 @@ export class DragbarElement extends LitElement {
 					? Math.abs(event.x - wrapperRect.left) + offset
 					: Math.abs(event.x - wrapperRect.right) + offset;
 
-				if (minWidth === undefined)
-					minWidth = Number(getComputedStyle(targetEl).minWidth.replace('px', '')) ?? 0;
-
-				if (isNaN(minWidth))
+				if (!minWidth || isNaN(minWidth))
 					minWidth = 0;
 
 				if (newWidth > minWidth) {
