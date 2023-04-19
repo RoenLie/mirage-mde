@@ -20,7 +20,7 @@
 		"build:preview": "vite --config ./vite.config.preview.ts build",
 		"preview": "vite --config ./vite.config.preview.ts preview",
 		"updatedeps": "pnpm update --latest --interactive",
-		"typecheck": "tsc --project ./tsconfig.json",
+		"typecheck": "tsc --project ./src/tsconfig.json --noEmit --emitDeclarationOnly false",
 		"test": "vitest --config ./test/vite.config.ts",
 		"increment-version": "package-toolbox increment-version"
 	},
