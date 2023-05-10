@@ -22,8 +22,6 @@ export class DragbarElement extends LitElement {
 
 	protected override willUpdate(props: PropertyValues) {
 		super.willUpdate(props);
-		console.log('dragbar updated');
-
 
 		if (props.has('handledrag')) {
 			this.handler = (ev: PointerEvent) => this.createDragHandler(
