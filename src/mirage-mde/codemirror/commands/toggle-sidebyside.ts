@@ -10,6 +10,7 @@ export const editorToPreview = async (scope: MirageMDE) => {
 		return;
 
 	const newValue = options.previewRender?.(editor.state.doc.toString()) ?? Promise.resolve('');
+
 	gui.preview.setContent(newValue);
 	gui.window?.setContent(newValue);
 };

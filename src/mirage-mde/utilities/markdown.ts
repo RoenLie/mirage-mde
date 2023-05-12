@@ -1,13 +1,25 @@
+import { type marked } from 'marked';
+
 import { MirageMDE } from '../mirage-mde.js';
 import { addAnchorTargetBlank } from './add-anchor-target.js';
 
 
-/**
- * Default markdown render.
- */
-export const markdown = async (scope: MirageMDE, text: string) => {
-	const [ marked, hljs ] = await Promise.all([
+let renderer: typeof marked['parse'] | undefined;
+
+// Only initialize the renderer once. This is done because Marked now apparently stores the uses and will
+// Cause any walkTokens functions to run more and more.
+const getRenderer = async (scope: MirageMDE) => {
+	if (renderer)
+		return renderer;
+
+	const [ marked, mangle, gfmHeadingId, markedHighlight, hljs ] = await Promise.all([
 		import('marked').then(m => m.marked),
+		//@ts-expect-error
+		import('marked-mangle').then(m => m.mangle),
+		//@ts-expect-error
+		import('marked-gfm-heading-id').then(m => m.gfmHeadingId),
+		//@ts-expect-error
+		import('marked-highlight').then(m => m.markedHighlight),
 		import('highlight.js').then(m => m.default),
 	]);
 
@@ -16,24 +28,49 @@ export const markdown = async (scope: MirageMDE, text: string) => {
 	// Initialize
 	const markedOptions = renderingConfig?.markedOptions ?? {};
 	markedOptions.breaks = !(renderingConfig?.singleLineBreaks === false);
+	markedOptions.mangle = false;
+	markedOptions.gfm = false;
 
 	if (renderingConfig?.codeSyntaxHighlighting === true) {
-		markedOptions.highlight = (code, language) => {
-			return language && hljs.getLanguage(language)
-				? hljs.highlight(code, { language }).value
-				: hljs.highlightAuto(code).value;
-		};
+		marked.use(markedHighlight({
+			langPrefix: 'language-',
+			highlight(code: string, lang: string) {
+				const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+
+				return hljs.highlight(code, { language }).value;
+			},
+		}));
 	}
 
 	// Set options
 	marked.setOptions(markedOptions);
 
+	// Mangle mailto links with HTML character references.
+	marked.use(mangle());
+
+	// Add ids to headings like GitHub.
+	marked.use(gfmHeadingId());
+
+	renderer = marked.parse;
+
+	return renderer!;
+};
+
+
+/**
+ * Default markdown render.
+ */
+export const markdown = async (scope: MirageMDE, text: string) => {
+	const { renderingConfig } = scope.options;
+
 	// Custom async replacement pipeline.
 	for (const { regexp, replacer } of renderingConfig?.preprocessor ?? [])
 		text = await replaceAsync(text, regexp, replacer);
 
+	const renderer = await getRenderer(scope);
+
 	// Convert the markdown to HTML
-	let htmlText = marked.parse(text);
+	let htmlText = renderer(text);
 
 	// Sanitize HTML
 	if (typeof renderingConfig?.sanitizerFunction === 'function')
