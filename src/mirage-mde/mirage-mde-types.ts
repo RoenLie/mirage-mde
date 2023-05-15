@@ -80,6 +80,7 @@ export interface Options {
 	extensions?: Extension[],
 	host?: LitElement;
 	autofocus?: boolean;
+	autocomplete?: boolean;
 	autosave?: AutoSaveOptions;
 	autoRefresh?: boolean | { delay: number; };
 	blockStyles?: BlockStyleOptions;

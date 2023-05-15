@@ -164,7 +164,7 @@ packages:
       '@codemirror/language': 6.6.0
       '@codemirror/state': 6.2.0
       '@lezer/common': 1.0.2
-      '@lezer/css': 1.1.1
+      '@lezer/css': 1.1.2
     transitivePeerDependencies:
       - '@codemirror/view'
     dev: false
@@ -179,7 +179,7 @@ packages:
       '@codemirror/state': 6.2.0
       '@codemirror/view': 6.11.2
       '@lezer/common': 1.0.2
-      '@lezer/css': 1.1.1
+      '@lezer/css': 1.1.2
       '@lezer/html': 1.3.4
     dev: false
 
@@ -696,8 +696,8 @@ packages:
       '@lezer/lr': 1.3.4
     dev: false
 
-  /@lezer/css@1.1.1:
-    resolution: {integrity: sha512-mSjx+unLLapEqdOYDejnGBokB5+AiJKZVclmud0MKQOKx3DLJ5b5VTCstgDDknR6iIV4gVrN6euzsCnj0A2gQA==}
+  /@lezer/css@1.1.2:
+    resolution: {integrity: sha512-5TKMAReXukfEmIiZprDlGfZVfOOCyEStFi1YLzxclm9H3G/HHI49/2wzlRT6bQw5r7PoZVEtjTItEkb/UuZQyg==}
     dependencies:
       '@lezer/highlight': 1.1.4
       '@lezer/lr': 1.3.4

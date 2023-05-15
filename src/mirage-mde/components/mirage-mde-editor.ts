@@ -189,7 +189,6 @@ export class EditorElement extends LitElement {
 			// keyboard behavior
 			indentOnInput(),
 			closeBrackets(),
-			autocompletion(),
 			keymap.of([
 				...shortcuts,
 				{
@@ -226,7 +225,13 @@ export class EditorElement extends LitElement {
 			syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
 		];
 
-
+		if (this.scope.options.autocomplete ?? true) {
+			extensions.push(
+				autocompletion({
+					tooltipClass: () => 'mmde-tooltip',
+				}),
+			);
+		}
 		if (this.scope.options.lineWrapping)
 			extensions.push(EditorView.lineWrapping);
 		if (this.scope.options.lineNumbers)
@@ -318,6 +323,26 @@ export class EditorElement extends LitElement {
 		}
 		.ͼo .cm-selectionBackground {
 			background-color: rgba(175, 175, 175, 0.3) !important;
+		}
+		.mmde-tooltip.cm-tooltip {
+			background-color: rgb(25, 34, 43);
+			border: 2px solid var(--mmde-scrollthumb);
+			border-radius: var(--mmde-border-radius);
+		}
+		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar {
+			width: var(--mmde-scrollsize);
+			height: var(--mmde-scrollsize);
+		}
+		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar-track {
+			background: var(--mmde-scrollbg);
+		}
+		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar-thumb {
+			background: var(--mmde-scrollthumb);
+			border-radius: 0px;
+			background-clip: padding-box;
+		}
+		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar-corner {
+			background: var(--mmde-scrollbg);
 		}
 		`,
 	];
