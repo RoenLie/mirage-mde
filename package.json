@@ -41,6 +41,7 @@
 		"highlight.js": "^11.8.0",
 		"lit": "^2.7.4",
 		"marked": "^5.0.2",
+		"marked-extended-tables": "^1.0.6",
 		"marked-gfm-heading-id": "^3.0.3",
 		"marked-highlight": "^1.0.2",
 		"marked-mangle": "^1.0.1",

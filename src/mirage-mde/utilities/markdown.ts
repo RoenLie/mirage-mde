@@ -12,12 +12,14 @@ const getRenderer = async (scope: MirageMDE) => {
 	if (renderer)
 		return renderer;
 
-	const [ marked, mangle, gfmHeadingId, markedHighlight, hljs ] = await Promise.all([
+	const [ marked, mangle, gfmHeadingId, extendedTables, markedHighlight, hljs ] = await Promise.all([
 		import('marked').then(m => m.marked),
 		//@ts-expect-error
 		import('marked-mangle').then(m => m.mangle),
 		//@ts-expect-error
 		import('marked-gfm-heading-id').then(m => m.gfmHeadingId),
+		//@ts-expect-error
+		import('marked-extended-tables').then(m => m.default),
 		//@ts-expect-error
 		import('marked-highlight').then(m => m.markedHighlight),
 		import('highlight.js').then(m => m.default),
@@ -50,6 +52,10 @@ const getRenderer = async (scope: MirageMDE) => {
 
 	// Add ids to headings like GitHub.
 	marked.use(gfmHeadingId());
+
+	// Extends the standard Github-Flavored tables to support advanced features.
+	// https://www.npmjs.com/package/marked-extended-tables
+	marked.use(extendedTables());
 
 	renderer = marked.parse;
 
