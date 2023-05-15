@@ -25,7 +25,7 @@
 		"increment-version": "package-toolbox increment-version"
 	},
 	"dependencies": {
-		"@codemirror/autocomplete": "^6.7.0",
+		"@codemirror/autocomplete": "^6.7.1",
 		"@codemirror/commands": "^6.2.4",
 		"@codemirror/lang-markdown": "^6.1.1",
 		"@codemirror/language": "^6.6.0",
@@ -33,7 +33,7 @@
 		"@codemirror/lint": "^6.2.1",
 		"@codemirror/search": "^6.4.0",
 		"@codemirror/state": "^6.2.0",
-		"@codemirror/view": "^6.11.1",
+		"@codemirror/view": "^6.11.2",
 		"@lezer/highlight": "^1.1.4",
 		"@lezer/markdown": "^1.0.2",
 		"@roenlie/mimic-core": "^0.0.14",
