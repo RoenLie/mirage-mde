@@ -1,4 +1,4 @@
-import { ChangeSpec, EditorSelection } from '@codemirror/state';
+import { type ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 
 

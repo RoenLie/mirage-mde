@@ -1,4 +1,4 @@
-import { ChangeSpec, EditorSelection } from '@codemirror/state';
+import { type ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { iterate } from '@roenlie/mimic-core/iterators';
 import { isRangeInRanges } from '@roenlie/mimic-core/validation';

@@ -12,17 +12,21 @@ const getRenderer = async (scope: MirageMDE) => {
 	if (renderer)
 		return renderer;
 
-	const [ marked, mangle, gfmHeadingId, extendedTables, markedHighlight, hljs ] = await Promise.all([
+	const [
+		marked,
+		mangle,
+		gfmHeadingId,
+		markedHighlight,
+		hljs,
+		extendedTables,
+	] = await Promise.all([
 		import('marked').then(m => m.marked),
-		//@ts-expect-error
 		import('marked-mangle').then(m => m.mangle),
-		//@ts-expect-error
 		import('marked-gfm-heading-id').then(m => m.gfmHeadingId),
-		//@ts-expect-error
-		import('marked-extended-tables').then(m => m.default),
-		//@ts-expect-error
 		import('marked-highlight').then(m => m.markedHighlight),
 		import('highlight.js').then(m => m.default),
+		//@ts-expect-error
+		import('marked-extended-tables').then(m => m.default),
 	]);
 
 	const { renderingConfig } = scope.options;
@@ -30,7 +34,6 @@ const getRenderer = async (scope: MirageMDE) => {
 	// Initialize
 	const markedOptions = renderingConfig?.markedOptions ?? {};
 	markedOptions.breaks = !(renderingConfig?.singleLineBreaks === false);
-	markedOptions.mangle = false;
 	markedOptions.gfm = false;
 
 	if (renderingConfig?.codeSyntaxHighlighting === true) {
@@ -76,7 +79,7 @@ export const markdown = async (scope: MirageMDE, text: string) => {
 	const renderer = await getRenderer(scope);
 
 	// Convert the markdown to HTML
-	let htmlText = renderer(text);
+	let htmlText = await renderer(text);
 
 	// Sanitize HTML
 	if (typeof renderingConfig?.sanitizerFunction === 'function')
@@ -101,12 +104,8 @@ export const removeListStyleWhenCheckbox = (htmlText: string): string => {
 	const htmlDoc = parser.parseFromString(htmlText, 'text/html');
 	const listItems = htmlDoc.getElementsByTagName('li');
 
-	for (let i = 0; i < listItems.length; i++) {
-		const listItem = listItems[i]!;
-
-		for (let j = 0; j < listItem.children.length; j++) {
-			const listItemChild = listItem.children[j]!;
-
+	for (const listItem of listItems) {
+		for (const listItemChild of listItem.children) {
 			if (listItemChild instanceof HTMLInputElement && listItemChild.type === 'checkbox') {
 				// From Github: margin: 0 .2em .25em -1.6em;
 				listItem.style.marginLeft = '-1.5em';

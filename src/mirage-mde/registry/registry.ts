@@ -1,15 +1,14 @@
-import { StringLiteral } from '@roenlie/mimic-core/types';
+import { type stringliteral } from '@roenlie/mimic-core/types';
 
-import { MirageMDE } from '../mirage-mde.js';
-import { BuiltInAction, builtInActions, ToolbarItem } from './action-registry.js';
-import { BuiltInDrawables, builtInDraws } from './draw-registry.js';
-import { builtInStatuses, StatusBarItem } from './status-registry.js';
+import { type BuiltInAction, builtInActions, type ToolbarItem } from './action-registry.js';
+import { type BuiltInDrawables, builtInDraws } from './draw-registry.js';
+import { builtInStatuses, type StatusBarItem } from './status-registry.js';
 
 
-export type Registry = {
-	action: Map<StringLiteral | BuiltInAction, ToolbarItem>;
-	status: Map<StringLiteral, StatusBarItem>;
-	draw: Map<StringLiteral | BuiltInDrawables, string>;
+export interface Registry {
+	action: Map<stringliteral | BuiltInAction, ToolbarItem>;
+	status: Map<stringliteral, StatusBarItem>;
+	draw: Map<stringliteral | BuiltInDrawables, string>;
 }
 
 

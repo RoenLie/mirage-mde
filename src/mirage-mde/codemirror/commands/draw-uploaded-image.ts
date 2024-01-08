@@ -1,6 +1,6 @@
 import { deIndent } from '@roenlie/mimic-core/string';
 
-import { MMDECommand } from '../../registry/action-registry.js';
+import { type MMDECommand } from '../../registry/action-registry.js';
 import { replaceSelection } from '../../utilities/replace-selection.js';
 
 

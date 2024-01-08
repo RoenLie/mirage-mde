@@ -1,8 +1,6 @@
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';
-import { isRangeInRanges, Range } from '@roenlie/mimic-core/validation';
-
-import { Tree } from '../types/tree.js';
+import { isRangeInRanges, type Range } from '@roenlie/mimic-core/validation';
 
 
 export type Marker = TextMarker | LineMarker | [
@@ -85,7 +83,7 @@ export const getNodesInRange = (state: EditorState, range: Range) => {
 		name: string;
 	})[] = [];
 
-	(syntaxTree(state) as Tree).iterate({
+	syntaxTree(state).iterate({
 		enter: ({ node }) => {
 			if (!isRangeInRanges([ { from: node.from, to: node.to } ], range))
 				return;
@@ -114,7 +112,7 @@ export const getAllNodesInRange = (state: EditorState, range: Range) => {
 		name: string;
 	})[] = [];
 
-	(syntaxTree(state) as Tree).iterate({
+	syntaxTree(state).iterate({
 		enter: ({ node }) => {
 			if (!isRangeInRanges([ { from: node.from, to: node.to } ], range))
 				return;

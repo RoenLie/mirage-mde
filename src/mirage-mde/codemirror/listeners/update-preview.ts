@@ -1,5 +1,5 @@
 import { ViewUpdate } from '@codemirror/view';
-import { curryDebounce } from '@roenlie/mimic-core/timing';
+import { debounce } from '@roenlie/mimic-core/timing';
 
 import { MirageMDE } from '../../mirage-mde.js';
 import { editorToPreview } from '../commands/toggle-sidebyside.js';
@@ -11,4 +11,4 @@ export const updatePreviewListener = (update: ViewUpdate, scope: MirageMDE) => {
 };
 
 
-const bounced = curryDebounce(500, (scope: MirageMDE) => editorToPreview(scope));
+const bounced = debounce((scope: MirageMDE) => editorToPreview(scope), 500);

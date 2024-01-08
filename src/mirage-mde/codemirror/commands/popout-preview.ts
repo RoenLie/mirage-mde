@@ -2,7 +2,7 @@ import '../../components/mirage-mde-window.js';
 
 import { html, render } from 'lit';
 
-import { MMDECommand } from '../../registry/action-registry.js';
+import { type MMDECommand } from '../../registry/action-registry.js';
 
 
 /**

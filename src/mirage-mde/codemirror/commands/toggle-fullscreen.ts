@@ -1,8 +1,7 @@
-
 import { EditorView } from '@codemirror/view';
 
 import { MirageMDE } from '../../mirage-mde.js';
-import { MMDECommand } from '../../registry/action-registry.js';
+import { type MMDECommand } from '../../registry/action-registry.js';
 
 
 const state = new WeakMap<MirageMDE, {

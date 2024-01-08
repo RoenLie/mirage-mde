@@ -1,14 +1,14 @@
 import { type Extension } from '@codemirror/state';
-import { type StringLiteral } from '@roenlie/mimic-core/types';
+import { type stringliteral } from '@roenlie/mimic-core/types';
 import { type LitElement } from 'lit';
-import { marked } from 'marked';
+import { marked, type MarkedOptions } from 'marked';
 
-import {
-	type BuiltInAction,
-	type ToolbarButton,
-	type ToolbarDropdown,
+import type {
+	BuiltInAction,
+	ToolbarButton,
+	ToolbarDropdown,
 } from './registry/action-registry.js';
-import { type BuildInStatus, StatusBarItem } from './registry/status-registry.js';
+import { type BuildInStatus, type StatusBarItem } from './registry/status-registry.js';
 
 
 export interface TimeFormatOptions {
@@ -50,7 +50,7 @@ export interface PromptTexts {
 
 export interface RenderingOptions {
 	codeSyntaxHighlighting?: boolean;
-	markedOptions?: marked.MarkedOptions;
+	markedOptions?: MarkedOptions;
 	sanitizerFunction?: (html: string) => string;
 	singleLineBreaks?: boolean;
 	preprocessor?: {
@@ -84,7 +84,7 @@ export interface Options {
 	autosave?: AutoSaveOptions;
 	autoRefresh?: boolean | { delay: number; };
 	blockStyles?: BlockStyleOptions;
-	hideIcons?: (StringLiteral | BuiltInAction)[];
+	hideIcons?: (stringliteral | BuiltInAction)[];
 	initialValue?: string;
 	lineNumbers?: boolean;
 	lineWrapping?: boolean;
@@ -96,9 +96,9 @@ export interface Options {
 	promptURLs?: boolean;
 	renderingConfig?: RenderingOptions;
 	tabSize?: number;
-	statusbar?: (StringLiteral | BuildInStatus)[];
+	statusbar?: (stringliteral | BuildInStatus)[];
 	statusbarStatuses?: StatusBarItem[];
-	toolbar?: (StringLiteral | BuiltInAction)[];
+	toolbar?: (stringliteral | BuiltInAction)[];
 	toolbarActions?: (ToolbarButton | ToolbarDropdown)[];
 	toolbarTooltips?: boolean;
 	drawables?: {name: string; value: string}[];

@@ -1,5 +1,5 @@
 import { MirageMDE } from '../../mirage-mde.js';
-import { ToolbarButton, ToolbarItem } from '../../registry/action-registry.js';
+import type { ToolbarButton, ToolbarItem } from '../../registry/action-registry.js';
 
 
 export const performAction = (scope: MirageMDE, item?: ToolbarItem) => {

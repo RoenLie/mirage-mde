@@ -1,7 +1,7 @@
 import './mirage-mde-icon.js';
 
 import { hasCommonElement } from '@roenlie/mimic-core/array';
-import { html, LitElement, nothing, TemplateResult, unsafeCSS } from 'lit';
+import { html, LitElement, nothing, type TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
@@ -11,8 +11,8 @@ import { when } from 'lit/directives/when.js';
 
 import { performAction } from '../codemirror/utils/perform-action.js';
 import { MirageMDE } from '../mirage-mde.js';
-import { Options } from '../mirage-mde-types.js';
-import { ToolbarButton } from '../registry/action-registry.js';
+import { type Options } from '../mirage-mde-types.js';
+import { type ToolbarButton } from '../registry/action-registry.js';
 import { isMobile } from '../utilities/is-mobile.js';
 import styles from './mirage-mde-toolbar.scss?inline';
 

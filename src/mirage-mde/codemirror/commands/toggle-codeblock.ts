@@ -1,16 +1,16 @@
-import { ChangeSpec, EditorSelection } from '@codemirror/state';
+import { type ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { isRangeInRanges } from '@roenlie/mimic-core/validation';
 
 import { MirageMDE } from '../../mirage-mde.js';
-import { MMDECommand } from '../../registry/action-registry.js';
+import { type MMDECommand } from '../../registry/action-registry.js';
 import { getNodesInRange } from '../listeners/get-state.js';
 
 
 /**
  * Action for toggling code block.
  */
-export const toggleCodeBlock: MMDECommand = (view: EditorView, scope: MirageMDE) => {
+export const toggleCodeBlock: MMDECommand = (view: EditorView, _scope: MirageMDE) => {
 	const state = view.state;
 	const ranges = view.state.selection.ranges;
 

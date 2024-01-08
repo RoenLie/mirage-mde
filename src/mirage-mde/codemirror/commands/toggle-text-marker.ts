@@ -1,10 +1,10 @@
-import { ChangeSpec, EditorSelection } from '@codemirror/state';
+import { type ChangeSpec, EditorSelection } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
 import { arrayObjSum } from '@roenlie/mimic-core/array';
 import { isRangeInRanges } from '@roenlie/mimic-core/validation';
 
 import { type MMDECommand } from '../../registry/action-registry.js';
-import { getNodesInRange, TextMarker, textMarkerValue } from '../listeners/get-state.js';
+import { getNodesInRange, type TextMarker, textMarkerValue } from '../listeners/get-state.js';
 import { cmFindBeginningOfWord, cmfindEndOfWord } from '../utils/string-helpers.js';
 
 

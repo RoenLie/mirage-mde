@@ -1,6 +1,6 @@
-import { RecordOf } from '@roenlie/mimic-core/types';
+import type { RecordOf } from '@roenlie/mimic-core/types';
 
-import { BlockStyleOptions, ImageErrorTextsOptions, PromptTexts } from './mirage-mde-types.js';
+import type { BlockStyleOptions, ImageErrorTextsOptions, PromptTexts } from './mirage-mde-types.js';
 
 
 export const promptTexts: PromptTexts = {

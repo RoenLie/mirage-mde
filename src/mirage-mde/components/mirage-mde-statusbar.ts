@@ -6,7 +6,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { when } from 'lit/directives/when.js';
 
 import { MirageMDE } from '../mirage-mde.js';
-import { StatusBarItem } from '../registry/status-registry.js';
+import type { StatusBarItem } from '../registry/status-registry.js';
 
 
 @customElement('mirage-mde-statusbar')

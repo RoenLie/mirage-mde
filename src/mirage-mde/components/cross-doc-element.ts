@@ -1,4 +1,4 @@
-import { CSSResult, CSSResultGroup, CSSResultOrNative, LitElement, supportsAdoptingStyleSheets } from 'lit';
+import { CSSResult, type CSSResultGroup, type CSSResultOrNative, LitElement, supportsAdoptingStyleSheets } from 'lit';
 
 
 // This function migrates styles from a custom element's constructe stylesheet to a new document.

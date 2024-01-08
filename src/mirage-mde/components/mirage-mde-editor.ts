@@ -9,12 +9,8 @@ import {
 	history,
 	historyKeymap,
 } from '@codemirror/commands';
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import {
-	markdown,
-	markdownLanguage,
-} from '@codemirror/lang-markdown';
-import {
-	bracketMatching,
 	defaultHighlightStyle,
 	foldKeymap,
 	HighlightStyle,
@@ -24,57 +20,34 @@ import {
 } from '@codemirror/language';
 import { languages } from '@codemirror/language-data';
 import { lintKeymap } from '@codemirror/lint';
-import {
-	highlightSelectionMatches,
-	searchKeymap,
-} from '@codemirror/search';
+import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
 import { EditorState } from '@codemirror/state';
 import {
 	crosshairCursor,
 	drawSelection,
 	dropCursor,
 	EditorView,
-	highlightActiveLine,
-	highlightActiveLineGutter,
 	highlightSpecialChars,
 	type KeyBinding,
 	keymap,
 	lineNumbers,
 	rectangularSelection,
 } from '@codemirror/view';
-import {
-	styleTags,
-	Tag,
-	tags,
-} from '@lezer/highlight';
-import { MarkdownConfig } from '@lezer/markdown';
+import { styleTags, Tag, tags } from '@lezer/highlight';
+import { type MarkdownConfig } from '@lezer/markdown';
 import { iterate } from '@roenlie/mimic-core/iterators';
 import { basicDark } from 'cm6-theme-basic-dark';
-import {
-	css,
-	html,
-	LitElement,
-	unsafeCSS,
-} from 'lit';
-import {
-	customElement,
-	property,
-} from 'lit/decorators.js';
+import { css, LitElement } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 import { insertTab, removeTab } from '../codemirror/commands/tab-list.js';
 import { toggleCheckbox } from '../codemirror/commands/toggle-checkbox.js';
-import {
-	editorToPreview,
-	handleEditorScroll,
-} from '../codemirror/commands/toggle-sidebyside.js';
+import { editorToPreview, handleEditorScroll } from '../codemirror/commands/toggle-sidebyside.js';
 import { updatePreviewListener } from '../codemirror/listeners/update-preview.js';
 import { updateStatusbarListener } from '../codemirror/listeners/update-statusbar.js';
 import { updateToolbarStateListener } from '../codemirror/listeners/update-toolbar.js';
 import { type MirageMDE } from '../mirage-mde.js';
-import {
-	MMDECommand,
-	ToolbarButton,
-} from '../registry/action-registry.js';
+import type { MMDECommand, ToolbarButton } from '../registry/action-registry.js';
 
 
 @customElement('mirage-mde-editor')

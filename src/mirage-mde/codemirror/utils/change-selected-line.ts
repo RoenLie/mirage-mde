@@ -1,4 +1,4 @@
-import { ChangeSpec, EditorSelection, EditorState, Line } from '@codemirror/state';
+import { type ChangeSpec, EditorSelection, EditorState, Line } from '@codemirror/state';
 
 
 export const changeBySelectedLine = (
@@ -10,7 +10,7 @@ export const changeBySelectedLine = (
 		const changes: ChangeSpec[] = [];
 
 		for (let pos = range.from; pos <= range.to;) {
-			let line = state.doc.lineAt(pos);
+			const line = state.doc.lineAt(pos);
 			if (line.number > atLine && (range.empty || range.to > line.from)) {
 				f(line, changes, range);
 				atLine = line.number;

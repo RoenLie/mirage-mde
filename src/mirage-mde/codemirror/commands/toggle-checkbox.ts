@@ -1,4 +1,4 @@
-import { StateCommand } from '@codemirror/state';
+import { type StateCommand } from '@codemirror/state';
 
 import { changeBySelectedLine } from '../utils/change-selected-line.js';
 

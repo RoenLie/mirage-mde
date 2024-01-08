@@ -1,6 +1,6 @@
 import {  deleteCharBackward, indentLess } from '@codemirror/commands';
 import { EditorSelection } from '@codemirror/state';
-import { Command } from '@codemirror/view';
+import { type Command } from '@codemirror/view';
 
 
 export const undoTab: Command = (view) => {

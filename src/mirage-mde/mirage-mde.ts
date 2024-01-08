@@ -1,6 +1,6 @@
 import { EditorView } from '@codemirror/view';
 import { deepMerge } from '@roenlie/mimic-core/structs';
-import { StringLiteral } from '@roenlie/mimic-core/types';
+import type { stringliteral } from '@roenlie/mimic-core/types';
 import { LitElement } from 'lit';
 import { type Ref } from 'lit/directives/ref.js';
 
@@ -10,7 +10,7 @@ import {
 	uploadImagesUsingCustomFunction,
 	uploadImageUsingCustomFunction,
 } from './actions/upload-images.js';
-import { Marker } from './codemirror/listeners/get-state.js';
+import { type Marker } from './codemirror/listeners/get-state.js';
 import { performAction } from './codemirror/utils/perform-action.js';
 import { EditorElement } from './components/mirage-mde-editor.js';
 import { PreviewElement } from './components/mirage-mde-preview.js';
@@ -24,7 +24,7 @@ import {
 	promptTexts,
 	timeFormat,
 } from './constants.js';
-import {
+import type {
 	BlockStyleOptions,
 	ImageErrorTextsOptions,
 	ImageTextsOptions,
@@ -33,12 +33,12 @@ import {
 	PromptTexts,
 	TimeFormatOptions,
 } from './mirage-mde-types.js';
-import { BuiltInAction, defaultToolbar, ToolbarItem } from './registry/action-registry.js';
+import { type BuiltInAction, defaultToolbar, type ToolbarItem } from './registry/action-registry.js';
 import { createRegistry } from './registry/registry.js';
 import {
-	BuildInStatus,
+	type BuildInStatus,
 	defaultStatus,
-	StatusBarItem,
+	type StatusBarItem,
 } from './registry/status-registry.js';
 import { autosave } from './utilities/autosave.js';
 import { markdown } from './utilities/markdown.js';
@@ -46,7 +46,7 @@ import { openBrowseFileWindow } from './utilities/open-file-window.js';
 import { value } from './utilities/value.js';
 
 
-type GUIElements = {
+interface GUIElements {
 	editor: EditorElement;
 	preview: PreviewElement;
 	toolbar: ToolbarElement;
@@ -61,9 +61,9 @@ export class MirageMDE {
 	public options: Options;
 	public host: LitElement;
 	public editor: EditorView;
-	public toolbar: (StringLiteral | BuiltInAction)[];
+	public toolbar: (stringliteral | BuiltInAction)[];
 	public toolbarElements: Record<string, Ref<HTMLElement>> = {};
-	public statusbar: (StringLiteral | BuildInStatus)[];
+	public statusbar: (stringliteral | BuildInStatus)[];
 	public saved = false;
 	public lastSaved = '';
 	public autosaveTimeoutId: number | undefined;
@@ -105,7 +105,7 @@ export class MirageMDE {
 
 		// Register any additional toolbar actions.
 		options.toolbarActions?.forEach(action => {
-			let existing = (this.registry.action.get(action.name) ?? {}) as ToolbarItem;
+			const existing = (this.registry.action.get(action.name) ?? {}) as ToolbarItem;
 			if (action.type === existing.type)
 				this.registry.action.set(action.name, deepMerge<ToolbarItem>([ existing, action ]));
 			else
@@ -115,7 +115,7 @@ export class MirageMDE {
 		// Handle status bar
 		this.statusbar ??= [ ...options.statusbar ?? defaultStatus ];
 		options.statusbarStatuses?.forEach(status => {
-			let existing = (this.registry.status.get(status.name) ?? {}) as StatusBarItem;
+			const existing = (this.registry.status.get(status.name) ?? {}) as StatusBarItem;
 			if (existing)
 				this.registry.status.set(status.name, deepMerge([ existing, status ]));
 			else

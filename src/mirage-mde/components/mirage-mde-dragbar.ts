@@ -1,5 +1,5 @@
 import { drag } from '@roenlie/mimic-core/dom';
-import { css, html, LitElement, PropertyValues } from 'lit';
+import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 
@@ -60,10 +60,10 @@ export class DragbarElement extends LitElement {
 		const dragbarRect = dragbarQry().getBoundingClientRect();
 		const offset = dragbarRect.left - initialEvent.x;
 
-		let wrapperEl = wrapperQry();
+		const wrapperEl = wrapperQry();
 		let wrapperRect = wrapperEl.getBoundingClientRect();
 
-		let targetEl = elementQry();
+		const targetEl = elementQry();
 		let minWidth = targetEl
 			? Number(getComputedStyle(targetEl).minWidth.replace('px', ''))
 			: undefined;

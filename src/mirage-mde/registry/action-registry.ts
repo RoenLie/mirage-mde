@@ -1,5 +1,5 @@
 import { type EditorView } from '@codemirror/view';
-import { type StringLiteral } from '@roenlie/mimic-core/types';
+import { type stringliteral } from '@roenlie/mimic-core/types';
 
 import { cleanBlock } from '../codemirror/commands/clean-block.js';
 import { drawHorizontalRule } from '../codemirror/commands/draw-horizontal-rule.js';
@@ -26,7 +26,7 @@ export type MMDECommand = (target: EditorView, scope: MirageMDE) => boolean
 export type ToolbarItem = ToolbarSeparator | ToolbarButton | ToolbarDropdown;
 
 export interface ToolbarButtonBase {
-	name: StringLiteral | BuiltInAction;
+	name: stringliteral | BuiltInAction;
 	iconUrl?: string;
 	title?: string;
 	shortcut?: string;
@@ -37,7 +37,7 @@ export interface ToolbarButtonBase {
 
 export interface ToolbarDropdown extends ToolbarButtonBase {
 	type: 'dropdown';
-	children: (StringLiteral | BuiltInAction)[];
+	children: (stringliteral | BuiltInAction)[];
 }
 
 export interface ToolbarButton extends ToolbarButtonBase {
@@ -124,7 +124,7 @@ export const defaultToolbar: BuiltInAction[] = [
 ];
 
 
-export const builtInActions: [StringLiteral | BuiltInAction, ToolbarItem][] = [
+export const builtInActions: [stringliteral | BuiltInAction, ToolbarItem][] = [
 	[ 'separator',   { type: 'separator' } ],
 	[ 'separator-1', { type: 'separator' } ],
 	[ 'separator-2', { type: 'separator' } ],
