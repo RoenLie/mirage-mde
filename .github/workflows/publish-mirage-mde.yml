@@ -1,4 +1,4 @@
-name: Publish to NPM with auto-incremented patch release.
+name: Publish Mirage-MDE to NPM
 
 on:
    # Runs on pushes targeting the default branch
