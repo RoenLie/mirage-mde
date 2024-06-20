@@ -61,24 +61,24 @@ export class PreviewElement extends LitElement {
 		:host {
 			display: grid;
 			overflow: auto;
-			border: var(--mmde-border);
+			border: var(--_mmde-border);
 			border-left: none;
 			border-bottom: none;
 		}
 		:host::-webkit-scrollbar {
-			width: var(--mmde-scrollsize);
-			height: var(--mmde-scrollsize);
+			width: var(--_mmde-scrollsize);
+			height: var(--_mmde-scrollsize);
 		}
 		:host::-webkit-scrollbar-track {
-			background: var(--mmde-scrollbg);
+			background: var(--_mmde-scrollbg);
 		}
 		:host::-webkit-scrollbar-thumb {
-			background: var(--mmde-scrollthumb);
+			background: var(--_mmde-scrollthumb);
 			border-radius: 0px;
 			background-clip: padding-box;
 		}
 		:host::-webkit-scrollbar-corner {
-			background: var(--mmde-scrollbg);
+			background: var(--_mmde-scrollbg);
 		}
 		`,
 	];

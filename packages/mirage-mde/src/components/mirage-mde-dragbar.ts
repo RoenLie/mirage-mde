@@ -111,7 +111,7 @@ export class DragbarElement extends LitElement {
 		height: 100%;
 		width: 4px;
 		left: -2px;
-		background-color: var(--mmde-scrollthumb);
+		background-color: var(--_mmde-scrollthumb);
 		z-index: 999;
 		cursor: ew-resize;
 		opacity: 0;

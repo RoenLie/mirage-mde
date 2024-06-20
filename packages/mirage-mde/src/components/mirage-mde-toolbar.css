@@ -13,11 +13,11 @@
 	min-height: 32px;
 	padding-inline: 10px;
 	padding-block: 4px;
-	border: var(--mmde-border);
-	border-top-left-radius: var(--mmde-border-radius);
-	border-top-right-radius: var(--mmde-border-radius);
+	border: var(--_mmde-border);
+	border-top-left-radius: var(--_mmde-border-radius);
+	border-top-right-radius: var(--_mmde-border-radius);
 	border-bottom: none;
-	background-color: var(--mmde-toolbar-bg);
+	background-color: var(--_mmde-toolbar-bg);
 
 	display: flex;
 	align-items: center;
@@ -74,7 +74,7 @@
 
 	i.separator {
 		display: inline-block;
-		background-color: var(--mmde-scrollthumb);
+		background-color: var(--_mmde-scrollthumb);
 		width: 2px;
 		color: transparent;
 		text-indent: -10px;

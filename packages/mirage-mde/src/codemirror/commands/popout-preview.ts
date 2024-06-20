@@ -22,7 +22,11 @@ export const popoutPreview: MMDECommand = (view, scope) => {
 
 	const winHandle = window.open(undefined, 'window-preview', windowCfg)!;
 
-	const previewFont = getComputedStyle(scope.host).getPropertyValue('--mmde-preview-family');
+	const computedStyles = scope.host.computedStyleMap();
+
+	const previewFont = computedStyles.get('--_mmde-preview-family')?.toString();
+	const customProperties = [ ...computedStyles ].filter(style => style[0].startsWith('--'));
+	const forwardedProperties = customProperties.map(([ key, val ]) => `${ key }: ${ val }`).join(';\n');
 
 	render(html`
 	<style>
@@ -32,6 +36,7 @@ export const popoutPreview: MMDECommand = (view, scope) => {
 			color: white;
 			min-height: 100dvh;
 			font-family: ${ previewFont };
+			${ forwardedProperties }
 		}
 		* {
 			box-sizing: border-box;

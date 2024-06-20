@@ -230,31 +230,31 @@ export class EditorElement extends LitElement {
 			display: grid;
 			overflow: hidden;
 			box-sizing: border-box;
-			color: var(--mmde-color);
-			border: var(--mmde-border);
+			color: var(--_mmde-color);
+			border: var(--_mmde-border);
 			border-bottom: none;
-			background-color: var(--mmde-background-color);
+			background-color: var(--_mmde-background-color);
 		}
 		.cm-editor {
 			overflow: hidden;
 		}
 		.cm-scroller::-webkit-scrollbar {
-			width: var(--mmde-scrollsize);
-			height: var(--mmde-scrollsize);
+			width: var(--_mmde-scrollsize);
+			height: var(--_mmde-scrollsize);
 		}
 		.cm-scroller::-webkit-scrollbar-track {
-			background: var(--mmde-scrollbg);
+			background: var(--_mmde-scrollbg);
 		}
 		.cm-scroller::-webkit-scrollbar-thumb {
-			background: var(--mmde-scrollthumb);
+			background: var(--_mmde-scrollthumb);
 			border-radius: 0px;
 			background-clip: padding-box;
 		}
 		.cm-scroller::-webkit-scrollbar-corner {
-			background: var(--mmde-scrollbg);
+			background: var(--_mmde-scrollbg);
 		}
 		:host .cm-scroller {
-			font-family: var(--mmde-editor-family);
+			font-family: var(--_mmde-editor-family);
 		}
 		:host .cm-gutters {
 			background-color: rgb(25, 34, 43);
@@ -294,28 +294,31 @@ export class EditorElement extends LitElement {
 			font-size: .85em;
 			color: #8b949e;
 		}
+		.ͼo {
+			background-color: var(--_mmde-editor-bg);
+		}
 		.ͼo .cm-selectionBackground {
 			background-color: rgba(175, 175, 175, 0.3) !important;
 		}
 		.mmde-tooltip.cm-tooltip {
 			background-color: rgb(25, 34, 43);
-			border: 2px solid var(--mmde-scrollthumb);
-			border-radius: var(--mmde-border-radius);
+			border: 2px solid var(--_mmde-scrollthumb);
+			border-radius: var(--_mmde-border-radius);
 		}
 		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar {
-			width: var(--mmde-scrollsize);
-			height: var(--mmde-scrollsize);
+			width: var(--_mmde-scrollsize);
+			height: var(--_mmde-scrollsize);
 		}
 		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar-track {
-			background: var(--mmde-scrollbg);
+			background: var(--_mmde-scrollbg);
 		}
 		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar-thumb {
-			background: var(--mmde-scrollthumb);
+			background: var(--_mmde-scrollthumb);
 			border-radius: 0px;
 			background-clip: padding-box;
 		}
 		.mmde-tooltip.cm-tooltip>ul::-webkit-scrollbar-corner {
-			background: var(--mmde-scrollbg);
+			background: var(--_mmde-scrollbg);
 		}
 		`,
 	];

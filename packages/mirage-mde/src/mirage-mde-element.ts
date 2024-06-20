@@ -66,7 +66,7 @@ export class MirageMDEElement extends LitElement {
 
 		${ when(this.scope?.isSideBySideActive, () => html`
 		<mirage-mde-dragbar
-			style="grid-area:sidebyside;position: absolute;height: 100%;"
+			style="grid-area:sidebyside;position:absolute;height:100%;"
 			.handledrag=${ ((): DragbarElement['handledrag'] => {
 				return {
 					orientation: 'right' as const,
@@ -95,16 +95,17 @@ export class MirageMDEElement extends LitElement {
 	public static override styles = [
 		css`
 		:host {
-			--mmde-border-radius: 0px;
-			--mmde-border: 2px solid rgb(30, 40, 50);
-			--mmde-color: rgb(220, 220, 220);
-			--mmde-background-color: rgb(13, 17, 23);
-			--mmde-toolbar-bg: rgb(30, 40, 50);
-			--mmde-scrollbg: rgb(30 40 50 / 75%);
-			--mmde-scrollthumb: rgb(52, 70, 88);
-			--mmde-scrollsize: 12px;
-			--mmde-editor-family: Helvetica;
-			--mmde-preview-family: Helvetica;
+			--_mmde-border-radius:    var(--mmde-border-radius, 0px);
+			--_mmde-border:           var(--mmde-border, 2px solid rgb(30, 40, 50));
+			--_mmde-color:            var(--mmde-color, rgb(220, 220, 220));
+			--_mmde-background-color: var(--mmde-background-color, rgb(13, 17, 23));
+			--_mmde-toolbar-bg:       var(--mmde-toolbar-bg, rgb(30, 40, 50));
+			--_mmde-scrollbg:         var(--mmde-scrollbg, rgb(30 40 50 / 75%));
+			--_mmde-scrollthumb:      var(--mmde-scrollthumb, rgb(52, 70, 88));
+			--_mmde-scrollsize:       var(--mmde-scrollsize, 12px);
+			--_mmde-editor-family:    var(--mmde-editor-family, Helvetica);
+			--_mmde-preview-family:   var(--mmde-preview-family, Helvetica);
+			--_mmde-editor-bg:        var(--mmde-editor-bg, rgb(46, 50, 53));
 		}
 		:host {
 			position: relative;
@@ -137,14 +138,6 @@ export class MirageMDEElement extends LitElement {
 		}
 		.hidden {
 			display: none;
-		}
-		.drag-handle {
-			grid-area: sidebyside;
-			position: absolute;
-			height: 100%;
-			width: 2px;
-			background-color: hotpink;
-			cursor: grab;
 		}
 		`,
 	];

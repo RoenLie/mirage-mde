@@ -53,12 +53,12 @@ export class StatusbarElement extends LitElement {
 		:host {
 			display: grid;
 
-			color: var(--mmde-color);
+			color: var(--_mmde-color);
 			background-color: rgb(25, 34, 43);
-			border: var(--mmde-border);
+			border: var(--_mmde-border);
 			border-top: 1px solid rgb(30, 40, 50);
-			border-bottom-left-radius: var(--mmde-border-radius);
-			border-bottom-right-radius: var(--mmde-border-radius);
+			border-bottom-left-radius: var(--_mmde-border-radius);
+			border-bottom-right-radius: var(--_mmde-border-radius);
 
 			padding-block: 4px;
 			padding-inline: 10px;
