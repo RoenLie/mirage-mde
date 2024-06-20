@@ -3,13 +3,13 @@
 	overflow-x: auto;
 	padding: 0.5em;
 
-	color: var(--mmde-hljs-color);
-	background: var(--mmde-hljs-bg);
+	color: var(--mmdp-hljs-color);
+	background: var(--mmdp-hljs-bg);
 }
 
 .markdown-body .hljs-comment,
 .markdown-body .hljs-punctuation {
-	color: var(--mmde-hljs-comment);
+	color: var(--mmdp-hljs-comment);
 }
 
 .markdown-body .hljs-attr,
@@ -18,29 +18,29 @@
 .markdown-body .hljs-selector-attr,
 .markdown-body .hljs-selector-class,
 .markdown-body .hljs-selector-id {
-	color: var(--mmde-hljs-attr);
+	color: var(--mmdp-hljs-attr);
 }
 
 .markdown-body .hljs-variable,
 .markdown-body .hljs-literal,
 .markdown-body .hljs-number,
 .markdown-body .hljs-doctag {
-	color: var(--mmde-hljs-variable);
+	color: var(--mmdp-hljs-variable);
 }
 
 .markdown-body .hljs-params {
-	color: var(--mmde-hljs-params);
+	color: var(--mmdp-hljs-params);
 }
 
 .markdown-body .hljs-function {
-	color: var(--mmde-hljs-function);
+	color: var(--mmdp-hljs-function);
 }
 
 .markdown-body .hljs-class,
 .markdown-body .hljs-tag,
 .markdown-body .hljs-title,
 .markdown-body .hljs-built_in {
-	color: var(--mmde-hljs-class);
+	color: var(--mmdp-hljs-class);
 }
 
 .markdown-body .hljs-keyword,
@@ -49,28 +49,28 @@
 .markdown-body .hljs-meta-keyword,
 .markdown-body .hljs-template-tag,
 .markdown-body .hljs-template-variable {
-	color: var(--mmde-hljs-keyword);
+	color: var(--mmdp-hljs-keyword);
 }
 
 .markdown-body .hljs-string,
 .markdown-body .hljs-undefined {
-	color: var(--mmde-hljs-string);
+	color: var(--mmdp-hljs-string);
 }
 
 .markdown-body .hljs-regexp {
-	color: var(--mmde-hljs-regexp);
+	color: var(--mmdp-hljs-regexp);
 }
 
 .markdown-body .hljs-symbol {
-	color: var(--mmde-hljs-symbol);
+	color: var(--mmdp-hljs-symbol);
 }
 
 .markdown-body .hljs-bullet {
-	color: var(--mmde-hljs-bullet);
+	color: var(--mmdp-hljs-bullet);
 }
 
 .markdown-body .hljs-section {
-	color: var(--mmde-hljs-section);
+	color: var(--mmdp-hljs-section);
 	font-weight: bold;
 }
 
@@ -78,30 +78,30 @@
 .markdown-body .hljs-name,
 .markdown-body .hljs-selector-tag,
 .markdown-body .hljs-selector-pseudo {
-	color: var(--mmde-hljs-quote);
+	color: var(--mmdp-hljs-quote);
 }
 
 .markdown-body .hljs-emphasis {
-	color: var(--mmde-hljs-emphasis);
+	color: var(--mmdp-hljs-emphasis);
 	font-style: italic;
 }
 
 .markdown-body .hljs-strong {
-	color: var(--mmde-hljs-strong);
+	color: var(--mmdp-hljs-strong);
 	font-weight: bold;
 }
 
 .markdown-body .hljs-deletion {
-	color: var(--mmde-hljs-deletion-color);
-	background-color: var(--mmde-hljs-deletion-bg);
+	color: var(--mmdp-hljs-deletion-color);
+	background-color: var(--mmdp-hljs-deletion-bg);
 }
 
 .markdown-body .hljs-addition {
-	color: var(--mmde-hljs-addition-color);
-	background-color: var(--mmde-hljs-addition-bg);
+	color: var(--mmdp-hljs-addition-color);
+	background-color: var(--mmdp-hljs-addition-bg);
 }
 
 .markdown-body .hljs-link {
-	color: var(--mmde-hljs-link);
+	color: var(--mmdp-hljs-link);
 	font-style: underline;
 }
