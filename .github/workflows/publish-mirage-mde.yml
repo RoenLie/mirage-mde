@@ -39,6 +39,11 @@ jobs:
          cd packages/mirage-mde
          pnpm increment-version
 
+      - name: Merge tsconfig
+        run: |
+         cd packages/mirage-mde
+         pnpm merge-tsconfig
+
       - name: Publish to NPM
         env:
          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
