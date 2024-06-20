@@ -1,2 +1,7 @@
-node_modules
 dist
+index.ts
+node_modules
+*.tsbuildinfo
+*-lock.yaml
+.npm
+.env

@@ -46,4 +46,48 @@
 		"titleBar.inactiveForeground": "#e7e7e799"
 	},
 	"peacock.color": "rgb(30,30,30)",
+	"restoreTerminals.runOnStartup": true,
+	"restoreTerminals.terminals": [
+		{
+			"splitTerminals": [
+				{
+					"name": "Workspace",
+					"commands": []
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "editor",
+					"commands": [
+						"cd packages/mirage-mde",
+						"clear"
+					]
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "display",
+					"commands": [
+						"cd packages/mirage-mde-display",
+						"clear"
+					]
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "demo",
+					"commands": [
+						"cd packages/mirage-mde-demo",
+						"clear"
+					]
+				}
+			]
+		},
+	],
 }
